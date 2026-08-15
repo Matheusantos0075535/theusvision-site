@@ -209,8 +209,11 @@ body.editar .midia .vaga{
 .foco-trilho{
   display:flex;align-items:center;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;
   padding:10px 22% 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
 }
+.foco-trilho.arrastando{cursor:grabbing}
 .foco-trilho::-webkit-scrollbar{display:none}
+.foco-trilho img,.foco-trilho video,.foco-trilho a{-webkit-user-drag:none;user-drag:none}
 .foco-trilho > *{
   flex:0 0 60%;scroll-snap-align:center;margin:0 -8% ;position:relative;
   transition:transform .28s cubic-bezier(.22,.61,.36,1),opacity .28s ease,box-shadow .28s ease;
@@ -220,17 +223,17 @@ body.editar .midia .vaga{
 
 /* ---------------- carrossel coverflow 3D (roleta, nichos) ---------------- */
 .coverflow{margin:30px 0 0;width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;padding:24px 0}
-.coverflow-palco{position:relative;height:330px;perspective:1100px;touch-action:pan-y;cursor:grab;user-select:none}
+.coverflow-palco{position:relative;height:330px;perspective:1100px;cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .coverflow-palco.arrastando{cursor:grabbing}
-.coverflow-palco.arrastando .midia{transition:none}
+.coverflow-palco *{-webkit-user-drag:none;user-drag:none}
 .coverflow-palco .midia{
-  position:absolute;top:50%;left:50%;width:180px;cursor:pointer;
+  position:absolute;top:50%;left:50%;width:180px;cursor:grab;
   transition:transform .55s cubic-bezier(.22,.61,.36,1),opacity .55s ease,filter .55s ease;
   box-shadow:0 18px 40px -20px rgba(0,0,0,.6);
-  -webkit-user-drag:none;user-select:none;
 }
+.coverflow-palco.arrastando .midia{transition:none}
 .coverflow-palco .midia.centro{
-  cursor:default;
+  cursor:grab;
   box-shadow:0 0 0 2px rgba(255,159,17,.45),0 30px 65px -18px rgba(255,159,17,.55),0 22px 48px -18px rgba(0,0,0,.7);
 }
 
@@ -920,6 +923,38 @@ function iniciarCarrossel(idTrilho, idPontos) {
   setas.forEach(s => {
     s.addEventListener("click", () => trilho.scrollBy({ left: passo() * (+s.dataset.dir), behavior: "smooth" }));
   });
+
+  /* --- arrastar com mouse/touch para rolar o trilho --- */
+  let arrastando = false, moveu = false, cliqueBloqueado = false, iniciX = 0, iniciScroll = 0;
+  trilho.addEventListener("dragstart", e => e.preventDefault());
+  trilho.addEventListener("pointerdown", e => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    arrastando = true; moveu = false;
+    iniciX = e.clientX; iniciScroll = trilho.scrollLeft;
+    trilho.classList.add("arrastando");
+    try { trilho.setPointerCapture(e.pointerId); } catch {}
+  });
+  trilho.addEventListener("pointermove", e => {
+    if (!arrastando) return;
+    const dx = e.clientX - iniciX;
+    if (Math.abs(dx) > 4) moveu = true;
+    if (moveu) {
+      trilho.scrollLeft = iniciScroll - dx;
+      e.preventDefault();
+    }
+  });
+  const soltarArrastoTrilho = e => {
+    if (!arrastando) return;
+    arrastando = false;
+    trilho.classList.remove("arrastando");
+    if (e && e.pointerId !== undefined) { try { trilho.releasePointerCapture(e.pointerId); } catch {} }
+    if (moveu) { cliqueBloqueado = true; setTimeout(() => { cliqueBloqueado = false; }, 0); }
+  };
+  trilho.addEventListener("pointerup", soltarArrastoTrilho);
+  trilho.addEventListener("pointercancel", soltarArrastoTrilho);
+  trilho.addEventListener("pointerleave", soltarArrastoTrilho);
+  trilho.addEventListener("click", e => { if (cliqueBloqueado) { e.preventDefault(); e.stopPropagation(); } }, true);
+
   trilho.addEventListener("scroll", () => {
     if (ticking) return;
     ticking = true;
@@ -939,6 +974,7 @@ function iniciarCoverflow(idPalco, idPontos) {
 
   let atual = 0;
   let autoplayId = null, retomarId = null;
+  let iniciX = 0, offsetArrasto = 0;
 
   const pontosEl = idPontos ? document.getElementById(idPontos) : null;
   let bolas = [];
@@ -972,7 +1008,7 @@ function iniciarCoverflow(idPalco, idPontos) {
       card.style.zIndex = String(20 - dist);
       card.style.opacity = dist === 3 ? "0.55" : "1";
       card.style.filter = `brightness(${brilho})`;
-      card.style.transform = `translate(-50%,-50%) translateX(${dir * dist * passoX}px) translateZ(${-dist * passoZ}px) rotateY(${dir * 25}deg) scale(${escala})`;
+      card.style.transform = `translate(-50%,-50%) translateX(${dir * dist * passoX + offsetArrasto}px) translateZ(${-dist * passoZ}px) rotateY(${dir * 25}deg) scale(${escala})`;
     });
     bolas.forEach((b, i) => b.classList.toggle("on", i === atual));
   };
@@ -990,34 +1026,46 @@ function iniciarCoverflow(idPalco, idPontos) {
     retomarId = setTimeout(iniciarAutoplay, 4000);
   };
 
-  let arrastando = false, moveu = false, startX = 0, deltaX = 0;
-  const LIMIAR = 40;
+  let cliqueBloqueado = false;
+  cards.forEach((card, i) => card.addEventListener("click", () => { if (cliqueBloqueado) return; if (i !== atual) irPara(i); }));
+  bolas.forEach((b, i) => b.addEventListener("click", () => irPara(i)));
 
+  /* --- arrastar com mouse/touch para trocar de card --- */
+  let arrastando = false, moveu = false;
+  palco.addEventListener("dragstart", e => e.preventDefault());
   palco.addEventListener("pointerdown", e => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
-    arrastando = true; moveu = false; startX = e.clientX; deltaX = 0;
+    arrastando = true; moveu = false; iniciX = e.clientX; offsetArrasto = 0;
     palco.classList.add("arrastando");
-    palco.setPointerCapture(e.pointerId);
-    pausarERetomar();
+    try { palco.setPointerCapture(e.pointerId); } catch {}
+    pararAutoplay();
   });
   palco.addEventListener("pointermove", e => {
     if (!arrastando) return;
-    deltaX = e.clientX - startX;
-    if (Math.abs(deltaX) > 6) moveu = true;
+    const dx = e.clientX - iniciX;
+    if (Math.abs(dx) > 4) moveu = true;
+    if (moveu) {
+      offsetArrasto = dx;
+      renderizar();
+      e.preventDefault();
+    }
   });
-  const finalizarArrasto = () => {
+  const soltarArrastoPalco = e => {
     if (!arrastando) return;
     arrastando = false;
     palco.classList.remove("arrastando");
-    if (Math.abs(deltaX) > LIMIAR) irPara(atual + (deltaX < 0 ? 1 : -1));
-    deltaX = 0;
+    if (e && e.pointerId !== undefined) { try { palco.releasePointerCapture(e.pointerId); } catch {} }
+    const largura = cards[0].getBoundingClientRect().width || 180;
+    const limite = largura * 0.22;
+    const destino = offsetArrasto <= -limite ? atual + 1 : offsetArrasto >= limite ? atual - 1 : atual;
+    offsetArrasto = 0;
+    if (moveu) { cliqueBloqueado = true; setTimeout(() => { cliqueBloqueado = false; }, 0); }
+    if (destino !== atual) irPara(destino); else { renderizar(); pausarERetomar(); }
   };
-  palco.addEventListener("pointerup", finalizarArrasto);
-  palco.addEventListener("pointercancel", finalizarArrasto);
-  palco.addEventListener("dragstart", e => e.preventDefault());
+  palco.addEventListener("pointerup", soltarArrastoPalco);
+  palco.addEventListener("pointercancel", soltarArrastoPalco);
+  palco.addEventListener("pointerleave", soltarArrastoPalco);
 
-  cards.forEach((card, i) => card.addEventListener("click", () => { if (!moveu && i !== atual) irPara(i); }));
-  bolas.forEach((b, i) => b.addEventListener("click", () => irPara(i)));
   window.addEventListener("resize", renderizar);
 
   renderizar();
