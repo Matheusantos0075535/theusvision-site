@@ -148,11 +148,13 @@ header{position:sticky;top:0;z-index:40;background:rgba(14,1,41,.92);backdrop-fi
 
 /* ---------------- faixa laranja ---------------- */
 .faixa{background:var(--laranja);color:#1A0A00;padding:42px 0}
-.faixa p{font-weight:800;text-transform:uppercase;font-size:clamp(22px,5.8vw,38px);line-height:1.04;max-width:23ch}
-.faixa small{display:block;font-size:16px;font-weight:500;text-transform:none;margin-top:15px;max-width:52ch;line-height:1.5;opacity:.86}
+.faixa .wrap{max-width:760px;margin:0 auto;text-align:center}
+.faixa p{font-weight:800;text-transform:uppercase;font-size:clamp(22px,5.8vw,38px);line-height:1.04;max-width:23ch;margin-left:auto;margin-right:auto}
+.faixa small{display:block;font-size:16px;font-weight:500;text-transform:none;margin-top:15px;max-width:52ch;line-height:1.5;opacity:.86;margin-left:auto;margin-right:auto}
 
 /* ---------------- video ads ---------------- */
-.video-ads video{width:100%;border-radius:14px;display:block}
+.video-ads{padding:60px 20px}
+.video-ads video{width:100%;max-width:720px;margin:0 auto;border-radius:14px;display:block}
 
 /* ====================================================================
    SLOTS DE MIDIA  -  use .midia para colocar video OU imagem
@@ -225,6 +227,7 @@ body.editar .midia .vaga{
 .cartao p{color:var(--texto-2);font-size:16px;margin-top:9px}
 
 /* ---------------- entrega ---------------- */
+.entrega-titulo h2{max-width:600px;margin-left:auto;margin-right:auto}
 .entrega{margin-top:34px;border-top:1px solid var(--borda)}
 .item{display:flex;gap:18px;padding:26px 0;border-bottom:1px solid var(--borda);text-align:left}
 .item .pt{color:var(--laranja);flex:none;font-weight:900;line-height:1.4;font-size:18px;margin-top:1px}
@@ -232,6 +235,8 @@ body.editar .midia .vaga{
 .item span{color:var(--texto-2);font-size:15.5px;line-height:1.55;display:block}
 
 /* ---------------- nichos ---------------- */
+.nichos-titulo h2{max-width:600px;margin-left:auto;margin-right:auto}
+.nichos-titulo p.lead{max-width:56ch}
 .trilho{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:34px -20px 0;padding:0 20px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .trilho::-webkit-scrollbar{display:none}
 .nicho{flex:0 0 auto;scroll-snap-align:start;background:var(--superf);border:1px solid var(--borda);border-radius:999px;padding:13px 20px;font-weight:600;font-size:16px;white-space:nowrap}
@@ -262,6 +267,8 @@ body.editar .midia .vaga{
 .fecho::before{content:"";position:absolute;inset:auto -30% -260px -30%;height:520px;background:radial-gradient(45% 55% at 50% 50%,rgba(255,159,17,.3),transparent 70%);pointer-events:none}
 .fecho .wrap{position:relative}
 .fecho p{margin-left:auto;margin-right:auto}
+.fecho p.lead{max-width:48ch}
+.fecho .botoes .zap{max-width:380px;margin:0 auto}
 .logo-fecho{height:40px;width:auto;margin:0 auto 22px;opacity:.92;display:block}
 footer{border-top:1px solid var(--borda);padding:26px 0 34px;color:var(--apagado);font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
 .rodape{display:flex;flex-direction:column;gap:8px;text-align:center}
@@ -309,6 +316,10 @@ body.editar .aviso-edicao{display:block}
   .botoes .zap{width:auto;max-width:none}
   .zap{min-height:60px;padding:18px 30px;font-size:18px}
   .tri{grid-template-columns:repeat(3,1fr);gap:20px}
+  .entrega-titulo h2{font-size:38px}
+  .nichos-titulo h2{font-size:38px}
+  .nichos-titulo p.lead{font-size:17px}
+  .fecho h2{font-size:38px}
   .entrega{display:grid;grid-template-columns:1fr 1fr;column-gap:40px}
   .entrega-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:42px;align-items:start}
   .entrega-grid .entrega{grid-template-columns:1fr;margin-top:0}
@@ -465,7 +476,7 @@ body.editar .aviso-edicao{display:block}
   <!-- ============ ENTREGA + SLOT 3 (vertical, ao lado da lista) ============ -->
   <section>
     <div class="wrap">
-      <div class="reveal">
+      <div class="reveal entrega-titulo">
         <span class="olho">O que chega pra você</span>
         <h2>Vídeo pronto pra postar<br>e pronto pra anunciar.</h2>
         <p class="lead">Você não recebe arquivo solto nem material bruto. Recebe o vídeo fechado, do jeito que sobe.</p>
@@ -607,7 +618,7 @@ body.editar .aviso-edicao{display:block}
   <!-- ============ NICHOS ============ -->
   <section>
     <div class="wrap">
-      <div class="reveal">
+      <div class="reveal nichos-titulo">
         <span class="olho">Onde isso já está rodando</span>
         <h2>Vale pra qualquer<br>negócio que precisa aparecer.</h2>
         <p class="lead">Comida foi onde começou — se vende pelo olho, ninguém compra hambúrguer lendo descrição. Mas a lógica é a mesma pra qualquer negócio onde o cliente decide vendo antes.</p>
