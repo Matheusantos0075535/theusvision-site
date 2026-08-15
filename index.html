@@ -241,13 +241,21 @@ body.editar .midia .vaga{
 .cartao p{color:var(--texto-2);font-size:16px;margin-top:9px}
 
 /* ---------------- entrega ---------------- */
-.entrega-titulo h2{max-width:600px;margin-left:auto;margin-right:auto}
-.entrega-titulo p.lead{max-width:52ch}
+.entrega-titulo h2{max-width:600px;margin-left:auto;margin-right:auto;margin-bottom:24px}
+.entrega-titulo p.lead{max-width:52ch;margin-bottom:40px}
 .entrega{margin-top:34px;border-top:1px solid var(--borda);padding:0 20px}
-.item{display:flex;gap:18px;padding:26px 0;border-bottom:1px solid var(--borda);text-align:left}
-.item .pt{color:var(--laranja);flex:none;font-weight:900;line-height:1.4;font-size:18px;margin-top:1px}
-.item b{display:block;font-weight:700;font-size:17.5px;margin-bottom:6px}
-.item span{color:var(--texto-2);font-size:15.5px;line-height:1.55;display:block}
+.item{border-bottom:1px solid var(--borda);text-align:left}
+.item-topo{
+  display:flex;align-items:center;gap:18px;width:100%;
+  background:none;border:0;margin:0;padding:26px 0;
+  font:inherit;color:inherit;text-align:left;cursor:pointer;
+}
+.item-topo .pt{color:var(--laranja);flex:none;font-weight:900;line-height:1.4;font-size:18px;transition:transform .3s ease}
+.item[data-open="true"] .item-topo .pt{transform:rotate(90deg)}
+.item-topo b{font-weight:700;font-size:17.5px}
+.item-corpo{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .35s ease}
+.item[data-open="true"] .item-corpo{opacity:1}
+.item-corpo span{display:block;color:var(--texto-2);font-size:15.5px;line-height:1.55;padding:0 0 26px 36px}
 
 /* ---------------- nichos ---------------- */
 .nichos-titulo h2{max-width:600px;margin-left:auto;margin-right:auto}
@@ -487,12 +495,30 @@ body.editar .aviso-edicao{display:block}
       </div>
       <div class="entrega-grid">
         <div class="entrega">
-          <div class="item reveal"><span class="pt">▸</span><div><b>Vertical de 16 a 60 segundos</b><span>No formato certo pro Reels, TikTok, Status do WhatsApp e anúncio pago.</span></div></div>
-          <div class="item reveal"><span class="pt">▸</span><div><b>Um personagem só seu</b><span>Com a sua aparência, um personagem criado do zero ou um mascote exclusivo da marca. Você escolhe.</span></div></div>
-          <div class="item reveal"><span class="pt">▸</span><div><b>Seu produto, seu ambiente</b><span>O seu lanche, o seu copo, a sua chapa. Não é banco de imagem com comida de outro país.</span></div></div>
-          <div class="item reveal"><span class="pt">▸</span><div><b>Legenda e locução inclusas</b><span>A maioria assiste sem som. O vídeo já sai legendado pra funcionar no mudo.</span></div></div>
-          <div class="item reveal"><span class="pt">▸</span><div><b>Roteiro aprovado antes</b><span>Você lê o roteiro e vê a ideia da cena antes de qualquer coisa ser gerada. Sem surpresa no final.</span></div></div>
-          <div class="item reveal"><span class="pt">▸</span><div><b>Zero produção do seu lado</b><span>Você não precisa aparecer, não precisa gravar e não precisa parar o movimento da loja.</span></div></div>
+          <div class="item reveal">
+            <button class="item-topo" type="button" aria-expanded="false"><span class="pt">▸</span><b>Vertical de 16 a 60 segundos</b></button>
+            <div class="item-corpo"><span>No formato certo pro Reels, TikTok, Status do WhatsApp e anúncio pago.</span></div>
+          </div>
+          <div class="item reveal">
+            <button class="item-topo" type="button" aria-expanded="false"><span class="pt">▸</span><b>Um personagem só seu</b></button>
+            <div class="item-corpo"><span>Com a sua aparência, um personagem criado do zero ou um mascote exclusivo da marca. Você escolhe.</span></div>
+          </div>
+          <div class="item reveal">
+            <button class="item-topo" type="button" aria-expanded="false"><span class="pt">▸</span><b>Seu produto, seu ambiente</b></button>
+            <div class="item-corpo"><span>O seu lanche, o seu copo, a sua chapa. Não é banco de imagem com comida de outro país.</span></div>
+          </div>
+          <div class="item reveal">
+            <button class="item-topo" type="button" aria-expanded="false"><span class="pt">▸</span><b>Legenda e locução inclusas</b></button>
+            <div class="item-corpo"><span>A maioria assiste sem som. O vídeo já sai legendado pra funcionar no mudo.</span></div>
+          </div>
+          <div class="item reveal">
+            <button class="item-topo" type="button" aria-expanded="false"><span class="pt">▸</span><b>Roteiro aprovado antes</b></button>
+            <div class="item-corpo"><span>Você lê o roteiro e vê a ideia da cena antes de qualquer coisa ser gerada. Sem surpresa no final.</span></div>
+          </div>
+          <div class="item reveal">
+            <button class="item-topo" type="button" aria-expanded="false"><span class="pt">▸</span><b>Zero produção do seu lado</b></button>
+            <div class="item-corpo"><span>Você não precisa aparecer, não precisa gravar e não precisa parar o movimento da loja.</span></div>
+          </div>
         </div>
         <!-- SLOT 3 - bom pra um video curto mostrando o personagem/mascote -->
         <div class="midia r916 reveal" style="margin-top:20px">
@@ -981,6 +1007,22 @@ if (!document.body.classList.contains("editar")) {
     });
   }, 400);
 }
+
+/* --- accordion da lista "o que chega pra você" --- */
+document.querySelectorAll(".entrega .item").forEach((item, i) => {
+  const btn = item.querySelector(".item-topo");
+  const corpo = item.querySelector(".item-corpo");
+  const definirEstado = aberto => {
+    item.dataset.open = aberto ? "true" : "false";
+    btn.setAttribute("aria-expanded", aberto ? "true" : "false");
+    corpo.style.maxHeight = aberto ? corpo.scrollHeight + "px" : "0px";
+  };
+  btn.addEventListener("click", () => definirEstado(item.dataset.open !== "true"));
+  window.addEventListener("resize", () => {
+    if (item.dataset.open === "true") corpo.style.maxHeight = corpo.scrollHeight + "px";
+  });
+  definirEstado(i === 0);
+});
 
 iniciarCoverflow("carro", "pontos");
 iniciarCarrossel("clientes-grid", "clientes-pontos");
