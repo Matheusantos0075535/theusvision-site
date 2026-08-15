@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#150240">
+<title>Vídeos com IA feitos por nós pro seu negócio | TheusVision</title>
+<meta name="description" content="A gente cria o vídeo com IA pro seu negócio — hamburgueria, pizzaria, açaiteria, espetinho, frango frito, restaurante e mais. Você não precisa de tempo, equipe nem aparecer em câmera nenhuma.">
+<meta property="og:title" content="Vídeos com IA feitos por nós pro seu negócio | TheusVision">
+<meta property="og:description" content="Você não tem tempo pra gravar vídeo. A gente cria por você, com IA, prontos pra postar e anunciar.">
+<meta property="og:type" content="website">
+<link rel="icon" href="midia/icone-branco.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* paleta oficial TheusVision */
+  --indigo:#150240;
+  --roxo:#3D1773;
+  --laranja:#FF9F11;
+  --laranja-esc:#E08707;
+  --preto:#050505;
+  --branco:#FFFFFF;
+  --zap:#25D366;
+
+  --fundo:#0E0129;
+  --superf:#1C0752;
+  --superf-2:#2A0F63;
+  --texto:#EFEAF7;
+  --texto-2:rgba(239,234,247,.72);
+  --apagado:rgba(239,234,247,.45);
+  --borda:rgba(255,255,255,.13);
+  --barra-h:76px;
+  --fonte:'Jost',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--fundo);color:var(--texto);font-family:var(--fonte);
+  font-size:17px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  
+}
+img,svg,video{display:block;max-width:100%}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 20px;text-align:center}
+section{padding:76px 0}
+section[id]{scroll-margin-top:76px}
+
+/* ---------------- tipografia ---------------- */
+/* itálico (estilo Dash) SÓ na headline principal */
+h1{
+  font-weight:900;font-style:italic;text-transform:uppercase;
+  font-size:clamp(29px,7.2vw,56px);line-height:1.06;letter-spacing:-.01em;
+  margin:0 auto 22px;max-width:16ch;text-wrap:balance;
+}
+h2{font-weight:800;text-transform:uppercase;font-size:clamp(24px,5.6vw,40px);line-height:1.1;letter-spacing:-.005em;margin:0 auto;max-width:20ch;text-wrap:balance}
+h3{font-weight:700;font-size:clamp(19px,4.4vw,22px);line-height:1.2}
+.olho{display:block;font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--laranja);margin-bottom:13px}
+.laranja{color:var(--laranja)}
+p{max-width:56ch;margin-left:auto;margin-right:auto}
+.lead{font-size:clamp(17px,4.4vw,21px);color:var(--texto);margin-top:0;font-weight:600;line-height:1.4;max-width:24ch}
+.apoio{font-size:clamp(15px,3.9vw,17px);color:var(--texto-2);margin-top:18px;line-height:1.65;max-width:46ch}
+.so-mobile{display:block}
+strong{font-weight:700;color:var(--texto)}
+
+/* selo laranja */
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--laranja);color:#1A0A00;
+  font-weight:800;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 15px;border-radius:999px;margin-bottom:34px;
+}
+.pill i{width:7px;height:7px;border-radius:50%;background:#1A0A00;animation:bate 1.6s ease-in-out infinite}
+
+/* ---------------- botões ---------------- */
+.zap{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:56px;padding:16px 22px;background:var(--zap);color:#042A16;
+  font-weight:800;font-size:16.5px;text-decoration:none;border-radius:10px;line-height:1.2;
+  box-shadow:0 10px 26px -10px rgba(37,211,102,.7);transition:transform .15s ease;
+}
+.zap:active{transform:scale(.98)}
+.zap svg{width:21px;height:21px;flex:none}
+.link{display:inline-flex;align-items:center;gap:8px;min-height:52px;color:var(--laranja);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(255,159,17,.4)}
+.botoes{display:flex;flex-direction:column;gap:14px;margin-top:32px;align-items:center}
+.botoes .zap{width:100%;max-width:340px}
+.selo{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--apagado);margin-top:22px;font-weight:600;text-align:center}
+.etq-preco{margin-left:auto;margin-right:auto;
+  display:inline-flex;align-items:center;gap:8px;margin-top:30px;
+  background:var(--superf);border:1px solid rgba(255,159,17,.35);border-radius:999px;
+  padding:10px 16px;text-decoration:none;color:var(--texto);font-size:14.5px;font-weight:600;
+}
+.etq-preco b{color:var(--laranja);font-weight:800}
+.etq-preco svg{width:15px;height:15px;color:var(--laranja);flex:none}
+a:focus-visible,button:focus-visible{outline:3px solid var(--laranja);outline-offset:3px;border-radius:8px}
+
+/* ---------------- topo ---------------- */
+.fita{height:4px;background:linear-gradient(90deg,var(--laranja),var(--laranja-esc) 55%,var(--roxo))}
+header{position:sticky;top:0;z-index:40;background:rgba(14,1,41,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--borda)}
+.barra{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 20px;max-width:1080px;margin:0 auto}
+.logo-topo{height:34px;width:auto;display:block}
+.barra-direita{display:flex;align-items:center;gap:16px}
+.barra .zap{display:none}
+.ver-precos{color:var(--laranja);font-weight:700;font-size:13px;letter-spacing:.06em;text-decoration:none;white-space:nowrap}
+
+/* ---------------- hero ---------------- */
+.logo-hero{height:44px;width:auto;margin:0 auto 30px;display:block}
+.hero{padding:46px 0 70px;position:relative;overflow:hidden}
+.hero::before{
+  content:"";position:absolute;top:-200px;left:-25%;right:-25%;height:660px;
+  background:radial-gradient(42% 52% at 26% 42%,rgba(255,159,17,.32),transparent 70%),
+             radial-gradient(46% 54% at 76% 30%,rgba(61,23,115,.9),transparent 72%);
+  pointer-events:none;
+}
+.hero::after{
+  content:"";position:absolute;left:-10%;right:-10%;bottom:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,159,17,.6),transparent);
+}
+.hero .wrap{position:relative}
+
+
+/* --- assinatura: foto fria x video quente --- */
+/* Quer trocar por um video seu? Apague o bloco .compara inteiro e
+   cole no lugar um <div class="midia r916"> igual aos outros slots. */
+.compara{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:36px}
+.fone{border:1px solid var(--borda);border-radius:16px;padding:9px 9px 11px;background:var(--superf);position:relative;overflow:hidden}
+.fone .tela{border-radius:11px;aspect-ratio:9/14;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.fone .rot{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:9px 3px 2px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.frio .tela{background:linear-gradient(180deg,#241246,#1A0B36)}
+.frio .burguer{filter:grayscale(.9);opacity:.42}
+.frio .rot{color:var(--apagado)}
+.quente{border-color:rgba(255,159,17,.5);box-shadow:0 0 0 1px rgba(255,159,17,.18),0 18px 40px -22px rgba(255,159,17,.7)}
+.quente .tela{background:radial-gradient(78% 66% at 50% 80%,rgba(255,159,17,.5),rgba(30,10,40,.92) 74%),linear-gradient(180deg,#3A1552,#1A0836)}
+.quente .rot{color:var(--laranja)}
+.burguer{width:78%;height:auto}
+.tag{position:absolute;top:8px;left:8px;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,0,0,.5);border-radius:4px;padding:4px 7px;color:#fff;display:flex;align-items:center;gap:5px}
+.pulso{width:6px;height:6px;border-radius:50%;background:var(--laranja);animation:bate 1.4s ease-in-out infinite}
+@keyframes bate{0%,100%{opacity:1}50%{opacity:.2}}
+.vapor{position:absolute;top:6%;left:0;right:0;height:34%;pointer-events:none}
+.vapor i{position:absolute;bottom:0;width:3px;height:100%;background:linear-gradient(180deg,transparent,rgba(255,159,17,.6));border-radius:3px;filter:blur(2px);animation:sobe 3.4s ease-in-out infinite}
+.vapor i:nth-child(1){left:36%}
+.vapor i:nth-child(2){left:50%;height:82%;animation-delay:.9s}
+.vapor i:nth-child(3){left:63%;height:90%;animation-delay:1.8s}
+@keyframes sobe{0%{opacity:0;transform:translateY(12px) scaleY(.6)}40%{opacity:.9}100%{opacity:0;transform:translateY(-16px) scaleY(1.15)}}
+.prog{position:absolute;left:8px;right:8px;bottom:8px;height:3px;background:rgba(255,255,255,.22);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--laranja);animation:corre 4.5s linear infinite}
+@keyframes corre{from{width:5%}to{width:100%}}
+
+/* ---------------- faixa laranja ---------------- */
+.faixa{background:var(--laranja);color:#1A0A00;padding:42px 0}
+.faixa p{font-weight:800;text-transform:uppercase;font-size:clamp(22px,5.8vw,38px);line-height:1.04;max-width:23ch}
+.faixa small{display:block;font-size:16px;font-weight:500;text-transform:none;margin-top:15px;max-width:52ch;line-height:1.5;opacity:.86}
+
+/* ====================================================================
+   SLOTS DE MIDIA  -  use .midia para colocar video OU imagem
+   Formatos: .r916 (vertical) . r169 (deitado) . r45 (retrato)
+   ==================================================================== */
+.midia{position:relative;border-radius:14px;overflow:hidden;background:var(--superf);border:1px solid var(--borda)}
+.midia.vazia{display:none}
+body.editar .midia.vazia{display:block;opacity:.55}
+.midia .erro{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:16px;background:var(--superf)}
+.midia .erro b{color:#FF6B6B;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.midia .erro span{color:var(--apagado);font-size:12.5px}
+.midia.erro-real{display:block !important}
+.midia.erro-real .erro{display:flex}
+.midia.r916{aspect-ratio:9/16}
+.midia.r169{aspect-ratio:16/9}
+.midia.r45{aspect-ratio:4/5}
+.midia video,.midia img{width:100%;height:100%;object-fit:cover}
+.midia .vaga{display:none}
+body.editar .midia .vaga{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;text-align:center;padding:22px;color:var(--apagado);font-size:14px;line-height:1.4;
+  background:repeating-linear-gradient(135deg,rgba(255,159,17,.05) 0 10px,transparent 10px 20px),var(--superf);
+}
+.midia .vaga b{color:var(--laranja);font-weight:800;font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+.midia .vaga code{background:rgba(0,0,0,.35);padding:2px 6px;border-radius:4px;font-size:13px}
+.midia .som{position:absolute;right:10px;bottom:10px;z-index:2;width:42px;height:42px;border-radius:50%;border:0;background:rgba(5,5,5,.6);color:#fff;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.midia .som svg{width:19px;height:19px}
+.midia .rotulo{position:absolute;left:10px;bottom:14px;z-index:2;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.85)}
+.destaque{max-width:820px;margin:0 auto;box-shadow:0 30px 70px -40px rgba(255,159,17,.55)}
+.par{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+
+.nota{text-align:left}
+/* ---------------- clientes atendidos ---------------- */
+.cliente{background:var(--superf);border:1px solid var(--borda);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px;text-align:left}
+.cliente .midia{border-radius:10px}
+.cliente-info{display:flex;flex-direction:column;gap:3px;padding:0 4px}
+.cliente-info b{font-weight:700;font-size:17px}
+.cliente-info .nicho{color:var(--apagado);font-size:13.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.insta{
+  margin-top:8px;display:inline-flex;align-items:center;gap:7px;align-self:flex-start;
+  color:var(--laranja);font-weight:700;font-size:15px;text-decoration:none;
+  border:1px solid rgba(255,159,17,.35);border-radius:999px;padding:8px 14px;
+}
+.insta svg{width:16px;height:16px;flex:none}
+
+/* ---------------- carrossel ---------------- */
+.carro-topo{margin-top:28px}
+
+/* ---------------- carrossel com foco no centro (estilo coverflow) ---------------- */
+.foco-container{margin:30px 0 0;width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;padding:20px 0 10px}
+.foco-trilho{
+  display:flex;align-items:center;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:10px 22% 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.foco-trilho::-webkit-scrollbar{display:none}
+.foco-trilho > *{
+  flex:0 0 60%;scroll-snap-align:center;margin:0 -8% ;position:relative;
+  transition:transform .28s cubic-bezier(.22,.61,.36,1),opacity .28s ease,box-shadow .28s ease;
+  will-change:transform,opacity;box-shadow:0 20px 45px -20px rgba(0,0,0,.6);
+}
+.foco-trilho > *.em-foco{box-shadow:0 30px 60px -18px rgba(255,159,17,.4),0 20px 45px -15px rgba(0,0,0,.7);z-index:5}
+.pontos{display:flex;gap:6px;justify-content:center;margin-top:22px;flex-wrap:wrap;max-width:280px;margin-left:auto;margin-right:auto}
+.pontos i{width:6px;height:6px;border-radius:50%;background:var(--borda);transition:background .2s,width .2s;flex:none}
+.pontos i.on{background:var(--laranja);width:20px;border-radius:4px}
+
+/* ---------------- cartoes ---------------- */
+.tri{display:grid;grid-template-columns:1fr;gap:18px;margin-top:36px}
+.cartao{background:var(--superf);border:1px solid var(--borda);border-radius:14px;padding:28px 24px;text-align:left}
+.cartao .num{display:block;font-weight:800;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--laranja);margin-bottom:12px}
+.cartao p{color:var(--texto-2);font-size:16px;margin-top:9px}
+
+/* ---------------- entrega ---------------- */
+.entrega{margin-top:34px;border-top:1px solid var(--borda)}
+.item{display:flex;gap:18px;padding:26px 0;border-bottom:1px solid var(--borda);text-align:left}
+.item .pt{color:var(--laranja);flex:none;font-weight:900;line-height:1.4;font-size:18px;margin-top:1px}
+.item b{display:block;font-weight:700;font-size:17.5px;margin-bottom:6px}
+.item span{color:var(--texto-2);font-size:15.5px;line-height:1.55;display:block}
+
+/* ---------------- nichos ---------------- */
+.trilho{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:34px -20px 0;padding:0 20px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.trilho::-webkit-scrollbar{display:none}
+.nicho{flex:0 0 auto;scroll-snap-align:start;background:var(--superf);border:1px solid var(--borda);border-radius:999px;padding:13px 20px;font-weight:600;font-size:16px;white-space:nowrap}
+.nicho.forte{background:var(--laranja);color:#1A0A00;border-color:var(--laranja);font-weight:700}
+.aberto{margin-top:24px;background:var(--superf-2);border:1px solid rgba(255,159,17,.28);border-radius:14px;padding:26px 22px}
+.aberto p{color:var(--texto-2);margin-top:11px}
+
+/* ---------------- preco ---------------- */
+.preco{background:var(--superf);border:1px solid var(--borda);border-radius:16px;padding:34px 24px;margin:34px auto 0;max-width:720px;text-align:left}
+.valor{font-weight:900;font-size:clamp(38px,11vw,58px);color:var(--laranja);line-height:1;margin:4px 0 12px;letter-spacing:-.02em}
+.valor em{font-style:normal;font-size:18px;font-weight:600;color:var(--apagado);letter-spacing:.06em;text-transform:uppercase}
+.preco .cap{display:block;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--apagado)}
+.preco ul{list-style:none;margin-top:20px}
+.preco li{padding:10px 0;border-top:1px solid var(--borda);color:var(--texto-2);font-size:16px;display:flex;gap:10px}
+.preco li::before{content:"\2713";color:var(--laranja);font-weight:800}
+
+/* ---------------- duvidas ---------------- */
+.faq{margin-top:34px;border-top:1px solid var(--borda)}
+.duvida{border-bottom:1px solid var(--borda)}
+.duvida summary{list-style:none;cursor:pointer;padding:21px 0;font-weight:700;font-size:17px;display:flex;justify-content:space-between;align-items:center;gap:14px;text-align:left}
+.duvida summary::-webkit-details-marker{display:none}
+.duvida summary::after{content:"+";color:var(--laranja);font-size:24px;font-weight:500;line-height:1;flex:none}
+.duvida[open] summary::after{content:"\2013"}
+.duvida p{color:var(--texto-2);font-size:16px;padding:0 0 24px;line-height:1.6;text-align:left}
+
+/* ---------------- fecho ---------------- */
+.fecho{text-align:center;position:relative;overflow:hidden;padding:70px 0}
+.fecho::before{content:"";position:absolute;inset:auto -30% -260px -30%;height:520px;background:radial-gradient(45% 55% at 50% 50%,rgba(255,159,17,.3),transparent 70%);pointer-events:none}
+.fecho .wrap{position:relative}
+.fecho p{margin-left:auto;margin-right:auto}
+.logo-fecho{height:40px;width:auto;margin:0 auto 22px;opacity:.92;display:block}
+footer{border-top:1px solid var(--borda);padding:26px 0 34px;color:var(--apagado);font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.rodape{display:flex;flex-direction:column;gap:8px;text-align:center}
+
+/* ---------------- barra fixa ---------------- */
+
+
+
+
+/* ---------------- modo edição (abra o site com ?editar no fim do link) ---------------- */
+.trocar{display:none}
+body.editar .trocar{
+  position:absolute;top:8px;right:8px;z-index:5;display:flex;align-items:center;gap:6px;
+  border:0;border-radius:999px;padding:8px 13px;cursor:pointer;
+  background:var(--laranja);color:#1A0A00;font-family:var(--fonte);font-weight:800;
+  font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+}
+body.editar .midia{outline:2px dashed rgba(255,159,17,.5);outline-offset:-2px}
+.aviso-edicao{
+  display:none;position:fixed;left:12px;right:12px;top:12px;z-index:90;
+  background:var(--laranja);color:#1A0A00;border-radius:10px;padding:11px 15px;
+  font-size:13.5px;font-weight:600;line-height:1.4;box-shadow:0 12px 30px -12px rgba(0,0,0,.7);
+}
+body.editar .aviso-edicao{display:block}
+
+/* ---------------- revelacao ---------------- */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.reveal.ok{opacity:1;transform:none}
+
+/* ---------------- desktop ---------------- */
+@media (min-width:760px){
+  body{font-size:18px}
+  section{padding:88px 0}
+  .barra .zap{display:inline-flex;min-height:46px;padding:12px 20px;font-size:15px}
+  .logo-topo{height:40px}
+  .hero{padding:70px 0 80px}
+  .hero .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:52px;align-items:center;text-align:left}
+  .hero h1,.hero p{margin-left:0;margin-right:0}
+  .logo-hero{margin-left:0;height:50px}
+  .hero .botoes{align-items:flex-start}
+  .hero .selo{text-align:left}
+  .so-mobile{display:none}
+  .compara{margin-top:0}
+  .botoes{flex-direction:row;align-items:center;gap:22px;justify-content:center}
+  .botoes .zap{width:auto;max-width:none}
+  .zap{min-height:60px;padding:18px 30px;font-size:18px}
+  .tri{grid-template-columns:repeat(3,1fr);gap:20px}
+  .entrega{display:grid;grid-template-columns:1fr 1fr;column-gap:40px}
+  .entrega-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:42px;align-items:start}
+  .entrega-grid .entrega{grid-template-columns:1fr;margin-top:0}
+  .foco-trilho{padding:20px calc(50% - 190px)}
+  .foco-trilho > *{flex:0 0 380px;margin:0 -34px}
+  .par{gap:18px}
+  .trilho{flex-wrap:wrap;overflow:visible;margin:34px 0 0;padding:0;justify-content:center}
+  .preco{padding:44px 38px}
+  .rodape{flex-direction:row;justify-content:space-between;text-align:left}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="aviso-edicao">Modo teste ligado. Toque em <b>Trocar</b> em qualquer espaço pra ver como fica com a sua imagem ou vídeo. Nada é salvo — ao recarregar volta ao normal.</div>
+<div class="fita"></div>
+<header>
+  <div class="barra">
+    <a href="#topo" aria-label="TheusVision - início"><img class="logo-topo" src="midia/logo-branco.png" alt="TheusVision" width="163" height="82"></a>
+    <div class="barra-direita">
+      <a class="ver-precos" href="precos.html">Ver preços</a>
+      <a class="zap wa" href="#" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7l1.8.6c.7.2 1.4.2 2 .1.6-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5l-.6-.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+        Chamar no WhatsApp
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="topo">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <img class="logo-hero" src="midia/logo-branco.png" alt="TheusVision" width="163" height="82">
+        <span class="pill"><i></i>Feito por nós, pro seu negócio</span>
+        <h1>Seu negócio precisa de <span class="laranja">vídeo.</span><br>A gente resolve.</h1>
+        <p class="lead">Você cuida do seu negócio.<br class="so-mobile">A gente cuida do vídeo.</p>
+        <p class="apoio">Criamos tudo com IA — roteiro, personagem, edição e legenda — pronto pra postar e anunciar. Sem gravar, sem aparecer, sem parar a loja.</p>
+        <a class="etq-preco" href="precos.html">
+          <span>A partir de <b>R$ 39</b> por vídeo</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+        </a>
+        <div class="botoes">
+          <a class="zap wa" href="#" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7l1.8.6c.7.2 1.4.2 2 .1.6-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5l-.6-.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+            Quero um vídeo do meu negócio
+          </a>
+          <a class="link" href="#videos">Ver exemplos de vídeo →</a>
+        </div>
+        <p class="selo">Tudo pelo WhatsApp · Atendo o Brasil inteiro</p>
+      </div>
+
+      <div class="compara" aria-hidden="true">
+        <div class="fone frio">
+          <div class="tela">
+            <span class="tag">Foto</span>
+            <svg class="burguer" viewBox="0 0 120 96" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 40C14 22 34 10 60 10s46 12 46 30z" fill="#C98A4B"/>
+              <circle cx="44" cy="26" r="2.4" fill="#F6E3C4"/><circle cx="62" cy="20" r="2.4" fill="#F6E3C4"/><circle cx="79" cy="27" r="2.4" fill="#F6E3C4"/>
+              <rect x="12" y="40" width="96" height="9" rx="4.5" fill="#F2B93B"/>
+              <path d="M14 49h92c0 8-8 9-14 6s-12 4-18 1-11 4-17 1-10 4-16 1-8-3-11-3z" fill="#7CA83F"/>
+              <rect x="13" y="59" width="94" height="14" rx="6" fill="#6B3B22"/>
+              <path d="M14 86c0-9 8-13 46-13s46 4 46 13z" fill="#C98A4B" transform="rotate(180 60 79.5)"/>
+            </svg>
+          </div>
+          <div class="rot"><span>Foto no feed</span><span>12 curtidas</span></div>
+        </div>
+        <div class="fone quente">
+          <div class="tela">
+            <span class="tag"><i class="pulso"></i>Vídeo</span>
+            <div class="vapor"><i></i><i></i><i></i></div>
+            <svg class="burguer" viewBox="0 0 120 96" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 40C14 22 34 10 60 10s46 12 46 30z" fill="#E5A257"/>
+              <circle cx="44" cy="26" r="2.4" fill="#FFF3DC"/><circle cx="62" cy="20" r="2.4" fill="#FFF3DC"/><circle cx="79" cy="27" r="2.4" fill="#FFF3DC"/>
+              <rect x="12" y="40" width="96" height="9" rx="4.5" fill="#FF9F11"/>
+              <path d="M14 49h92c0 8-8 9-14 6s-12 4-18 1-11 4-17 1-10 4-16 1-8-3-11-3z" fill="#8FC24A"/>
+              <rect x="13" y="59" width="94" height="14" rx="6" fill="#7A4326"/>
+              <path d="M14 86c0-9 8-13 46-13s46 4 46 13z" fill="#E5A257" transform="rotate(180 60 79.5)"/>
+            </svg>
+            <div class="prog"><i></i></div>
+          </div>
+          <div class="rot"><span>Vídeo no Reels</span><span id="contador">8.412 views</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAIXA ============ -->
+  <div class="faixa">
+    <div class="wrap reveal">
+      <p>Seu concorrente não é melhor que você. Ele só apareceu primeiro.</p>
+      <small>O lanche dele não é mais gostoso. O açaí dele não é mais cheio. Ele só tem um vídeo rodando enquanto você tem uma foto parada.</small>
+    </div>
+  </div>
+
+  <!-- ============ COMO FUNCIONA ============ -->
+  <section id="como">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="olho">Do primeiro oi ao vídeo na mão</span>
+        <h2>Três passos.<br>Todos pelo zap.</h2>
+      </div>
+      <div class="tri">
+        <div class="cartao reveal">
+          <span class="num">Passo 01</span>
+          <h3>Você manda o material</h3>
+          <p>Fotos do seu produto, sua logo e o nome do negócio. Cinco minutos de conversa e acabou a sua parte.</p>
+        </div>
+        <div class="cartao reveal">
+          <span class="num">Passo 02</span>
+          <h3>Você aprova o roteiro</h3>
+          <p>Eu escrevo o roteiro e descrevo as cenas. Você lê, pede ajuste, aprova. Só depois o vídeo começa a ser gerado.</p>
+        </div>
+        <div class="cartao reveal">
+          <span class="num">Passo 03</span>
+          <h3>O vídeo chega pronto</h3>
+          <p>Editado, legendado e no formato certo. É baixar e postar. Prazo médio: <strong>[X] dias úteis</strong>.</p>
+        </div>
+      </div>
+
+      <!-- ============ SLOT 4 - PROVA (par de imagens) ============ -->
+      <!-- Otimo pra print de conversa no WhatsApp, print de resultado do Reels
+           ou um antes/depois. Aceita imagem ou video. -->
+      <div class="par reveal">
+        <div class="midia r45">
+          <img src="prova1.jpg" alt="">
+          <div class="vaga"><b>Slot 4A · prova</b><span><code>prova1.jpg</code><br>print de resultado</span></div>
+        </div>
+        <div class="midia r45">
+          <img src="prova2.jpg" alt="">
+          <div class="vaga"><b>Slot 4B · prova</b><span><code>prova2.jpg</code><br>print de conversa</span></div>
+        </div>
+      </div>
+      <div class="botoes" style="margin-top:28px"><a class="zap wa" href="#" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7l1.8.6c.7.2 1.4.2 2 .1.6-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5l-.6-.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>Quero um vídeo pro meu negócio</a></div>
+    </div>
+  </section>
+
+  <!-- ============ ENTREGA + SLOT 3 (vertical, ao lado da lista) ============ -->
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <span class="olho">O que chega pra você</span>
+        <h2>Vídeo pronto pra postar<br>e pronto pra anunciar.</h2>
+        <p class="lead">Você não recebe arquivo solto nem material bruto. Recebe o vídeo fechado, do jeito que sobe.</p>
+      </div>
+      <div class="entrega-grid">
+        <div class="entrega">
+          <div class="item reveal"><span class="pt">▸</span><div><b>Vertical de 16 a 60 segundos</b><span>No formato certo pro Reels, TikTok, Status do WhatsApp e anúncio pago.</span></div></div>
+          <div class="item reveal"><span class="pt">▸</span><div><b>Um personagem só seu</b><span>Com a sua aparência, um personagem criado do zero ou um mascote exclusivo da marca. Você escolhe.</span></div></div>
+          <div class="item reveal"><span class="pt">▸</span><div><b>Seu produto, seu ambiente</b><span>O seu lanche, o seu copo, a sua chapa. Não é banco de imagem com comida de outro país.</span></div></div>
+          <div class="item reveal"><span class="pt">▸</span><div><b>Legenda e locução inclusas</b><span>A maioria assiste sem som. O vídeo já sai legendado pra funcionar no mudo.</span></div></div>
+          <div class="item reveal"><span class="pt">▸</span><div><b>Roteiro aprovado antes</b><span>Você lê o roteiro e vê a ideia da cena antes de qualquer coisa ser gerada. Sem surpresa no final.</span></div></div>
+          <div class="item reveal"><span class="pt">▸</span><div><b>Zero produção do seu lado</b><span>Você não precisa aparecer, não precisa gravar e não precisa parar o movimento da loja.</span></div></div>
+        </div>
+        <!-- SLOT 3 - bom pra um video curto mostrando o personagem/mascote -->
+        <div class="midia r916 reveal" style="margin-top:20px">
+          <video src="personagem.mp4" muted loop playsinline preload="metadata"></video>
+          <div class="vaga"><b>Slot 3 · personagem</b><span><code>personagem.mp4</code><br>ou uma imagem do mascote</span></div>
+          <button class="som" type="button" aria-label="Ligar ou desligar o som"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLOT 2 - CARROSSEL DE EXEMPLOS ============ -->
+  <section id="videos">
+    <div class="wrap">
+      <div class="carro-topo reveal">
+        <div>
+          <span class="olho">Prévia por nicho</span>
+          <h2>É o seu logo<br>na tela.</h2>
+        </div>
+</div>
+
+      <p class="lead" style="margin:6px 0 0">Onde está escrito "seu logo aqui", entra a sua marca. Onde está a placa, entra a sua fachada. Arraste pro lado.</p>
+      <!-- Para adicionar mais, copie um bloco .midia inteiro. -->
+      <div class="foco-container">
+        <div class="foco-trilho" id="carro">
+        <div class="midia r916" data-obrigatorio="true">
+          <img src="midia/nicho-hamburgueria.jpg" alt="Exemplo de peça para hamburgueria" loading="lazy">
+          <div class="vaga"><b>Hamburgueria</b></div>
+          <span class="rotulo">Hamburgueria</span>
+        </div>
+        <div class="midia r916" data-obrigatorio="true">
+          <img src="midia/nicho-pizzaria.jpg" alt="Exemplo de peça para pizzaria" loading="lazy">
+          <div class="vaga"><b>Pizzaria</b></div>
+          <span class="rotulo">Pizzaria</span>
+        </div>
+        <div class="midia r916" data-obrigatorio="true">
+          <img src="midia/nicho-acaiteria.jpg" alt="Exemplo de peça para açaiteria" loading="lazy">
+          <div class="vaga"><b>Açaiteria</b></div>
+          <span class="rotulo">Açaiteria</span>
+        </div>
+        <div class="midia r916" data-obrigatorio="true">
+          <img src="midia/nicho-self-service.jpg" alt="Exemplo de peça para self-service" loading="lazy">
+          <div class="vaga"><b>Self-service</b></div>
+          <span class="rotulo">Self-service</span>
+        </div>
+        <div class="midia r916" data-obrigatorio="true">
+          <img src="midia/nicho-restaurante.jpg" alt="Exemplo de peça para restaurante" loading="lazy">
+          <div class="vaga"><b>Restaurante</b></div>
+          <span class="rotulo">Restaurante</span>
+        </div>
+        <div class="midia r916" data-obrigatorio="true">
+          <img src="midia/nicho-confeitaria.jpg" alt="Exemplo de peça para doceria" loading="lazy">
+          <div class="vaga"><b>Doceria</b></div>
+          <span class="rotulo">Doceria</span>
+        </div>
+        <div class="midia r916" data-obrigatorio="true">
+          <img src="midia/nicho-clinica.jpg" alt="Exemplo de peça para clínica" loading="lazy">
+          <div class="vaga"><b>Clínica</b></div>
+          <span class="rotulo">Clínica</span>
+        </div>
+        <div class="midia r916" data-obrigatorio="true">
+          <img src="midia/nicho-farmacia.jpg" alt="Exemplo de peça para farmácia" loading="lazy">
+          <div class="vaga"><b>Farmácia</b></div>
+          <span class="rotulo">Farmácia</span>
+        </div>
+        </div>
+      </div>
+      <div class="pontos" id="pontos"></div>
+      <div class="botoes" style="margin-top:28px"><a class="zap wa" href="#" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7l1.8.6c.7.2 1.4.2 2 .1.6-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5l-.6-.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>Quero um vídeo pro meu negócio</a></div>
+    </div>
+  </section>
+
+  <!-- ============ PRECO ============ -->
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <span class="olho">Quanto custa</span>
+        <h2>Valor fechado por vídeo.<br>Sem mensalidade.</h2>
+      </div>
+      <div class="preco reveal">
+        <span class="cap">A partir de</span>
+        <div class="valor">R$ 39 <em>/ vídeo</em></div>
+        <p>O valor muda pela duração do vídeo — 16, 30 ou 60 segundos — não pelo seu ramo nem pela complexidade do roteiro. Quanto maior o vídeo, menor o valor por segundo.</p>
+        <ul>
+          <li>Sem contrato e sem fidelidade</li>
+          <li>Sem taxa de agência e sem custo de equipe</li>
+          <li>Ajustes de roteiro inclusos antes da geração</li>
+          <li>O arquivo é seu: use onde quiser, quantas vezes quiser</li>
+        </ul>
+        <div class="botoes">
+          <a class="zap" href="precos.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
+            Ver os 3 tamanhos e valores
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROBLEMA ============ -->
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <span class="olho">O que está travando</span>
+        <h2>Foto não vende mais.<br>Vende quem se mexe.</h2>
+      </div>
+      <div class="tri">
+        <div class="cartao reveal">
+          <span class="num">O feed cansou</span>
+          <h3>Todo mundo posta foto</h3>
+          <p>Prato bonito, luz do celular, mesma moldura de sempre. O cliente já viu isso mil vezes hoje e passa em menos de meio segundo.</p>
+        </div>
+        <div class="cartao reveal">
+          <span class="num">A briga é pelo dedo</span>
+          <h3>Vídeo segura, foto não</h3>
+          <p>Movimento, som, queijo derretendo. É o que faz o dedo parar de rolar — e é justamente o que o algoritmo entrega pra mais gente.</p>
+        </div>
+        <div class="cartao reveal">
+          <span class="num">O caminho antigo</span>
+          <h3>Filmagem custa e trava</h3>
+          <p>Equipe é cara, precisa marcar dia, arrumar a loja e torcer pra dar certo. Resultado: você grava uma vez por ano e vive de foto o resto do tempo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NICHOS ============ -->
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <span class="olho">Onde isso já está rodando</span>
+        <h2>Vale pra qualquer<br>negócio que precisa aparecer.</h2>
+        <p class="lead">Comida foi onde começou — se vende pelo olho, ninguém compra hambúrguer lendo descrição. Mas a lógica é a mesma pra qualquer negócio onde o cliente decide vendo antes.</p>
+      </div>
+      <div class="trilho reveal">
+        <span class="nicho forte">Hamburgueria</span>
+        <span class="nicho forte">Pizzaria</span>
+        <span class="nicho forte">Açaiteria</span>
+        <span class="nicho forte">Espetinho</span>
+        <span class="nicho forte">Frango frito e assado</span>
+        <span class="nicho">Restaurante e self-service</span>
+        <span class="nicho">Sorveteria</span>
+        <span class="nicho">Doceria e confeitaria</span>
+        <span class="nicho">Padaria</span>
+        <span class="nicho">Bicicletaria</span>
+        <span class="nicho">Clínica odontológica</span>
+        <span class="nicho">Bar</span>
+        <span class="nicho">Imobiliária</span>
+        <span class="nicho">Pet shop</span>
+        <span class="nicho">Barbearia</span>
+        <span class="nicho">Academia</span>
+        <span class="nicho">E muito mais</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLIENTES ATENDIDOS ============ -->
+  <!-- Para adicionar, editar ou remover clientes, mexa só na lista CLIENTES
+       lá no final do <script>. Não precisa editar HTML nenhum aqui. -->
+  <section id="clientes">
+    <div class="wrap">
+      <div class="carro-topo reveal">
+        <div>
+          <span class="olho">Prova real</span>
+          <h2>Quem já roda<br>vídeo com a gente.</h2>
+        </div>
+</div>
+      <p class="lead" style="margin:6px 0 0">Toca pra assistir e clica no @ pra ver o perfil de verdade no Instagram.</p>
+      <div class="foco-container"><div class="foco-trilho" id="clientes-grid"></div></div>
+      <div class="pontos" id="clientes-pontos"></div>
+    </div>
+  </section>
+
+  <!-- ============ DUVIDAS ============ -->
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <span class="olho">Antes de você perguntar</span>
+        <h2>As dúvidas que<br>sempre chegam.</h2>
+      </div>
+      <div class="faq reveal">
+        <details class="duvida"><summary>Preciso aparecer no vídeo?</summary><p>Não. Dá pra usar um personagem com a sua aparência, um personagem criado do zero ou um mascote da sua marca. Muita gente prefere o mascote justamente pra não depender de ninguém aparecer.</p></details>
+        <details class="duvida"><summary>Preciso gravar alguma coisa?</summary><p>Não. Você só manda fotos do seu produto e a logo. O resto é comigo.</p></details>
+        <details class="duvida"><summary>Serve pra anunciar ou só pra postar?</summary><p>Serve pros dois. O vídeo já sai no formato usado em Meta Ads e TikTok Ads, e também no Status do WhatsApp.</p></details>
+        <details class="duvida"><summary>Meu negócio é pequeno demais?</summary><p>Se você já vende e já posta, tem o que mostrar. Negócio pequeno é justamente quem mais ganha, porque passa a aparecer do tamanho dos grandes.</p></details>
+        <details class="duvida"><summary>Sou de outro estado, tem problema?</summary><p>Nenhum. Tudo é resolvido pelo WhatsApp. Atendo o Brasil inteiro.</p></details>
+        <details class="duvida"><summary>E se eu não gostar do resultado?</summary><p>Por isso o roteiro é aprovado antes. Você entra na ideia comigo antes de qualquer cena existir, e ajustamos até fazer sentido pro seu negócio.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FECHO ============ -->
+  <section class="fecho">
+    <div class="wrap reveal">
+      <img class="logo-fecho" src="midia/logo-branco.png" alt="TheusVision" width="163" height="82">
+      <h2>Enquanto você decide,<br>alguém do seu bairro <span class="laranja">já postou.</span></h2>
+      <p class="lead">Me manda uma mensagem dizendo qual é o seu negócio. Eu te explico como ficaria no seu caso e quanto custa. Sem enrolação e sem compromisso.</p>
+      <div class="botoes">
+        <a class="zap wa" href="#" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7l1.8.6c.7.2 1.4.2 2 .1.6-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5l-.6-.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+          Chamar no WhatsApp agora
+        </a>
+      </div>
+      <p class="selo">Resposta no mesmo dia · Atendimento em todo o Brasil</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap rodape">
+    <span>TheusVision · Vídeos com IA para negócios</span>
+    <span>Embu das Artes · SP · Atende o Brasil</span>
+  </div>
+</footer>
+
+
+
+<script>
+/* ==========================================================
+   TROQUE SO ESTAS DUAS LINHAS
+   NUMERO   -> 55 + DDD + numero, sem espaco e sem simbolo
+   MENSAGEM -> texto que ja vem digitado pro cliente
+   ========================================================== */
+const NUMERO   = "5511939450546";
+const MENSAGEM = "Oi! Vi a página dos vídeos com IA e quero um pro meu negócio.";
+
+const linkZap = "https://wa.me/" + NUMERO + "?text=" + encodeURIComponent(MENSAGEM);
+document.querySelectorAll("a.wa").forEach(a => { a.href = linkZap; a.target = "_blank"; });
+
+/* ==========================================================
+   CLIENTES ATENDIDOS
+   Pra cada cliente novo, copie um bloco { ... } e preencha:
+   nome      -> nome do negócio
+   nicho     -> hamburgueria, pizzaria, clínica etc.
+   instagram -> @ do cliente, sem arroba e sem link completo
+   video     -> nome do arquivo de vídeo (coloque na mesma pasta do index.html)
+                pode ser .mp4 (vídeo) ou .jpg/.png (imagem), ambos funcionam
+   Se não tiver vídeo ainda, deixe o nome do arquivo mesmo assim —
+   o espaço só mostra "vaga livre" até você subir o arquivo.
+   ========================================================== */
+const CLIENTES = [
+  { nome: "Nome do negócio", nicho: "Hamburgueria", instagram: "usuario_do_cliente", video: "cliente1.mp4" },
+  { nome: "Nome do negócio", nicho: "Pizzaria",      instagram: "usuario_do_cliente", video: "cliente2.mp4" },
+  { nome: "Nome do negócio", nicho: "Açaiteria",     instagram: "usuario_do_cliente", video: "cliente3.mp4" },
+];
+
+const secaoClientes = document.getElementById("clientes");
+const temClienteReal = CLIENTES.some(c => c.nome !== "Nome do negócio" && c.instagram !== "usuario_do_cliente");
+if (secaoClientes && !temClienteReal && !location.search.includes("editar")) secaoClientes.remove();
+
+const gradeClientes = document.getElementById("clientes-grid");
+if (gradeClientes && (temClienteReal || location.search.includes("editar"))) {
+  const ehImagem = arq => /\.(jpe?g|png|webp)$/i.test(arq);
+  gradeClientes.innerHTML = CLIENTES.map(c => `
+    <div class="cliente reveal ok">
+      <div class="midia r45">
+        ${ehImagem(c.video)
+          ? `<img src="${c.video}" alt="Vídeo entregue para ${c.nome}">`
+          : `<video src="${c.video}" muted loop playsinline preload="metadata"></video><button class="som" type="button" aria-label="Ligar ou desligar o som"></button>`}
+        <div class="vaga"><b>Vaga</b><span><code>${c.video}</code></span></div>
+      </div>
+      <div class="cliente-info">
+        <b>${c.nome}</b>
+        <span class="nicho">${c.nicho}</span>
+        <a class="insta" href="https://instagram.com/${c.instagram}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          @${c.instagram}
+        </a>
+      </div>
+    </div>
+  `).join("");
+}
+
+/* --- revelacao no scroll --- */
+const obs = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("ok"); obs.unobserve(e.target); } });
+}, { threshold: .12 });
+document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
+
+/* --- contador de views --- */
+const cont = document.getElementById("contador");
+if (cont && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  let n = 8412;
+  setInterval(() => { n += Math.floor(Math.random()*7)+1; cont.textContent = n.toLocaleString("pt-BR") + " views"; }, 900);
+}
+
+/* --- slots de midia: some com a "vaga" quando o arquivo existe --- */
+const MUDO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2-3.7v7.4a4.5 4.5 0 0 0 2-3.7zM3 3l18 18-1.4 1.4L1.6 4.4 3 3z"/></svg>';
+const SOM  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2-3.7v7.4a4.5 4.5 0 0 0 2-3.7zM14.5 3.2v2.1a6.8 6.8 0 0 1 0 13.4v2.1a8.8 8.8 0 0 0 0-17.6z"/></svg>';
+
+document.querySelectorAll(".midia").forEach(caixa => {
+  if (!caixa.querySelector("img[src], video[src]")) caixa.classList.add("vazia");
+  const v = caixa.querySelector("video");
+  const img = caixa.querySelector("img");
+  const vaga = caixa.querySelector(".vaga");
+  const btn = caixa.querySelector(".som");
+  if (btn) btn.innerHTML = MUDO;
+
+  const some = () => { caixa.classList.remove("vazia"); };
+  const falhou = el => {
+    el.style.display = "none";
+    if (btn) btn.style.display = "none";
+    if (caixa.dataset.obrigatorio) {
+      caixa.classList.remove("vazia");
+      caixa.classList.add("erro-real");
+      if (!caixa.querySelector(".erro")) {
+        caixa.insertAdjacentHTML("beforeend", '<div class="erro"><b>Imagem não encontrada</b><span>Confira se a pasta midia/ subiu junto no Netlify</span></div>');
+      }
+    } else {
+      caixa.classList.add("vazia");
+    }
+  };
+
+  if (img) { img.addEventListener("load", some); img.addEventListener("error", () => falhou(img)); }
+
+  if (v) {
+    v.addEventListener("loadeddata", some);
+    v.addEventListener("error", () => falhou(v));
+    if (btn) btn.addEventListener("click", () => {
+      v.muted = !v.muted;
+      btn.innerHTML = v.muted ? MUDO : SOM;
+      if (!v.muted) v.play();
+    });
+    new IntersectionObserver(es => {
+      es.forEach(e => e.isIntersecting ? v.play().catch(()=>{}) : v.pause());
+    }, { threshold: .5 }).observe(caixa);
+  }
+});
+
+
+/* --- modo edição: abra o link com ?editar no fim para testar imagens/vídeos --- */
+if (location.search.includes("editar")) {
+  document.body.classList.add("editar");
+  document.querySelectorAll(".midia").forEach(caixa => {
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "trocar"; btn.textContent = "Trocar";
+    const input = document.createElement("input");
+    input.type = "file"; input.accept = "image/*,video/*"; input.hidden = true;
+
+    btn.addEventListener("click", () => input.click());
+    input.addEventListener("change", () => {
+      const arq = input.files[0]; if (!arq) return;
+      const url = URL.createObjectURL(arq);
+      caixa.querySelectorAll("video,img,.vaga").forEach(e => e.remove());
+      const novo = document.createElement(arq.type.startsWith("video") ? "video" : "img");
+      novo.src = url;
+      if (arq.type.startsWith("video")) { novo.muted = true; novo.loop = true; novo.playsInline = true; novo.autoplay = true; }
+      caixa.prepend(novo);
+    });
+
+    caixa.append(btn, input);
+  });
+}
+
+/* --- carrossel com foco no centro (reutilizável) --- */
+function iniciarCarrossel(idTrilho, idPontos) {
+  const trilho = document.getElementById(idTrilho);
+  if (!trilho) return;
+  const itens = [...trilho.children];
+  if (!itens.length) return;
+  const pontosEl = idPontos ? document.getElementById(idPontos) : null;
+  let bolas = [];
+  if (pontosEl) {
+    pontosEl.innerHTML = "";
+    itens.forEach(() => pontosEl.appendChild(document.createElement("i")));
+    bolas = [...pontosEl.children];
+  }
+  const setas = document.querySelectorAll(`[data-setas="${idTrilho}"] .seta`);
+
+  let ticking = false;
+  const atualizarFoco = () => {
+    const rect = trilho.getBoundingClientRect();
+    const centro = rect.left + rect.width / 2;
+    let maisPerto = 0, menorDist = Infinity;
+    itens.forEach((it, i) => {
+      const r = it.getBoundingClientRect();
+      const c = r.left + r.width / 2;
+      const dist = Math.abs(c - centro);
+      const norm = Math.min(1, dist / (rect.width / 2));
+      const escala = 1 - norm * 0.24;
+      const desce = norm * 26;
+      it.style.transform = `translateY(${desce}px) scale(${escala})`;
+      it.style.opacity = 1 - norm * 0.62;
+      it.style.zIndex = String(Math.round((1 - norm) * 10));
+      it.classList.toggle("em-foco", norm < 0.18);
+      if (dist < menorDist) { menorDist = dist; maisPerto = i; }
+    });
+    bolas.forEach((b, k) => b.classList.toggle("on", k === maisPerto));
+    setas.forEach(s => {
+      const d = +s.dataset.dir;
+      s.disabled = (d < 0 && maisPerto === 0) || (d > 0 && maisPerto === itens.length - 1);
+    });
+  };
+
+  const passo = () => itens[0].getBoundingClientRect().width + 14;
+  setas.forEach(s => {
+    s.addEventListener("click", () => trilho.scrollBy({ left: passo() * (+s.dataset.dir), behavior: "smooth" }));
+  });
+  trilho.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { atualizarFoco(); ticking = false; });
+  });
+  window.addEventListener("resize", atualizarFoco);
+  atualizarFoco();
+}
+
+/* --- esconde blocos que ficaram sem nenhuma mídia (fora do modo edição) --- */
+if (!document.body.classList.contains("editar")) {
+  setTimeout(() => {
+    document.querySelectorAll(".par").forEach(bloco => {
+      if (![...bloco.querySelectorAll(".midia")].some(m => !m.classList.contains("vazia"))) bloco.style.display = "none";
+    });
+    document.querySelectorAll(".entrega-grid > .midia").forEach(m => {
+      if (m.classList.contains("vazia")) m.style.display = "none";
+    });
+  }, 400);
+}
+
+iniciarCarrossel("carro", "pontos");
+iniciarCarrossel("clientes-grid", "clientes-pontos");
+</script>
+</body>
+</html>
