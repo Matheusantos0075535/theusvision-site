@@ -220,11 +220,14 @@ body.editar .midia .vaga{
 
 /* ---------------- carrossel coverflow 3D (roleta, nichos) ---------------- */
 .coverflow{margin:30px 0 0;width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;padding:24px 0}
-.coverflow-palco{position:relative;height:330px;perspective:1100px}
+.coverflow-palco{position:relative;height:330px;perspective:1100px;touch-action:pan-y;cursor:grab;user-select:none}
+.coverflow-palco.arrastando{cursor:grabbing}
+.coverflow-palco.arrastando .midia{transition:none}
 .coverflow-palco .midia{
   position:absolute;top:50%;left:50%;width:180px;cursor:pointer;
   transition:transform .55s cubic-bezier(.22,.61,.36,1),opacity .55s ease,filter .55s ease;
   box-shadow:0 18px 40px -20px rgba(0,0,0,.6);
+  -webkit-user-drag:none;user-select:none;
 }
 .coverflow-palco .midia.centro{
   cursor:default;
@@ -987,9 +990,34 @@ function iniciarCoverflow(idPalco, idPontos) {
     retomarId = setTimeout(iniciarAutoplay, 4000);
   };
 
-  cards.forEach((card, i) => card.addEventListener("click", () => { if (i !== atual) irPara(i); }));
+  let arrastando = false, moveu = false, startX = 0, deltaX = 0;
+  const LIMIAR = 40;
+
+  palco.addEventListener("pointerdown", e => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    arrastando = true; moveu = false; startX = e.clientX; deltaX = 0;
+    palco.classList.add("arrastando");
+    palco.setPointerCapture(e.pointerId);
+    pausarERetomar();
+  });
+  palco.addEventListener("pointermove", e => {
+    if (!arrastando) return;
+    deltaX = e.clientX - startX;
+    if (Math.abs(deltaX) > 6) moveu = true;
+  });
+  const finalizarArrasto = () => {
+    if (!arrastando) return;
+    arrastando = false;
+    palco.classList.remove("arrastando");
+    if (Math.abs(deltaX) > LIMIAR) irPara(atual + (deltaX < 0 ? 1 : -1));
+    deltaX = 0;
+  };
+  palco.addEventListener("pointerup", finalizarArrasto);
+  palco.addEventListener("pointercancel", finalizarArrasto);
+  palco.addEventListener("dragstart", e => e.preventDefault());
+
+  cards.forEach((card, i) => card.addEventListener("click", () => { if (!moveu && i !== atual) irPara(i); }));
   bolas.forEach((b, i) => b.addEventListener("click", () => irPara(i)));
-  palco.addEventListener("pointerdown", pausarERetomar);
   window.addEventListener("resize", renderizar);
 
   renderizar();
