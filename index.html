@@ -228,7 +228,8 @@ body.editar .midia .vaga{
 
 /* ---------------- entrega ---------------- */
 .entrega-titulo h2{max-width:600px;margin-left:auto;margin-right:auto}
-.entrega{margin-top:34px;border-top:1px solid var(--borda)}
+.entrega-titulo p.lead{max-width:52ch}
+.entrega{margin-top:34px;border-top:1px solid var(--borda);padding:0 20px}
 .item{display:flex;gap:18px;padding:26px 0;border-bottom:1px solid var(--borda);text-align:left}
 .item .pt{color:var(--laranja);flex:none;font-weight:900;line-height:1.4;font-size:18px;margin-top:1px}
 .item b{display:block;font-weight:700;font-size:17.5px;margin-bottom:6px}
@@ -762,6 +763,12 @@ if (cont && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
   setInterval(() => { n += Math.floor(Math.random()*7)+1; cont.textContent = n.toLocaleString("pt-BR") + " views"; }, 900);
 }
 
+/* --- carrossel de nichos: duplica os cards pra criar o loop infinito --- */
+const trilhoCarro = document.getElementById("carro");
+if (trilhoCarro) {
+  [...trilhoCarro.children].forEach(it => trilhoCarro.appendChild(it.cloneNode(true)));
+}
+
 /* --- slots de midia: some com a "vaga" quando o arquivo existe --- */
 const MUDO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2-3.7v7.4a4.5 4.5 0 0 0 2-3.7zM3 3l18 18-1.4 1.4L1.6 4.4 3 3z"/></svg>';
 const SOM  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2-3.7v7.4a4.5 4.5 0 0 0 2-3.7zM14.5 3.2v2.1a6.8 6.8 0 0 1 0 13.4v2.1a8.8 8.8 0 0 0 0-17.6z"/></svg>';
@@ -883,6 +890,75 @@ function iniciarCarrossel(idTrilho, idPontos) {
   atualizarFoco();
 }
 
+/* --- carrossel infinito com autoplay (usado só no carrossel de nichos, id="carro") --- */
+function iniciarCarrosselInfinito(idTrilho, idPontos) {
+  const trilho = document.getElementById(idTrilho);
+  if (!trilho) return;
+  const itens = [...trilho.children];
+  const n = itens.length / 2; // metade original, metade clone (pro loop)
+  if (!n) return;
+
+  const pontosEl = idPontos ? document.getElementById(idPontos) : null;
+  let bolas = [];
+  if (pontosEl) {
+    pontosEl.innerHTML = "";
+    for (let i = 0; i < n; i++) pontosEl.appendChild(document.createElement("i"));
+    bolas = [...pontosEl.children];
+  }
+
+  let ticking = false;
+  const atualizarFoco = () => {
+    const rect = trilho.getBoundingClientRect();
+    const centro = rect.left + rect.width / 2;
+    let maisPerto = 0, menorDist = Infinity;
+    itens.forEach((it, i) => {
+      const r = it.getBoundingClientRect();
+      const c = r.left + r.width / 2;
+      const dist = Math.abs(c - centro);
+      const norm = Math.min(1, dist / (rect.width / 2));
+      const escala = 1 - norm * 0.24;
+      const desce = norm * 26;
+      it.style.transform = `translateY(${desce}px) scale(${escala})`;
+      it.style.opacity = 1 - norm * 0.62;
+      it.style.zIndex = String(Math.round((1 - norm) * 10));
+      it.classList.toggle("em-foco", norm < 0.18);
+      if (dist < menorDist) { menorDist = dist; maisPerto = i; }
+    });
+    bolas.forEach((b, k) => b.classList.toggle("on", k === maisPerto % n));
+
+    // loop sem tranco: ao entrar no bloco clonado, volta pro bloco original na mesma posição visual
+    const meio = trilho.scrollWidth / 2;
+    if (trilho.scrollLeft >= meio) trilho.scrollLeft -= meio;
+  };
+
+  const passo = () => {
+    const a = itens[0].getBoundingClientRect();
+    const b = itens[1].getBoundingClientRect();
+    return (b.left + b.width / 2) - (a.left + a.width / 2);
+  };
+
+  trilho.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { atualizarFoco(); ticking = false; });
+  });
+  window.addEventListener("resize", atualizarFoco);
+  atualizarFoco();
+
+  let autoplayId = null, retomarId = null;
+  const avancar = () => trilho.scrollBy({ left: passo(), behavior: "smooth" });
+  const pararAutoplay = () => { if (autoplayId) { clearInterval(autoplayId); autoplayId = null; } };
+  const iniciarAutoplay = () => { pararAutoplay(); autoplayId = setInterval(avancar, 2500); };
+  const pausarERetomar = () => {
+    pararAutoplay();
+    clearTimeout(retomarId);
+    retomarId = setTimeout(iniciarAutoplay, 4000);
+  };
+  ["pointerdown", "touchstart", "wheel"].forEach(ev => trilho.addEventListener(ev, pausarERetomar, { passive: true }));
+
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) iniciarAutoplay();
+}
+
 /* --- esconde blocos que ficaram sem nenhuma mídia (fora do modo edição) --- */
 if (!document.body.classList.contains("editar")) {
   setTimeout(() => {
@@ -895,7 +971,7 @@ if (!document.body.classList.contains("editar")) {
   }, 400);
 }
 
-iniciarCarrossel("carro", "pontos");
+iniciarCarrosselInfinito("carro", "pontos");
 iniciarCarrossel("clientes-grid", "clientes-pontos");
 </script>
 </body>
