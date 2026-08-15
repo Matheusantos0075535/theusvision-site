@@ -151,6 +151,9 @@ header{position:sticky;top:0;z-index:40;background:rgba(14,1,41,.92);backdrop-fi
 .faixa p{font-weight:800;text-transform:uppercase;font-size:clamp(22px,5.8vw,38px);line-height:1.04;max-width:23ch}
 .faixa small{display:block;font-size:16px;font-weight:500;text-transform:none;margin-top:15px;max-width:52ch;line-height:1.5;opacity:.86}
 
+/* ---------------- video ads ---------------- */
+.video-ads video{width:100%;border-radius:14px;display:block}
+
 /* ====================================================================
    SLOTS DE MIDIA  -  use .midia para colocar video OU imagem
    Formatos: .r916 (vertical) . r169 (deitado) . r45 (retrato)
@@ -409,6 +412,13 @@ body.editar .aviso-edicao{display:block}
       <small>O lanche dele não é mais gostoso. O açaí dele não é mais cheio. Ele só tem um vídeo rodando enquanto você tem uma foto parada.</small>
     </div>
   </div>
+
+  <!-- ============ VIDEO ADS ============ -->
+  <section class="video-ads">
+    <div class="wrap">
+      <video src="ads-theusvision.mp4" controls muted playsinline preload="metadata"></video>
+    </div>
+  </section>
 
   <!-- ============ COMO FUNCIONA ============ -->
   <section id="como">
