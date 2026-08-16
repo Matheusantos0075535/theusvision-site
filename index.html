@@ -218,7 +218,7 @@ body.editar .midia .vaga{
 .foco-trilho{
   display:flex;align-items:center;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;
   padding:10px 22% 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
-  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
+  cursor:grab;touch-action:pan-x pan-y;-webkit-user-select:none;user-select:none;
 }
 .foco-trilho.arrastando{cursor:grabbing}
 .foco-trilho::-webkit-scrollbar{display:none}
@@ -838,7 +838,7 @@ if (gradeClientes && (temClienteReal || location.search.includes("editar"))) {
   const ehImagem = arq => /\.(jpe?g|png|webp)$/i.test(arq);
   gradeClientes.innerHTML = CLIENTES.map(c => `
     <div class="cliente reveal ok">
-      <div class="midia r45">
+      <div class="midia r916">
         ${ehImagem(c.video)
           ? `<img src="${c.video}" alt="Vídeo entregue para ${c.nome}">`
           : `<video src="${c.video}" muted loop playsinline preload="metadata"></video><button class="som" type="button" aria-label="Ligar ou desligar o som"></button>`}
@@ -983,11 +983,12 @@ function iniciarCarrossel(idTrilho, idPontos) {
     s.addEventListener("click", () => trilho.scrollBy({ left: passo() * (+s.dataset.dir), behavior: "smooth" }));
   });
 
-  /* --- arrastar com mouse/touch para rolar o trilho --- */
+  /* --- arrastar com mouse para rolar o trilho (no touch, deixa o scroll nativo + snap cuidar, é mais fluido no celular) --- */
   let arrastando = false, moveu = false, cliqueBloqueado = false, iniciX = 0, iniciScroll = 0;
   trilho.addEventListener("dragstart", e => e.preventDefault());
   trilho.addEventListener("pointerdown", e => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (e.pointerType !== "mouse") return;
+    if (e.button !== 0) return;
     if (e.target.closest("button, a")) return;
     arrastando = true; moveu = false;
     iniciX = e.clientX; iniciScroll = trilho.scrollLeft;
