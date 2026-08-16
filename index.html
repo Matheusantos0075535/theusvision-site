@@ -229,6 +229,7 @@ body.editar .midia .vaga{
   will-change:transform,opacity;box-shadow:0 20px 45px -20px rgba(0,0,0,.6);
 }
 .foco-trilho > *.em-foco{box-shadow:0 30px 60px -18px rgba(255,159,17,.4),0 20px 45px -15px rgba(0,0,0,.7);z-index:5}
+.foco-trilho.arrastando > *{transition:none}
 
 /* ---------------- carrossel coverflow 3D (roleta, nichos) ---------------- */
 .coverflow{margin:30px 0 0;width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;padding:24px 0}
@@ -288,7 +289,9 @@ body.editar .midia .vaga{
 .trilho{
   display:flex;gap:12px;overflow-x:auto;margin:34px -20px 0;padding:0 20px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
   cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
+  transition:opacity .35s ease;
 }
+.trilho.embaralhando{opacity:0}
 .trilho.arrastando{cursor:grabbing}
 .trilho::-webkit-scrollbar{display:none}
 .nicho{flex:0 0 auto;background:var(--laranja);color:#1A0A00;border:1px solid var(--laranja);border-radius:999px;padding:13px 20px;font-weight:700;font-size:16px;white-space:nowrap}
@@ -1022,22 +1025,43 @@ function iniciarCarrossel(idTrilho, idPontos) {
 }
 
 /* --- faixa que rola sozinha (marquee em loop) e também pode ser arrastada com mouse/touch --- */
-function iniciarFaixaAuto(idTrilho, velocidade = 40) {
+function iniciarFaixaAuto(idTrilho, velocidade = 40, intervaloEmbaralhar = 6000) {
   const trilho = document.getElementById(idTrilho);
   if (!trilho) return;
-  const itensOriginais = [...trilho.children];
-  if (!itensOriginais.length) return;
-
-  itensOriginais.forEach(it => trilho.appendChild(it.cloneNode(true)));
+  let ordem = [...trilho.children];
+  if (!ordem.length) return;
 
   let larguraUmaVolta = 0;
   const medir = () => { larguraUmaVolta = trilho.scrollWidth / 2; };
-  medir();
-  window.addEventListener("resize", medir);
-  const imgs = [...trilho.querySelectorAll("img")];
-  imgs.forEach(im => { if (!im.complete) im.addEventListener("load", medir); });
 
-  let autoplayAtivo = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const montar = () => {
+    ordem.forEach(it => trilho.appendChild(it));
+    ordem.forEach(it => trilho.appendChild(it.cloneNode(true)));
+    trilho.scrollLeft = 0;
+    medir();
+    const imgs = [...trilho.querySelectorAll("img")];
+    imgs.forEach(im => { if (!im.complete) im.addEventListener("load", medir); });
+  };
+  montar();
+  window.addEventListener("resize", medir);
+
+  const semAnimacao = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!semAnimacao) {
+    setInterval(() => {
+      for (let i = ordem.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [ordem[i], ordem[j]] = [ordem[j], ordem[i]];
+      }
+      trilho.classList.add("embaralhando");
+      setTimeout(() => {
+        trilho.innerHTML = "";
+        montar();
+        trilho.classList.remove("embaralhando");
+      }, 350);
+    }, intervaloEmbaralhar);
+  }
+
+  let autoplayAtivo = !semAnimacao;
   let ultimoTempo = null, retomarId = null;
 
   const passoAuto = tempo => {
