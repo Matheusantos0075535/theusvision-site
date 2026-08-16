@@ -9,6 +9,13 @@
 <meta property="og:title" content="Vídeos com IA feitos por nós pro seu negócio | TheusVision">
 <meta property="og:description" content="Você não tem tempo pra gravar vídeo. A gente cria por você, com IA, prontos pra postar e anunciar.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://theusvision.netlify.app/">
+<meta property="og:image" content="https://theusvision.netlify.app/midia/icone-branco.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vídeos com IA feitos por nós pro seu negócio | TheusVision">
+<meta name="twitter:description" content="Você não tem tempo pra gravar vídeo. A gente cria por você, com IA, prontos pra postar e anunciar.">
+<meta name="twitter:image" content="https://theusvision.netlify.app/midia/icone-branco.png">
+<link rel="canonical" href="https://theusvision.netlify.app/">
 <link rel="icon" href="midia/icone-branco.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -192,6 +199,7 @@ body.editar .midia .vaga{
 .cliente{background:var(--superf);border:1px solid var(--borda);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px;text-align:left}
 .cliente .midia{border-radius:10px}
 .cliente-info{display:flex;flex-direction:column;gap:3px;padding:0 4px}
+.cliente-logo{height:22px;width:auto;object-fit:contain;object-position:left;margin-bottom:6px}
 .cliente-info b{font-weight:700;font-size:17px}
 .cliente-info .nicho{color:var(--apagado);font-size:13.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
 .insta{
@@ -206,6 +214,7 @@ body.editar .midia .vaga{
 
 /* ---------------- carrossel com foco no centro (scroll nativo, usado nos clientes) ---------------- */
 .foco-container{margin:30px 0 0;width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;padding:20px 0 10px}
+.foco-caixa{position:relative;max-width:1080px;margin:0 auto}
 .foco-trilho{
   display:flex;align-items:center;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;
   padding:10px 22% 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
@@ -223,6 +232,7 @@ body.editar .midia .vaga{
 
 /* ---------------- carrossel coverflow 3D (roleta, nichos) ---------------- */
 .coverflow{margin:30px 0 0;width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;padding:24px 0}
+.coverflow-caixa{position:relative;max-width:1080px;margin:0 auto}
 .coverflow-palco{position:relative;height:330px;perspective:1100px;cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .coverflow-palco.arrastando{cursor:grabbing}
 .coverflow-palco *{-webkit-user-drag:none;user-drag:none}
@@ -241,6 +251,14 @@ body.editar .midia .vaga{
 .pontos i{width:6px;height:6px;border-radius:50%;background:var(--borda);transition:background .2s,width .2s;flex:none}
 .pontos i.on{background:var(--laranja);width:20px;border-radius:4px}
 
+/* ---------------- setas de navegação dos carrosséis ---------------- */
+.setas{position:absolute;top:50%;left:8px;right:8px;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none;z-index:30}
+.seta{pointer-events:auto;width:42px;height:42px;flex:none;border-radius:50%;border:1px solid var(--borda);background:rgba(10,10,10,.55);backdrop-filter:blur(6px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,opacity .2s,transform .15s}
+.seta svg{width:19px;height:19px}
+.seta:hover{background:var(--laranja);border-color:var(--laranja)}
+.seta:active{transform:scale(.92)}
+.seta:disabled{opacity:.3;cursor:default;pointer-events:none}
+
 /* ---------------- cartoes ---------------- */
 .tri{display:grid;grid-template-columns:1fr;gap:18px;margin-top:36px}
 .cartao{background:var(--superf);border:1px solid var(--borda);border-radius:14px;padding:28px 24px;text-align:left}
@@ -250,7 +268,7 @@ body.editar .midia .vaga{
 /* ---------------- entrega ---------------- */
 .entrega-titulo h2{max-width:600px;margin-left:auto;margin-right:auto;margin-bottom:24px}
 .entrega-titulo p.lead{max-width:52ch;margin-bottom:40px}
-.entrega{margin-top:34px;border-top:1px solid var(--borda);padding:0 20px}
+.entrega{margin-top:34px;border-top:1px solid var(--borda);padding:0 20px;max-width:680px;margin-left:auto;margin-right:auto}
 .item{border-bottom:1px solid var(--borda);text-align:left}
 .item-topo{
   display:flex;align-items:center;gap:18px;width:100%;
@@ -267,10 +285,15 @@ body.editar .midia .vaga{
 /* ---------------- nichos ---------------- */
 .nichos-titulo h2{max-width:600px;margin-left:auto;margin-right:auto}
 .nichos-titulo p.lead{max-width:56ch}
-.trilho{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:34px -20px 0;padding:0 20px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.trilho{
+  display:flex;gap:12px;overflow-x:auto;margin:34px -20px 0;padding:0 20px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none;
+}
+.trilho.arrastando{cursor:grabbing}
 .trilho::-webkit-scrollbar{display:none}
-.nicho{flex:0 0 auto;scroll-snap-align:start;background:var(--superf);border:1px solid var(--borda);border-radius:999px;padding:13px 20px;font-weight:600;font-size:16px;white-space:nowrap}
-.nicho.forte{background:var(--laranja);color:#1A0A00;border-color:var(--laranja);font-weight:700}
+.nicho{flex:0 0 auto;background:var(--laranja);color:#1A0A00;border:1px solid var(--laranja);border-radius:999px;padding:13px 20px;font-weight:700;font-size:16px;white-space:nowrap}
+
+
 .aberto{margin-top:24px;background:var(--superf-2);border:1px solid rgba(255,159,17,.28);border-radius:14px;padding:26px 22px}
 .aberto p{color:var(--texto-2);margin-top:11px}
 
@@ -278,28 +301,31 @@ body.editar .midia .vaga{
 .preco{background:var(--superf);border:1px solid var(--borda);border-radius:16px;padding:34px 24px;margin:34px auto 0;max-width:720px;text-align:left}
 .valor{font-weight:900;font-size:clamp(38px,11vw,58px);color:var(--laranja);line-height:1;margin:4px 0 12px;letter-spacing:-.02em}
 .valor em{font-style:normal;font-size:18px;font-weight:600;color:var(--apagado);letter-spacing:.06em;text-transform:uppercase}
+.centavos{font-size:.55em}
 .preco .cap{display:block;font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--apagado)}
 .preco ul{list-style:none;margin-top:20px}
 .preco li{padding:10px 0;border-top:1px solid var(--borda);color:var(--texto-2);font-size:16px;display:flex;gap:10px}
 .preco li::before{content:"\2713";color:var(--laranja);font-weight:800}
 
 /* ---------------- duvidas ---------------- */
-.faq{margin-top:34px;border-top:1px solid var(--borda)}
+.faq{margin-top:34px;border-top:1px solid var(--borda);max-width:680px;margin-left:auto;margin-right:auto}
 .duvida{border-bottom:1px solid var(--borda)}
 .duvida summary{list-style:none;cursor:pointer;padding:21px 0;font-weight:700;font-size:17px;display:flex;justify-content:space-between;align-items:center;gap:14px;text-align:left}
 .duvida summary::-webkit-details-marker{display:none}
 .duvida summary::after{content:"+";color:var(--laranja);font-size:24px;font-weight:500;line-height:1;flex:none}
 .duvida[open] summary::after{content:"\2013"}
-.duvida p{color:var(--texto-2);font-size:16px;padding:0 0 24px;line-height:1.6;text-align:left}
+.duvida p{color:var(--texto-2);font-size:16px;padding:0 0 24px;line-height:1.6;text-align:left;max-width:none;margin:0}
 
 /* ---------------- fecho ---------------- */
 .fecho{text-align:center;position:relative;overflow:hidden;padding:70px 0}
 .fecho::before{content:"";position:absolute;inset:auto -30% -260px -30%;height:520px;background:radial-gradient(45% 55% at 50% 50%,rgba(255,159,17,.3),transparent 70%);pointer-events:none}
 .fecho .wrap{position:relative}
 .fecho p{margin-left:auto;margin-right:auto}
+.fecho h2{margin-top:6px;margin-bottom:22px}
 .fecho p.lead{max-width:48ch}
+.fecho .botoes{margin-top:40px}
 .fecho .botoes .zap{max-width:380px;margin:0 auto}
-.logo-fecho{height:40px;width:auto;margin:0 auto 22px;opacity:.92;display:block}
+.logo-fecho{height:40px;width:auto;margin:0 auto 30px;opacity:.92;display:block}
 footer{border-top:1px solid var(--borda);padding:26px 0 34px;color:var(--apagado);font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
 .rodape{display:flex;flex-direction:column;gap:8px;text-align:center}
 
@@ -397,9 +423,9 @@ body.editar .aviso-edicao{display:block}
         <img class="logo-hero" src="midia/logo-branco.png" alt="TheusVision" width="163" height="82">
         <span class="pill"><i></i>Feito por nós, pro seu negócio</span>
         <h1>Vídeo <span class="laranja">profissional.</span> Sem gravar nada.</h1>
-        <p class="apoio">Sem câmera, sem edição, sem equipe. A gente cria o vídeo com IA — você só aprova e posta.</p>
+        <p class="apoio">Sem câmera, sem equipe, sem complicação. A gente cria o vídeo do seu jeito com IA — você só aprova e posta.</p>
         <a class="etq-preco" href="precos.html">
-          <span>A partir de <b>R$ 39</b> por vídeo</span>
+          <span>A partir de <b>R$ 39<span class="centavos">,99</span></b> por vídeo</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg>
         </a>
         <div class="botoes">
@@ -483,7 +509,7 @@ body.editar .aviso-edicao{display:block}
         <div class="cartao reveal">
           <span class="num">Passo 03</span>
           <h3>O vídeo chega pronto</h3>
-          <p>Editado, legendado e no formato certo. É baixar e postar. Prazo médio: <strong>[X] dias úteis</strong>.</p>
+          <p>Editado, legendado e no formato certo. É baixar e postar. Prazo médio: <strong>1 dia útil</strong>.</p>
         </div>
       </div>
 
@@ -528,8 +554,8 @@ body.editar .aviso-edicao{display:block}
         </div>
         <!-- SLOT 3 - bom pra um video curto mostrando o personagem/mascote -->
         <div class="midia r916 reveal" style="margin-top:20px">
-          <video src="personagem.mp4" muted loop playsinline preload="metadata"></video>
-          <div class="vaga"><b>Slot 3 · personagem</b><span><code>personagem.mp4</code><br>ou uma imagem do mascote</span></div>
+          <video src="midia/video-frangooudabraga.mp4" muted loop playsinline preload="metadata"></video>
+          <div class="vaga"><b>Slot 3 · personagem</b><span><code>midia/video-frangooudabraga.mp4</code><br>ou uma imagem do mascote</span></div>
           <button class="som" type="button" aria-label="Ligar ou desligar o som"></button>
         </div>
       </div>
@@ -549,6 +575,7 @@ body.editar .aviso-edicao{display:block}
       <p class="lead" style="margin-top:6px">Onde está escrito "seu logo aqui", entra a sua marca. Onde está a placa, entra a sua fachada. Arraste pro lado.</p>
       <!-- Para adicionar mais, copie um bloco .midia inteiro. -->
       <div class="coverflow">
+        <div class="coverflow-caixa">
         <div class="coverflow-palco" id="carro">
         <div class="midia r916" data-obrigatorio="true">
           <img src="midia/nicho-hamburgueria.jpg" alt="Exemplo de peça para hamburgueria" loading="lazy">
@@ -591,6 +618,15 @@ body.editar .aviso-edicao{display:block}
           <span class="rotulo">Farmácia</span>
         </div>
         </div>
+        <div class="setas" data-setas="carro">
+          <button class="seta" type="button" data-dir="-1" aria-label="Ver exemplo anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <button class="seta" type="button" data-dir="1" aria-label="Ver próximo exemplo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        </div>
       </div>
       <div class="pontos" id="pontos"></div>
       <div class="botoes" style="margin-top:28px"><a class="zap wa" href="#" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.2-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7l1.8.6c.7.2 1.4.2 2 .1.6-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5l-.6-.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>Quero um vídeo pro meu negócio</a></div>
@@ -606,7 +642,7 @@ body.editar .aviso-edicao{display:block}
       </div>
       <div class="preco reveal">
         <span class="cap">A partir de</span>
-        <div class="valor">R$ 39 <em>/ vídeo</em></div>
+        <div class="valor">R$ 39<span class="centavos">,99</span> <em>/ vídeo</em></div>
         <p>O valor muda pela duração do vídeo — 16, 30 ou 60 segundos — não pelo seu ramo nem pela complexidade do roteiro. Quanto maior o vídeo, menor o valor por segundo.</p>
         <ul>
           <li>Sem contrato e sem fidelidade</li>
@@ -657,14 +693,14 @@ body.editar .aviso-edicao{display:block}
       <div class="reveal nichos-titulo">
         <span class="olho">Onde isso já está rodando</span>
         <h2>Vale pra qualquer<br>negócio que precisa aparecer.</h2>
-        <p class="lead">Comida foi onde começou — se vende pelo olho, ninguém compra hambúrguer lendo descrição. Mas a lógica é a mesma pra qualquer negócio onde o cliente decide vendo antes.</p>
+        <p class="lead">A lógica é a mesma pra qualquer negócio onde o cliente decide vendo antes.</p>
       </div>
-      <div class="trilho reveal">
-        <span class="nicho forte">Hamburgueria</span>
-        <span class="nicho forte">Pizzaria</span>
-        <span class="nicho forte">Açaiteria</span>
-        <span class="nicho forte">Espetinho</span>
-        <span class="nicho forte">Frango frito e assado</span>
+      <div class="trilho reveal" id="nichos-trilho">
+        <span class="nicho">Hamburgueria</span>
+        <span class="nicho">Pizzaria</span>
+        <span class="nicho">Açaiteria</span>
+        <span class="nicho">Espetinho</span>
+        <span class="nicho">Frango frito e assado</span>
         <span class="nicho">Restaurante e self-service</span>
         <span class="nicho">Sorveteria</span>
         <span class="nicho">Doceria e confeitaria</span>
@@ -681,19 +717,31 @@ body.editar .aviso-edicao{display:block}
     </div>
   </section>
 
-  <!-- ============ CLIENTES ATENDIDOS ============ -->
+  <!-- ============ CLIENTES ATENDIDOS (inclui logo da marca) ============ -->
   <!-- Para adicionar, editar ou remover clientes, mexa só na lista CLIENTES
        lá no final do <script>. Não precisa editar HTML nenhum aqui. -->
   <section id="clientes">
     <div class="wrap">
       <div class="carro-topo reveal">
         <div>
-          <span class="olho">Prova real</span>
+          <span class="olho">Marcas que já confiam</span>
           <h2>Quem já roda<br>vídeo com a gente.</h2>
         </div>
 </div>
       <p class="lead" style="margin-top:6px">Toca pra assistir e clica no @ pra ver o perfil de verdade no Instagram.</p>
-      <div class="foco-container"><div class="foco-trilho" id="clientes-grid"></div></div>
+      <div class="foco-container">
+        <div class="foco-caixa">
+          <div class="foco-trilho" id="clientes-grid"></div>
+          <div class="setas" data-setas="clientes-grid">
+            <button class="seta" type="button" data-dir="-1" aria-label="Ver cliente anterior">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="seta" type="button" data-dir="1" aria-label="Ver próximo cliente">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="pontos" id="clientes-pontos"></div>
     </div>
   </section>
@@ -720,7 +768,7 @@ body.editar .aviso-edicao{display:block}
   <section class="fecho">
     <div class="wrap reveal">
       <img class="logo-fecho" src="midia/logo-branco.png" alt="TheusVision" width="163" height="82">
-      <h2>Enquanto você decide,<br>alguém do seu bairro <span class="laranja">já postou.</span></h2>
+      <h2>Enquanto você decide,<br>o seu concorrente <span class="laranja">já postou.</span></h2>
       <p class="lead">Me manda uma mensagem dizendo qual é o seu negócio. Eu te explico como ficaria no seu caso e quanto custa. Sem enrolação e sem compromisso.</p>
       <div class="botoes">
         <a class="zap wa" href="#" rel="noopener">
@@ -760,15 +808,18 @@ document.querySelectorAll("a.wa").forEach(a => { a.href = linkZap; a.target = "_
    nome      -> nome do negócio
    nicho     -> hamburgueria, pizzaria, clínica etc.
    instagram -> @ do cliente, sem arroba e sem link completo
-   video     -> nome do arquivo de vídeo (coloque na mesma pasta do index.html)
+   video     -> caminho do arquivo dentro da pasta midia/ (ex: "midia/nome-video.mp4")
                 pode ser .mp4 (vídeo) ou .jpg/.png (imagem), ambos funcionam
+   logo      -> (opcional) caminho do logo do cliente dentro de midia/logo-clientes/
+                use uma imagem já cortada rente à logo, senão aparece minúscula.
+                Deixe "" ou apague a linha se não tiver o logo.
    Se não tiver vídeo ainda, deixe o nome do arquivo mesmo assim —
    o espaço só mostra "vaga livre" até você subir o arquivo.
    ========================================================== */
 const CLIENTES = [
-  { nome: "Nome do negócio", nicho: "Hamburgueria", instagram: "usuario_do_cliente", video: "cliente1.mp4" },
-  { nome: "Nome do negócio", nicho: "Pizzaria",      instagram: "usuario_do_cliente", video: "cliente2.mp4" },
-  { nome: "Nome do negócio", nicho: "Açaiteria",     instagram: "usuario_do_cliente", video: "cliente3.mp4" },
+  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "midia/video-boha.mp4",     logo: "midia/logo-clientes/logo-boha-crop.png" },
+  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "midia/video-estrelar.mp4", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
+  { nome: "Frangoou da Braga",    nicho: "Frango frito e assado", instagram: "frangooudabraga_", video: "midia/video-frangooudabraga.mp4", logo: "midia/logo-clientes/frangooudabraga-logo.jpg" },
 ];
 
 const secaoClientes = document.getElementById("clientes");
@@ -787,6 +838,7 @@ if (gradeClientes && (temClienteReal || location.search.includes("editar"))) {
         <div class="vaga"><b>Vaga</b><span><code>${c.video}</code></span></div>
       </div>
       <div class="cliente-info">
+        ${c.logo ? `<img class="cliente-logo" src="${c.logo}" alt="Logo ${c.nome}" loading="lazy">` : ""}
         <b>${c.nome}</b>
         <span class="nicho">${c.nicho}</span>
         <a class="insta" href="https://instagram.com/${c.instagram}" target="_blank" rel="noopener">
@@ -929,6 +981,7 @@ function iniciarCarrossel(idTrilho, idPontos) {
   trilho.addEventListener("dragstart", e => e.preventDefault());
   trilho.addEventListener("pointerdown", e => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (e.target.closest("button, a")) return;
     arrastando = true; moveu = false;
     iniciX = e.clientX; iniciScroll = trilho.scrollLeft;
     trilho.classList.add("arrastando");
@@ -962,6 +1015,75 @@ function iniciarCarrossel(idTrilho, idPontos) {
   });
   window.addEventListener("resize", atualizarFoco);
   atualizarFoco();
+}
+
+/* --- faixa que rola sozinha (marquee em loop) e também pode ser arrastada com mouse/touch --- */
+function iniciarFaixaAuto(idTrilho, velocidade = 40) {
+  const trilho = document.getElementById(idTrilho);
+  if (!trilho) return;
+  const itensOriginais = [...trilho.children];
+  if (!itensOriginais.length) return;
+
+  itensOriginais.forEach(it => trilho.appendChild(it.cloneNode(true)));
+
+  let larguraUmaVolta = 0;
+  const medir = () => { larguraUmaVolta = trilho.scrollWidth / 2; };
+  medir();
+  window.addEventListener("resize", medir);
+  const imgs = [...trilho.querySelectorAll("img")];
+  imgs.forEach(im => { if (!im.complete) im.addEventListener("load", medir); });
+
+  let autoplayAtivo = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let ultimoTempo = null, retomarId = null;
+
+  const passoAuto = tempo => {
+    if (ultimoTempo === null) ultimoTempo = tempo;
+    const dt = (tempo - ultimoTempo) / 1000;
+    ultimoTempo = tempo;
+    if (autoplayAtivo && larguraUmaVolta > 0) {
+      trilho.scrollLeft += velocidade * dt;
+      if (trilho.scrollLeft >= larguraUmaVolta) trilho.scrollLeft -= larguraUmaVolta;
+    }
+    requestAnimationFrame(passoAuto);
+  };
+  requestAnimationFrame(passoAuto);
+
+  const pararAuto = () => { autoplayAtivo = false; clearTimeout(retomarId); };
+  const retomarAuto = () => {
+    clearTimeout(retomarId);
+    retomarId = setTimeout(() => { ultimoTempo = null; autoplayAtivo = true; }, 2500);
+  };
+
+  /* --- arrastar com mouse/touch --- */
+  let arrastando = false, moveu = false, iniciX = 0, iniciScroll = 0;
+  trilho.addEventListener("dragstart", e => e.preventDefault());
+  trilho.addEventListener("pointerdown", e => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    arrastando = true; moveu = false;
+    iniciX = e.clientX; iniciScroll = trilho.scrollLeft;
+    trilho.classList.add("arrastando");
+    pararAuto();
+    try { trilho.setPointerCapture(e.pointerId); } catch {}
+  });
+  trilho.addEventListener("pointermove", e => {
+    if (!arrastando) return;
+    const dx = e.clientX - iniciX;
+    if (Math.abs(dx) > 4) moveu = true;
+    if (moveu) {
+      trilho.scrollLeft = iniciScroll - dx;
+      e.preventDefault();
+    }
+  });
+  const soltarArrasto = e => {
+    if (!arrastando) return;
+    arrastando = false;
+    trilho.classList.remove("arrastando");
+    if (e && e.pointerId !== undefined) { try { trilho.releasePointerCapture(e.pointerId); } catch {} }
+    retomarAuto();
+  };
+  trilho.addEventListener("pointerup", soltarArrasto);
+  trilho.addEventListener("pointercancel", soltarArrasto);
+  trilho.addEventListener("pointerleave", soltarArrasto);
 }
 
 /* --- carrossel coverflow 3D (roleta) com loop infinito e autoplay, usado só no carrossel de nichos, id="carro" --- */
@@ -1029,6 +1151,9 @@ function iniciarCoverflow(idPalco, idPontos) {
   let cliqueBloqueado = false;
   cards.forEach((card, i) => card.addEventListener("click", () => { if (cliqueBloqueado) return; if (i !== atual) irPara(i); }));
   bolas.forEach((b, i) => b.addEventListener("click", () => irPara(i)));
+
+  const setas = document.querySelectorAll(`[data-setas="${idPalco}"] .seta`);
+  setas.forEach(s => s.addEventListener("click", () => irPara(atual + (+s.dataset.dir))));
 
   /* --- arrastar com mouse/touch para trocar de card --- */
   let arrastando = false, moveu = false;
@@ -1102,6 +1227,7 @@ document.querySelectorAll(".entrega .item").forEach((item, i) => {
 
 iniciarCoverflow("carro", "pontos");
 iniciarCarrossel("clientes-grid", "clientes-pontos");
+iniciarFaixaAuto("nichos-trilho", 35);
 </script>
 </body>
 </html>

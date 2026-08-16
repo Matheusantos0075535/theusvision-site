@@ -6,6 +6,16 @@
 <meta name="theme-color" content="#150240">
 <title>Planos e preços | TheusVision</title>
 <meta name="description" content="Quanto custa um vídeo feito com IA para o seu negócio. Valor fechado por vídeo, sem mensalidade e sem fidelidade.">
+<meta property="og:title" content="Planos e preços | TheusVision">
+<meta property="og:description" content="Quanto custa um vídeo feito com IA para o seu negócio. Valor fechado por vídeo, sem mensalidade e sem fidelidade.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://theusvision.netlify.app/precos.html">
+<meta property="og:image" content="https://theusvision.netlify.app/midia/icone-branco.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Planos e preços | TheusVision">
+<meta name="twitter:description" content="Quanto custa um vídeo feito com IA para o seu negócio. Valor fechado por vídeo, sem mensalidade e sem fidelidade.">
+<meta name="twitter:image" content="https://theusvision.netlify.app/midia/icone-branco.png">
+<link rel="canonical" href="https://theusvision.netlify.app/precos.html">
 <link rel="icon" href="midia/icone-branco.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,6 +80,7 @@ header{position:sticky;top:0;z-index:40;background:rgba(14,1,41,.92);backdrop-fi
 .plano .sub{color:var(--apagado);font-size:15px}
 .plano .preco{font-weight:900;font-size:44px;line-height:1;color:var(--branco);margin:18px 0 2px;letter-spacing:-.02em}
 .plano.destaque .preco{color:var(--laranja)}
+.centavos{font-size:.55em}
 .plano .unidade{color:var(--apagado);font-size:14.5px;min-height:22px}
 .plano ul{list-style:none;margin:20px 0 24px;flex:1}
 .plano li{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--borda);color:var(--texto-2);font-size:15.5px;line-height:1.4}
@@ -81,13 +92,13 @@ header{position:sticky;top:0;z-index:40;background:rgba(14,1,41,.92);backdrop-fi
 .nota b{color:var(--texto)}
 
 /* ---------------- faq ---------------- */
-.faq{margin-top:26px;border-top:1px solid var(--borda)}
+.faq{margin-top:26px;border-top:1px solid var(--borda);max-width:680px;margin-left:auto;margin-right:auto}
 .duvida{border-bottom:1px solid var(--borda)}
-.duvida summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:700;font-size:17px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.duvida summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:700;font-size:17px;display:flex;justify-content:space-between;align-items:center;gap:14px;text-align:left}
 .duvida summary::-webkit-details-marker{display:none}
 .duvida summary::after{content:"+";color:var(--laranja);font-size:24px;font-weight:500;line-height:1;flex:none}
 .duvida[open] summary::after{content:"\2013"}
-.duvida p{color:var(--texto-2);font-size:16px;padding:0 0 20px}
+.duvida p{color:var(--texto-2);font-size:16px;padding:0 0 20px;text-align:left;max-width:none;margin:0}
 
 .fecho{text-align:center;position:relative;overflow:hidden;padding:60px 0}
 .fecho::before{content:"";position:absolute;inset:auto -30% -260px -30%;height:500px;
@@ -203,14 +214,14 @@ footer{border-top:1px solid var(--borda);padding:26px 0 34px;color:var(--apagado
       <div class="nota reveal">
         <b>O que nunca é cobrado à parte:</b> roteiro, ajustes de roteiro antes da geração, legenda, locução e a entrega no formato certo pra Reels, TikTok, Status e anúncio. O arquivo é seu e você usa onde quiser, quantas vezes quiser.
         <br><br>
-        <b>Ainda não vendo pacote fechado de vários vídeos</b> — por enquanto é vídeo por vídeo, do tamanho que você escolher. Pacote com desconto por quantidade é o próximo passo, depois de validar a demanda.
+        <b>Como você recebe:</b> o vídeo pronto é enviado em documento no seu WhatsApp (sem perder qualidade na compressão) e também por link do Google Drive, pra você baixar quando quiser sem risco de perder o arquivo.
       </div>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <div class="reveal">
+      <div class="reveal" style="text-align:center">
         <span class="olho">Perguntas sobre valor</span>
         <h2>O que costuma<br>gerar dúvida.</h2>
       </div>
@@ -219,9 +230,8 @@ footer{border-top:1px solid var(--borda);padding:26px 0 34px;color:var(--apagado
         <details class="duvida"><summary>Por que o de 60s custa mais que o de 16s?</summary><p>Porque vídeo mais longo tem mais roteiro, mais tempo de geração por IA e mais edição. O valor por segundo cai quanto maior o vídeo — mas o total sobe, porque o trabalho por trás também sobe.</p></details>
         <details class="duvida"><summary>Tem mensalidade ou fidelidade?</summary><p>Não. Você pede quando quiser, do tamanho que quiser, e não tem contrato me prendendo a você nem você a mim.</p></details>
         <details class="duvida"><summary>E se eu quiser mudar depois de pronto?</summary><p>Ajuste de roteiro é ilimitado antes da geração — é de graça e é a hora certa de mudar. Depois de gerado, mudanças pequenas de edição e legenda entram sem custo. Refazer a cena inteira conta como vídeo novo, porque o custo de geração é real.</p></details>
-        <details class="duvida"><summary>Em quanto tempo fica pronto?</summary><p>Prazo médio de <strong>[X] dias úteis</strong> por vídeo, contando a partir da aprovação do roteiro.</p></details>
+        <details class="duvida"><summary>Em quanto tempo fica pronto?</summary><p>Prazo médio de <strong>1 dia útil</strong> por vídeo, contando a partir da aprovação do roteiro.</p></details>
         <details class="duvida"><summary>Meu negócio não é de comida. O valor muda?</summary><p>Não. O preço é pela duração do vídeo, não pelo ramo. Clínica, pet shop, barbearia, oficina, loja — mesma tabela.</p></details>
-        <details class="duvida"><summary>Vai ter pacote de vários vídeos?</summary><p>Vai, mas ainda não. Por enquanto o modelo é vídeo por vídeo pra validar o que funciona. Pacote com desconto entra assim que fizer sentido pra ambos.</p></details>
       </div>
     </div>
   </section>
@@ -264,11 +274,11 @@ const MENSAGEM = "Oi! Vi a página de planos e quero saber mais sobre os vídeos
 const linkZap = "https://wa.me/" + NUMERO + "?text=" + encodeURIComponent(MENSAGEM);
 document.querySelectorAll("a.wa").forEach(a => { a.href = linkZap; a.target = "_blank"; });
 
-const reais = n => "R$ " + n.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+const reais = n => "R$ " + n.toLocaleString("pt-BR", { maximumFractionDigits: 0 }) + '<span class="centavos">,99</span>';
 
 document.querySelectorAll("[data-preco]").forEach(el => {
   const v = PRECOS[el.dataset.preco];
-  el.textContent = v == null ? "R$ [VALOR]" : reais(v);
+  el.innerHTML = v == null ? "R$ [VALOR]" : reais(v);
 });
 
 const obs = new IntersectionObserver(es => {
