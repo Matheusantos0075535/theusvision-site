@@ -162,7 +162,7 @@ header{position:sticky;top:0;z-index:40;background:rgba(14,1,41,.92);backdrop-fi
 
 /* ---------------- video ads ---------------- */
 .video-ads{padding:60px 0}
-.video-ads video{width:100%;max-width:720px;margin:0 auto;border-radius:14px;display:block}
+.video-ads video,.video-ads iframe{width:100%;max-width:720px;aspect-ratio:16/9;margin:0 auto;border-radius:14px;display:block;border:0}
 
 /* ====================================================================
    SLOTS DE MIDIA  -  use .midia para colocar video OU imagem
@@ -179,7 +179,7 @@ body.editar .midia.vazia{display:block;opacity:.55}
 .midia.r916{aspect-ratio:9/16}
 .midia.r169{aspect-ratio:16/9}
 .midia.r45{aspect-ratio:4/5}
-.midia video,.midia img{width:100%;height:100%;object-fit:cover}
+.midia video,.midia img,.midia iframe{width:100%;height:100%;object-fit:cover;border:0}
 .midia .vaga{display:none}
 body.editar .midia .vaga{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -487,7 +487,7 @@ body.editar .aviso-edicao{display:block}
   <!-- ============ VIDEO ADS ============ -->
   <section class="video-ads">
     <div class="wrap">
-      <video src="midia/ads-theusvision.mp4" controls muted playsinline preload="metadata"></video>
+      <iframe src="https://www.youtube.com/embed/Ws2MiwgMLUE?autoplay=1&mute=1&loop=1&playlist=Ws2MiwgMLUE" title="Vídeo de anúncio TheusVision" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
     </div>
   </section>
 
@@ -557,8 +557,8 @@ body.editar .aviso-edicao{display:block}
         </div>
         <!-- SLOT 3 - bom pra um video curto mostrando o personagem/mascote -->
         <div class="midia r916 reveal" style="margin-top:20px">
-          <video src="midia/video-frangooudabraga.mp4" muted loop playsinline preload="metadata"></video>
-          <div class="vaga"><b>Slot 3 · personagem</b><span><code>midia/video-frangooudabraga.mp4</code><br>ou uma imagem do mascote</span></div>
+          <iframe src="https://www.youtube.com/embed/JanJd4QS1IA?autoplay=1&mute=1&loop=1&playlist=JanJd4QS1IA" title="Vídeo do personagem Frangoou da Braga" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+          <div class="vaga"><b>Slot 3 · personagem</b><span><code>youtube.com/embed/JanJd4QS1IA</code><br>ou uma imagem do mascote</span></div>
           <button class="som" type="button" aria-label="Ligar ou desligar o som"></button>
         </div>
       </div>
@@ -811,8 +811,8 @@ document.querySelectorAll("a.wa").forEach(a => { a.href = linkZap; a.target = "_
    nome      -> nome do negócio
    nicho     -> hamburgueria, pizzaria, clínica etc.
    instagram -> @ do cliente, sem arroba e sem link completo
-   video     -> caminho do arquivo dentro da pasta midia/ (ex: "midia/nome-video.mp4")
-                pode ser .mp4 (vídeo) ou .jpg/.png (imagem), ambos funcionam
+   video     -> link de embed do YouTube (ex: "https://www.youtube.com/embed/ID?autoplay=1&mute=1&loop=1&playlist=ID")
+                ou caminho de imagem dentro da pasta midia/ (.jpg/.png/.webp)
    logo      -> (opcional) caminho do logo do cliente dentro de midia/logo-clientes/
                 use uma imagem já cortada rente à logo, senão aparece minúscula.
                 Deixe "" ou apague a linha se não tiver o logo.
@@ -820,13 +820,13 @@ document.querySelectorAll("a.wa").forEach(a => { a.href = linkZap; a.target = "_
    o espaço só mostra "vaga livre" até você subir o arquivo.
    ========================================================== */
 const CLIENTES = [
-  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "midia/video-boha.mp4",     logo: "midia/logo-clientes/logo-boha-crop.png" },
-  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "midia/video-bohafitnesscb.mp4", logo: "midia/logo-clientes/logo-boha-crop.png" },
-  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "midia/video-estrelar.mp4", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
-  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "midia/video-estrelarperfumaria2.mp4", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
-  { nome: "Frangoou da Braga",    nicho: "Frango frito e assado", instagram: "frangooudabraga_", video: "midia/video-frangooudabraga.mp4", logo: "midia/logo-clientes/frangooudabraga-logo.jpg" },
-  { nome: "Santa Fé Doces",       nicho: "Doces e confeitaria", instagram: "santafedoces", video: "midia/video-santafedoces.mp4", logo: "midia/logo-clientes/santafedoces-logo.jpg" },
-  { nome: "Ótica Ema",            nicho: "Óculos e lentes", instagram: "oticaema", video: "midia/video-oticaema.mp4", logo: "midia/logo-clientes/oticaema-logo.jpg" },
+  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "https://www.youtube.com/embed/v2NjzYcgi3c?autoplay=1&mute=1&loop=1&playlist=v2NjzYcgi3c",     logo: "midia/logo-clientes/logo-boha-crop.png" },
+  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "https://www.youtube.com/embed/W1ZGMqTGhvo?autoplay=1&mute=1&loop=1&playlist=W1ZGMqTGhvo", logo: "midia/logo-clientes/logo-boha-crop.png" },
+  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "https://www.youtube.com/embed/ZIS6jAA9ulM?autoplay=1&mute=1&loop=1&playlist=ZIS6jAA9ulM", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
+  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "https://www.youtube.com/embed/eaK2fTCOIdo?autoplay=1&mute=1&loop=1&playlist=eaK2fTCOIdo", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
+  { nome: "Frangoou da Braga",    nicho: "Frango frito e assado", instagram: "frangooudabraga_", video: "https://www.youtube.com/embed/JanJd4QS1IA?autoplay=1&mute=1&loop=1&playlist=JanJd4QS1IA", logo: "midia/logo-clientes/frangooudabraga-logo.jpg" },
+  { nome: "Santa Fé Doces",       nicho: "Doces e confeitaria", instagram: "santafedoces", video: "https://www.youtube.com/embed/zKC-XKWyFnM?autoplay=1&mute=1&loop=1&playlist=zKC-XKWyFnM", logo: "midia/logo-clientes/santafedoces-logo.jpg" },
+  { nome: "Ótica Ema",            nicho: "Óculos e lentes", instagram: "oticaema", video: "https://www.youtube.com/embed/jvhxKDpSxGM?autoplay=1&mute=1&loop=1&playlist=jvhxKDpSxGM", logo: "midia/logo-clientes/oticaema-logo.jpg" },
 ];
 
 const secaoClientes = document.getElementById("clientes");
@@ -836,12 +836,15 @@ if (secaoClientes && !temClienteReal && !location.search.includes("editar")) sec
 const gradeClientes = document.getElementById("clientes-grid");
 if (gradeClientes && (temClienteReal || location.search.includes("editar"))) {
   const ehImagem = arq => /\.(jpe?g|png|webp)$/i.test(arq);
+  const ehYoutube = arq => /youtube\.com\/embed\//i.test(arq);
   gradeClientes.innerHTML = CLIENTES.map(c => `
     <div class="cliente reveal ok">
       <div class="midia r916">
         ${ehImagem(c.video)
           ? `<img src="${c.video}" alt="Vídeo entregue para ${c.nome}">`
-          : `<video src="${c.video}" muted loop playsinline preload="metadata"></video><button class="som" type="button" aria-label="Ligar ou desligar o som"></button>`}
+          : ehYoutube(c.video)
+            ? `<iframe src="${c.video}" title="Vídeo entregue para ${c.nome}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>`
+            : `<video src="${c.video}" muted loop playsinline preload="metadata"></video><button class="som" type="button" aria-label="Ligar ou desligar o som"></button>`}
         <div class="vaga"><b>Vaga</b><span><code>${c.video}</code></span></div>
       </div>
       <div class="cliente-info">
@@ -875,9 +878,10 @@ const MUDO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5
 const SOM  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2-3.7v7.4a4.5 4.5 0 0 0 2-3.7zM14.5 3.2v2.1a6.8 6.8 0 0 1 0 13.4v2.1a8.8 8.8 0 0 0 0-17.6z"/></svg>';
 
 document.querySelectorAll(".midia").forEach(caixa => {
-  if (!caixa.querySelector("img[src], video[src]")) caixa.classList.add("vazia");
+  if (!caixa.querySelector("img[src], video[src], iframe[src]")) caixa.classList.add("vazia");
   const v = caixa.querySelector("video");
   const img = caixa.querySelector("img");
+  const frame = caixa.querySelector("iframe");
   const vaga = caixa.querySelector(".vaga");
   const btn = caixa.querySelector(".som");
   if (btn) btn.innerHTML = MUDO;
@@ -898,6 +902,7 @@ document.querySelectorAll(".midia").forEach(caixa => {
   };
 
   if (img) { img.addEventListener("load", some); img.addEventListener("error", () => falhou(img)); }
+  if (frame) some();
 
   if (v) {
     v.addEventListener("loadeddata", some);
