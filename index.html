@@ -487,7 +487,7 @@ body.editar .aviso-edicao{display:block}
   <!-- ============ VIDEO ADS ============ -->
   <section class="video-ads">
     <div class="wrap">
-      <iframe src="https://www.youtube.com/embed/Ws2MiwgMLUE?autoplay=1&mute=1&loop=1&playlist=Ws2MiwgMLUE" title="Vídeo de anúncio TheusVision" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+      <iframe src="https://www.youtube.com/embed/Ws2MiwgMLUE?autoplay=1&mute=1&loop=1&playlist=Ws2MiwgMLUE" title="Vídeo de anúncio TheusVision" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
   </section>
 
@@ -557,7 +557,7 @@ body.editar .aviso-edicao{display:block}
         </div>
         <!-- SLOT 3 - bom pra um video curto mostrando o personagem/mascote -->
         <div class="midia r916 reveal" style="margin-top:20px">
-          <iframe src="https://www.youtube.com/embed/JanJd4QS1IA?autoplay=1&mute=1&loop=1&playlist=JanJd4QS1IA" title="Vídeo do personagem Frangoou da Braga" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+          <iframe src="https://www.youtube.com/embed/JanJd4QS1IA?autoplay=1&mute=1&loop=1&playlist=JanJd4QS1IA" title="Vídeo do personagem Frangoou da Braga" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
           <div class="vaga"><b>Slot 3 · personagem</b><span><code>youtube.com/embed/JanJd4QS1IA</code><br>ou uma imagem do mascote</span></div>
           <button class="som" type="button" aria-label="Ligar ou desligar o som"></button>
         </div>
@@ -843,7 +843,7 @@ if (gradeClientes && (temClienteReal || location.search.includes("editar"))) {
         ${ehImagem(c.video)
           ? `<img src="${c.video}" alt="Vídeo entregue para ${c.nome}">`
           : ehYoutube(c.video)
-            ? `<iframe src="${c.video}" title="Vídeo entregue para ${c.nome}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>`
+            ? `<iframe src="${c.video}" title="Vídeo entregue para ${c.nome}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>`
             : `<video src="${c.video}" muted loop playsinline preload="metadata"></video><button class="som" type="button" aria-label="Ligar ou desligar o som"></button>`}
         <div class="vaga"><b>Vaga</b><span><code>${c.video}</code></span></div>
       </div>
