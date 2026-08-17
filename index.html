@@ -487,7 +487,7 @@ body.editar .aviso-edicao{display:block}
   <!-- ============ VIDEO ADS ============ -->
   <section class="video-ads">
     <div class="wrap">
-      <iframe src="https://www.youtube.com/embed/Ws2MiwgMLUE?autoplay=1&mute=1&loop=1&playlist=Ws2MiwgMLUE&controls=0&cc_load_policy=0&modestbranding=1&rel=0" title="Vídeo de anúncio TheusVision" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <iframe src="https://www.youtube.com/embed/Ws2MiwgMLUE?autoplay=1&mute=1&loop=1&playlist=Ws2MiwgMLUE&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3" title="Vídeo de anúncio TheusVision" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
   </section>
 
@@ -557,7 +557,7 @@ body.editar .aviso-edicao{display:block}
         </div>
         <!-- SLOT 3 - bom pra um video curto mostrando o personagem/mascote -->
         <div class="midia r916 reveal" style="margin-top:20px">
-          <iframe src="https://www.youtube.com/embed/JanJd4QS1IA?autoplay=1&mute=1&loop=1&playlist=JanJd4QS1IA&controls=0&cc_load_policy=0&modestbranding=1&rel=0" title="Vídeo do personagem Frangoou da Braga" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          <iframe src="https://www.youtube.com/embed/JanJd4QS1IA?autoplay=1&mute=1&loop=1&playlist=JanJd4QS1IA&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3" title="Vídeo do personagem Frangoou da Braga" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
           <div class="vaga"><b>Slot 3 · personagem</b><span><code>youtube.com/embed/JanJd4QS1IA</code><br>ou uma imagem do mascote</span></div>
           <button class="som" type="button" aria-label="Ligar ou desligar o som"></button>
         </div>
@@ -820,13 +820,13 @@ document.querySelectorAll("a.wa").forEach(a => { a.href = linkZap; a.target = "_
    o espaço só mostra "vaga livre" até você subir o arquivo.
    ========================================================== */
 const CLIENTES = [
-  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "https://www.youtube.com/embed/v2NjzYcgi3c?autoplay=1&mute=1&loop=1&playlist=v2NjzYcgi3c&controls=0&cc_load_policy=0&modestbranding=1&rel=0",     logo: "midia/logo-clientes/logo-boha-crop.png" },
-  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "https://www.youtube.com/embed/W1ZGMqTGhvo?autoplay=1&mute=1&loop=1&playlist=W1ZGMqTGhvo&controls=0&cc_load_policy=0&modestbranding=1&rel=0", logo: "midia/logo-clientes/logo-boha-crop.png" },
-  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "https://www.youtube.com/embed/ZIS6jAA9ulM?autoplay=1&mute=1&loop=1&playlist=ZIS6jAA9ulM&controls=0&cc_load_policy=0&modestbranding=1&rel=0", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
-  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "https://www.youtube.com/embed/eaK2fTCOIdo?autoplay=1&mute=1&loop=1&playlist=eaK2fTCOIdo&controls=0&cc_load_policy=0&modestbranding=1&rel=0", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
-  { nome: "Frangoou da Braga",    nicho: "Frango frito e assado", instagram: "frangooudabraga_", video: "https://www.youtube.com/embed/JanJd4QS1IA?autoplay=1&mute=1&loop=1&playlist=JanJd4QS1IA&controls=0&cc_load_policy=0&modestbranding=1&rel=0", logo: "midia/logo-clientes/frangooudabraga-logo.jpg" },
-  { nome: "Santa Fé Doces",       nicho: "Doces e confeitaria", instagram: "santafedoces", video: "https://www.youtube.com/embed/zKC-XKWyFnM?autoplay=1&mute=1&loop=1&playlist=zKC-XKWyFnM&controls=0&cc_load_policy=0&modestbranding=1&rel=0", logo: "midia/logo-clientes/santafedoces-logo.jpg" },
-  { nome: "Ótica Ema",            nicho: "Óculos e lentes", instagram: "oticaema", video: "https://www.youtube.com/embed/jvhxKDpSxGM?autoplay=1&mute=1&loop=1&playlist=jvhxKDpSxGM&controls=0&cc_load_policy=0&modestbranding=1&rel=0", logo: "midia/logo-clientes/oticaema-logo.jpg" },
+  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "https://www.youtube.com/embed/v2NjzYcgi3c?autoplay=1&mute=1&loop=1&playlist=v2NjzYcgi3c&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3",     logo: "midia/logo-clientes/logo-boha-crop.png" },
+  { nome: "Boha Fitness",         nicho: "Academia",    instagram: "bohafitness",        video: "https://www.youtube.com/embed/W1ZGMqTGhvo?autoplay=1&mute=1&loop=1&playlist=W1ZGMqTGhvo&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3", logo: "midia/logo-clientes/logo-boha-crop.png" },
+  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "https://www.youtube.com/embed/ZIS6jAA9ulM?autoplay=1&mute=1&loop=1&playlist=ZIS6jAA9ulM&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
+  { nome: "Estrelar Perfumaria",  nicho: "Perfumaria",   instagram: "estrelarperfumaria", video: "https://www.youtube.com/embed/eaK2fTCOIdo?autoplay=1&mute=1&loop=1&playlist=eaK2fTCOIdo&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3", logo: "midia/logo-clientes/logo-estrelar-crop.png" },
+  { nome: "Frangoou da Braga",    nicho: "Frango frito e assado", instagram: "frangooudabraga_", video: "https://www.youtube.com/embed/JanJd4QS1IA?autoplay=1&mute=1&loop=1&playlist=JanJd4QS1IA&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3", logo: "midia/logo-clientes/frangooudabraga-logo.jpg" },
+  { nome: "Santa Fé Doces",       nicho: "Doces e confeitaria", instagram: "santafedoces", video: "https://www.youtube.com/embed/zKC-XKWyFnM?autoplay=1&mute=1&loop=1&playlist=zKC-XKWyFnM&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3", logo: "midia/logo-clientes/santafedoces-logo.jpg" },
+  { nome: "Ótica Ema",            nicho: "Óculos e lentes", instagram: "oticaema", video: "https://www.youtube.com/embed/jvhxKDpSxGM?autoplay=1&mute=1&loop=1&playlist=jvhxKDpSxGM&controls=0&cc_load_policy=0&modestbranding=1&rel=0&iv_load_policy=3", logo: "midia/logo-clientes/oticaema-logo.jpg" },
 ];
 
 const secaoClientes = document.getElementById("clientes");
