@@ -470,7 +470,7 @@ body.editar .aviso-edicao{display:block}
             </svg>
             <div class="prog"><i></i></div>
           </div>
-          <div class="rot"><span>Vídeo no Reels</span><span id="contador">8.412 views</span></div>
+          <div class="rot"><span>Vídeo no Reels</span><span id="contador">+30 mil views</span></div>
         </div>
       </div>
     </div>
@@ -762,7 +762,7 @@ body.editar .aviso-edicao{display:block}
         <details class="duvida"><summary>Serve pra anunciar ou só pra postar?</summary><p>Serve pros dois. O vídeo já sai no formato usado em Meta Ads e TikTok Ads, e também no Status do WhatsApp.</p></details>
         <details class="duvida"><summary>Meu negócio é pequeno demais?</summary><p>Se você já vende e já posta, tem o que mostrar. Negócio pequeno é justamente quem mais ganha, porque passa a aparecer do tamanho dos grandes.</p></details>
         <details class="duvida"><summary>Sou de outro estado, tem problema?</summary><p>Nenhum. Tudo é resolvido pelo WhatsApp. Atendo o Brasil inteiro.</p></details>
-        <details class="duvida"><summary>E se eu não gostar do resultado?</summary><p>Por isso o roteiro é aprovado antes. Você entra na ideia comigo antes de qualquer cena existir, e ajustamos até fazer sentido pro seu negócio.</p></details>
+        <details class="duvida"><summary>E se eu não gostar do resultado?</summary><p>Você não corre esse risco: nada é gerado até você aprovar o roteiro e a ideia da cena. Se não fizer sentido pro seu negócio, ajustamos antes — o vídeo só é feito depois do sim.</p></details>
       </div>
     </div>
   </section>
@@ -780,6 +780,7 @@ body.editar .aviso-edicao{display:block}
         </a>
       </div>
       <p class="selo">Resposta no mesmo dia · Atendimento em todo o Brasil</p>
+      <p class="lead">Um dos vídeos que já entregamos passou de 30 mil visualizações.</p>
     </div>
   </section>
 </main>
@@ -866,12 +867,6 @@ const obs = new IntersectionObserver(es => {
 }, { threshold: .12 });
 document.querySelectorAll(".reveal").forEach(el => obs.observe(el));
 
-/* --- contador de views --- */
-const cont = document.getElementById("contador");
-if (cont && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  let n = 8412;
-  setInterval(() => { n += Math.floor(Math.random()*7)+1; cont.textContent = n.toLocaleString("pt-BR") + " views"; }, 900);
-}
 
 /* --- slots de midia: some com a "vaga" quando o arquivo existe --- */
 const MUDO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2-3.7v7.4a4.5 4.5 0 0 0 2-3.7zM3 3l18 18-1.4 1.4L1.6 4.4 3 3z"/></svg>';
