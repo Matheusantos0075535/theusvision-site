@@ -670,22 +670,24 @@ export const DOIS_CAMINHOS = {
         'Com descanso de verdade e rotina, a energia tende a voltar. Os problemas continuam existindo, mas passam a parecer mais resolvíveis.',
     },
   ],
-  /** Versos curtos do topo: um par por dia (muda sozinho). Mantenha curtos, sem culpa e sem prometer nada. */
-  lembreteRotulo: 'Hoje eu escolho',
-  lembreteEvitando: 'Evitando',
-  lembreteIndo: 'Indo para',
+  /**
+   * Versos do topo: "onde você estava" (passado) e "para onde você está indo". Trocam a cada 10 segundos.
+   * Mantenha curtos, sem culpa e sem prometer nada.
+   */
+  lembreteDe: 'Onde você estava',
+  lembretePara: 'Para onde você está indo',
   lembreteLink: 'Ver o porquê',
   lembretes: [
-    { evitando: 'O alívio de hoje vira o peso de amanhã.', indo: 'Energia e clareza para construir o que eu quero.' },
-    { evitando: 'Cabeça picada, tarefa adiada.', indo: 'Foco firme: começar e terminar.' },
-    { evitando: 'Fugir do cansaço só adia o cansaço.', indo: 'Descanso de verdade, energia de volta.' },
-    { evitando: 'Mais um dia no automático.', indo: 'Mais um dia por escolha.' },
-    { evitando: 'Sobrecarga + fuga: ciclo de desgaste.', indo: 'Rotina + descanso: constância.' },
-    { evitando: 'A bagunça de fora vira bagunça de dentro.', indo: 'Casa em ordem, mente leve.' },
-    { evitando: 'Um prazer que cobra depois.', indo: 'Prazer nas pequenas conquistas.' },
-    { evitando: 'Energia e dinheiro escorrendo.', indo: 'Energia e dinheiro a favor dos meus projetos.' },
-    { evitando: 'Adiar a decisão difícil.', indo: 'Dar o próximo passo, hoje.' },
-    { evitando: 'Desgaste se acumulando em silêncio.', indo: 'Limites e descanso de verdade.' },
+    { de: 'Alívio rápido que virava peso no dia seguinte.', para: 'Energia e clareza para construir o que você quer.' },
+    { de: 'Cabeça picada, tarefa adiada.', para: 'Foco firme: começar e terminar.' },
+    { de: 'Fugir do cansaço só adiava o cansaço.', para: 'Descanso de verdade, energia de volta.' },
+    { de: 'Dias no automático.', para: 'Dias por escolha.' },
+    { de: 'Sobrecarga + fuga: ciclo de desgaste.', para: 'Rotina + descanso: constância.' },
+    { de: 'A bagunça de fora virava bagunça de dentro.', para: 'Casa em ordem, mente leve.' },
+    { de: 'Um prazer que cobrava depois.', para: 'Prazer nas pequenas conquistas.' },
+    { de: 'Energia e dinheiro escorrendo.', para: 'Energia e dinheiro a favor dos seus projetos.' },
+    { de: 'A decisão difícil ficava para amanhã.', para: 'O próximo passo, feito hoje.' },
+    { de: 'Desgaste se acumulando em silêncio.', para: 'Limites e descanso de verdade.' },
   ],
   fecho: 'Dois caminhos. Uma escolha, que eu refaço todo dia.',
   semCulpa: 'Não é para me culpar. É para lembrar do que eu estou escolhendo hoje.',
