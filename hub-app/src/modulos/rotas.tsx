@@ -6,6 +6,10 @@ const IdeiasApp = lazy(() => import('./ideias/IdeiasApp'))
 const FinancasApp = lazy(() => import('./financas/FinancasApp'))
 const CasaApp = lazy(() => import('./casa/CasaApp'))
 const EstudosApp = lazy(() => import('./estudos/EstudosApp'))
+const ClientesApp = lazy(() => import('./work/ClientesApp'))
+const ReceitaApp = lazy(() => import('./work/ReceitaApp'))
+const ProcessosApp = lazy(() => import('./work/ProcessosApp'))
+const VisaoApp = lazy(() => import('./work/VisaoApp'))
 const DnsmkApp = lazy(() => import('./dnsmk/DnsmkApp'))
 const LeituraApp = lazy(() => import('./leitura/LeituraApp'))
 
@@ -30,6 +34,10 @@ export const ROTAS_MODULOS: { caminho: string; elemento: ReactNode }[] = [
   { caminho: '/financas/*', elemento: <Lento><FinancasApp /></Lento> },
   { caminho: '/casa/*', elemento: <Lento><CasaApp /></Lento> },
   { caminho: '/estudos/*', elemento: <Lento><EstudosApp /></Lento> },
+  { caminho: '/clientes/*', elemento: <Lento><ClientesApp /></Lento> },
+  { caminho: '/receita/*', elemento: <Lento><ReceitaApp /></Lento> },
+  { caminho: '/construcao/*', elemento: <Lento><ProcessosApp /></Lento> },
+  { caminho: '/visao/*', elemento: <Lento><VisaoApp /></Lento> },
   { caminho: '/dnsmk/*', elemento: <Lento><DnsmkApp /></Lento> },
   { caminho: '/leitura/*', elemento: <Lento><LeituraApp /></Lento> },
 ]

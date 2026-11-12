@@ -289,9 +289,9 @@ export function Hoje() {
           <button className="btn-icone" onClick={() => irPara(proximo)} disabled={!proximo.startsWith(`${ANO}-`)} aria-label="Próximo dia">
             <ChevronRight aria-hidden />
           </button>
-          <button className="btn btn-secundario dia-cal-botao" onClick={() => setCalendario(true)}>
+          <button className="btn btn-secundario dia-cal-botao" onClick={() => setCalendario(true)} aria-label="Abrir calendário">
             <CalendarDays aria-hidden />
-            Calendário
+            <span className="dia-cal-texto">Calendário</span>
           </button>
         </div>
         {ehHoje ? (
