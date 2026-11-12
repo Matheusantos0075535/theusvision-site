@@ -15,6 +15,7 @@ import { APOIO_HUMOR, AVISO_EDUCATIVO, COMECAR, LICOES_POR_ID, MENSAGENS_MARCO, 
 import { useDnsmk, type EstadoDnsmk } from '../dados'
 import { DoisCaminhos } from '../DoisCaminhos'
 import { Lembrete } from '../Lembrete'
+import { OndeVoceEsta } from '../OndeVoceEsta'
 import { Recaida } from '../Recaida'
 
 function Comecar() {
@@ -194,6 +195,8 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
           <ChevronRight aria-hidden />
         </Link>
       )}
+
+      <OndeVoceEsta dias={e.sequencia_atual} />
 
       <Numeros
         itens={[

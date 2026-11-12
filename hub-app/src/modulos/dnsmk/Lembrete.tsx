@@ -1,19 +1,35 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useMovimentoReduzido } from '../../lib/useMidia'
-import { DOIS_CAMINHOS as T } from './conteudo/textosSaude'
+import { DOIS_CAMINHOS as T, FRASES_ANCORA } from './conteudo/textosSaude'
 
 const INTERVALO = 10_000
-const N = T.lembretes.length
 
-/** O verso inicial muda a cada dia de Brasília (o "hoje" vem do banco); depois troca a cada 10 s. */
+type Item = { tipo: 'par'; de: string; para: string } | { tipo: 'ancora'; situacao: string; frase: string }
+
+/** Pares "onde você estava → para onde está indo" e frases-âncora, alternados. */
+const ITENS: Item[] = (() => {
+  const out: Item[] = []
+  const n = Math.max(T.lembretes.length, FRASES_ANCORA.length)
+  for (let i = 0; i < n; i++) {
+    if (T.lembretes[i]) out.push({ tipo: 'par', ...T.lembretes[i] })
+    if (FRASES_ANCORA[i]) out.push({ tipo: 'ancora', ...FRASES_ANCORA[i] })
+  }
+  return out
+})()
+const N = ITENS.length
+
+/** O item inicial muda a cada dia de Brasília (o "hoje" vem do banco); depois troca a cada 10 s. */
 function indiceDoDia(hoje: string) {
   const dias = Math.floor(Date.parse(`${hoje}T12:00:00Z`) / 86_400_000)
   return ((dias % N) + N) % N
 }
 
+const textoDe = (it: Item) => (it.tipo === 'par' ? `${T.lembreteDe}: ${it.de} ${T.lembretePara}: ${it.para}.` : `${it.situacao}: ${it.frase}`)
+
 /**
- * Faixa curta antes da ofensiva: onde você estava → para onde você está indo.
- * Troca sozinha; pausa com o mouse em cima, com foco ou com a aba escondida; sem troca com movimento reduzido.
+ * Faixa curta antes da ofensiva. Troca sozinha; pausa com o mouse em cima, com foco ou com a aba escondida;
+ * sem troca com movimento reduzido. Todos os itens ficam empilhados na mesma célula (só um visível),
+ * assim a faixa tem sempre a altura do maior e a tela não "pula" a cada troca.
  */
 export function Lembrete({ hoje, aoVerPorque }: { hoje: string; aoVerPorque: () => void }) {
   const reduzido = useMovimentoReduzido()
@@ -40,7 +56,7 @@ export function Lembrete({ hoje, aoVerPorque }: { hoje: string; aoVerPorque: () 
     return () => window.clearTimeout(t)
   }, [ciclo, pausado, reduzido])
 
-  const par = T.lembretes[indice]
+  const lista = useMemo(() => ITENS, [])
   return (
     <button
       className="lembrete"
@@ -49,23 +65,36 @@ export function Lembrete({ hoje, aoVerPorque }: { hoje: string; aoVerPorque: () 
       onPointerLeave={() => setPausaPonteiro(false)}
       onFocus={() => setPausaPonteiro(true)}
       onBlur={() => setPausaPonteiro(false)}
-      aria-label={`${T.lembreteDe}: ${par.de} ${T.lembretePara}: ${par.para}. ${T.lembreteLink}`}
+      aria-label={`${textoDe(lista[indice])} ${T.lembreteLink}`}
     >
       <span className="lembrete-brilho" aria-hidden />
-      <span className="lembrete-fluxo" key={indice} aria-hidden>
-        <span className="lembrete-no lembrete-de">
-          <span className="lembrete-rotulo">{T.lembreteDe}</span>
-          <span className="lembrete-verso">{par.de}</span>
-        </span>
-        <span className="lembrete-fio">
-          <i className="fio-ponta fio-ponta-de" />
-          <i className="fio-linha" />
-          <i className="fio-ponta fio-ponta-para" />
-        </span>
-        <span className="lembrete-no lembrete-para">
-          <span className="lembrete-rotulo">{T.lembretePara}</span>
-          <span className="lembrete-verso">{par.para}</span>
-        </span>
+      <span className="lembrete-pilha" aria-hidden>
+        {lista.map((it, i) =>
+          it.tipo === 'par' ? (
+            <span key={i} className="lembrete-fluxo" data-ativo={i === indice || undefined}>
+              <span className="lembrete-no lembrete-de">
+                <span className="lembrete-rotulo">{T.lembreteDe}</span>
+                <span className="lembrete-verso">{it.de}</span>
+              </span>
+              <span className="lembrete-fio">
+                <i className="fio-ponta fio-ponta-de" />
+                <i className="fio-linha" />
+                <i className="fio-ponta fio-ponta-para" />
+              </span>
+              <span className="lembrete-no lembrete-para">
+                <span className="lembrete-rotulo">{T.lembretePara}</span>
+                <span className="lembrete-verso">{it.para}</span>
+              </span>
+            </span>
+          ) : (
+            <span key={i} className="lembrete-fluxo lembrete-ancora" data-ativo={i === indice || undefined}>
+              <span className="lembrete-no">
+                <span className="lembrete-rotulo">{it.situacao}</span>
+                <span className="lembrete-verso">{it.frase}</span>
+              </span>
+            </span>
+          ),
+        )}
       </span>
       <span className="lembrete-link" aria-hidden>
         {T.lembreteLink}

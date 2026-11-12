@@ -938,7 +938,32 @@ input[type='date'].entrada {
   grid-template-columns: 14px minmax(0, 1fr);
   column-gap: 14px;
   row-gap: 14px;
+  grid-area: 1 / 1;
+  visibility: hidden;
+  align-content: center;
+}
+.lembrete-fluxo[data-ativo] {
+  visibility: visible;
   animation: verso-entra 450ms var(--curva);
+}
+.lembrete-pilha {
+  display: grid;
+}
+/* frase-âncora: um bloco só, com uma barra de brilho à esquerda */
+.lembrete-ancora {
+  grid-template-columns: minmax(0, 1fr);
+  align-self: center;
+  padding-left: 14px;
+  border-left: 3px solid transparent;
+  border-image: linear-gradient(180deg, var(--laranja), var(--verde)) 1;
+}
+.lembrete-ancora .lembrete-rotulo {
+  color: var(--laranja);
+}
+.lembrete-ancora .lembrete-verso {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
 }
 @keyframes verso-entra {
   from {
@@ -1084,7 +1109,7 @@ input[type='date'].entrada {
   .lembrete {
     padding: 20px 24px 14px;
   }
-  .lembrete-fluxo {
+  .lembrete-fluxo:not(.lembrete-ancora) {
     grid-template-columns: minmax(0, 1fr) minmax(90px, 200px) minmax(0, 1fr);
     column-gap: 18px;
     row-gap: 0;
@@ -1135,6 +1160,18 @@ input[type='date'].entrada {
   .lembrete-rotulo {
     font-size: 11px;
   }
+  .lembrete-ancora {
+    text-align: center;
+    padding: 0;
+    border: 0;
+    border-image: none;
+  }
+  .lembrete-ancora .lembrete-no {
+    align-items: center;
+  }
+  .lembrete-ancora .lembrete-verso {
+    font-size: 21px;
+  }
 }
 @keyframes corre-h {
   from {
@@ -1154,6 +1191,145 @@ input[type='date'].entrada {
   .lembrete-fluxo,
   .fio-linha::after,
   .lembrete-tempo i {
+    animation: none;
+  }
+}
+
+/* ---------- onde você está (fase da recuperação) ---------- */
+.onde {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border-radius: var(--raio-g);
+  border: 1px solid var(--borda);
+  background: linear-gradient(160deg, rgba(255, 159, 17, 0.1), transparent 55%), var(--superf);
+}
+.onde-topo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.onde-pino {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--laranja-suave);
+  color: var(--laranja);
+}
+.onde-pino svg {
+  width: 20px;
+  height: 20px;
+}
+.onde-titulos {
+  min-width: 0;
+  flex: 1;
+}
+.onde-titulos h3 {
+  margin: 2px 0 0;
+  font-size: 20px;
+  line-height: 1.15;
+}
+.onde-periodo {
+  flex: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--texto-2);
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--borda);
+  white-space: nowrap;
+}
+.onde-fases {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+.onde-fases li {
+  height: 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.onde-fases i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--grad-verde);
+}
+.onde-fases li[data-estado='feita'] i {
+  width: 100%;
+}
+.onde-fases li[data-estado='atual'] i {
+  width: var(--p, 0%);
+  box-shadow: 0 0 10px rgba(61, 220, 151, 0.6);
+}
+.onde-prox {
+  color: var(--texto-2);
+  font-size: 12.5px;
+}
+.onde-normal,
+.onde-foco {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--texto-2);
+}
+.onde-normal b {
+  color: var(--texto);
+}
+.onde-foco b {
+  color: var(--verde);
+}
+.onde-mais {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 4px;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--laranja);
+}
+.onde-mais svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--t-medio) var(--curva);
+}
+.onde-mais[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+.onde-detalhe {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: verso-entra 300ms var(--curva);
+}
+.onde-detalhe ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--texto-2);
+}
+.onde-detalhe small {
+  color: var(--texto-2);
+  opacity: 0.8;
+  font-size: 12px;
+  line-height: 1.4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .onde-detalhe {
     animation: none;
   }
 }
