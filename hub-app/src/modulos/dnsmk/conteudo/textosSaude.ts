@@ -608,3 +608,70 @@ export const UNIDADES: Unidade[] = [
 export const LICOES_POR_ID: Record<string, { licao: Licao; unidade: Unidade }> = Object.fromEntries(
   UNIDADES.flatMap((u) => u.licoes.map((l) => [l.id, { licao: l, unidade: u }])),
 )
+
+/**
+ * Quadro "Dois caminhos": lembrete fixo dos dois lados, o que se está evitando e para onde se quer ir.
+ * Linguagem cautelosa de propósito: descreve tendências e riscos, sem prever o futuro e sem culpa.
+ * Revisar com um profissional de saúde junto com o resto deste arquivo.
+ */
+export const DOIS_CAMINHOS = {
+  olho: 'Lembrete',
+  titulo: 'Os dois lados da moeda',
+  apoio: 'As mesmas escolhas de hoje, daqui a uns meses. Varia de pessoa para pessoa, mas o rumo costuma ser parecido.',
+  evitando: {
+    rotulo: 'O que eu estou evitando',
+    titulo: 'Se eu continuar no uso e na sobrecarga',
+    resultado:
+      'Um desgaste que vai se acumulando: energia, dinheiro, relações e planos ficam em segundo plano, e o alívio de hoje vira o peso de amanhã.',
+    frase: 'Sobrecarga + uso contínuo costuma levar ao desgaste.',
+    tendencias: ['Disciplina', 'Energia', 'Dinheiro', 'Relações', 'Liberdade'],
+    tendenciaRotulo: 'Tende a cair',
+  },
+  querendo: {
+    rotulo: 'Para onde eu quero ir',
+    titulo: 'Se eu mantiver a sobriedade estruturada',
+    resultado:
+      'Viver com mais energia, clareza e constância, construindo o que eu quero com o corpo e a mente alinhados.',
+    frase: 'Descanso de verdade + constância costuma levar a mais liberdade.',
+    tendencias: ['Disciplina', 'Energia', 'Dinheiro', 'Relações', 'Liberdade'],
+    tendenciaRotulo: 'Tende a subir',
+  },
+  areas: [
+    {
+      id: 'sensacao',
+      nome: 'A sensação do uso',
+      evitando:
+        'O alívio dura pouco e costuma cobrar depois: mais irritação, ansiedade e cabeça pesada. Com o tempo, a mesma dose tende a aliviar cada vez menos.',
+      querendo:
+        'O corpo vai se reequilibrando. O prazer nas coisas simples costuma voltar e a cabeça fica mais leve, sem depender de nada para relaxar.',
+    },
+    {
+      id: 'foco',
+      nome: 'Foco e execução',
+      evitando:
+        'O foco costuma ficar picado e o que importa vai sendo adiado. Muito movimento, pouco resultado, e a decisão difícil fica para amanhã.',
+      querendo:
+        'A atenção tende a ficar mais firme. Fica mais fácil começar, manter o ritmo e terminar o que importa, inclusive os projetos da TheusVision.',
+    },
+    {
+      id: 'casa',
+      nome: 'Casa e ambiente',
+      evitando:
+        'Quando tudo pesa, a casa e a rotina costumam se desorganizar, e a bagunça aumenta o cansaço mental.',
+      querendo:
+        'Um ambiente mais simples e em ordem costuma ajudar a mente a descansar. A casa vira lugar de recarregar.',
+    },
+    {
+      id: 'burnout',
+      nome: 'Burnout e emoções',
+      evitando:
+        'Sobrecarga somada ao uso como fuga pode alimentar um ciclo: cansaço, fuga, culpa, mais cansaço. Isso pode evoluir para burnout, ansiedade e desânimo.',
+      querendo:
+        'Com descanso de verdade e rotina, a energia tende a voltar. Os problemas continuam existindo, mas passam a parecer mais resolvíveis.',
+    },
+  ],
+  fecho: 'Dois caminhos. Uma escolha, que eu refaço todo dia.',
+  semCulpa: 'Não é para me culpar. É para lembrar do que eu estou escolhendo hoje.',
+  verTudo: 'Ver a comparação completa',
+  esconder: 'Mostrar só o resumo',
+}

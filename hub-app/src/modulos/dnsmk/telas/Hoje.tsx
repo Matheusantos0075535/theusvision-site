@@ -13,6 +13,7 @@ import { diferencaDias } from '../../../lib/tempo'
 import { CheckIn, type ResultadoCheckin } from '../CheckIn'
 import { APOIO_HUMOR, AVISO_EDUCATIVO, COMECAR, LICOES_POR_ID, MENSAGENS_MARCO, MENSAGENS_REFORCO, RECAIDA } from '../conteudo/textosSaude'
 import { useDnsmk, type EstadoDnsmk } from '../dados'
+import { DoisCaminhos } from '../DoisCaminhos'
 import { Recaida } from '../Recaida'
 
 function Comecar() {
@@ -98,6 +99,8 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
 
   return (
     <div className="dn-hoje">
+      <DoisCaminhos />
+
       <section className="bloco-ofensiva" aria-label="Sua ofensiva">
         <Chama numero={e.sequencia_atual} tamanho="grande" apagada={e.sequencia_atual === 0} />
         <p className="bloco-ofensiva-rotulo">{e.sequencia_atual === 1 ? 'dia sem fumar' : 'dias sem fumar'}</p>

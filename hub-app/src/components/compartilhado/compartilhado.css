@@ -1069,7 +1069,7 @@
   .shell-miolo .dn-hoje > .hoje-lado,
   .shell-miolo .le-hoje > .hoje-lado {
     grid-column: 2;
-    grid-row: 1 / span 3;
+    grid-row: span 3;
   }
   .shell-miolo .dn-hoje > .dn-rodape {
     grid-column: 1 / -1;
