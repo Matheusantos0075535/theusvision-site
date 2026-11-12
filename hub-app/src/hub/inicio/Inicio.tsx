@@ -7,7 +7,7 @@ import { dataBrasiliaPorExtenso, horaBrasilia, primeiroNome, saudacao } from '..
 import { useAuth } from '../auth'
 import { Marca } from '../LayoutAcesso'
 import { useModo } from '../modo'
-import { MODULOS, ROTULO_MODO, type Modo } from '../modulos'
+import { GRUPOS, MODULOS, ROTULO_MODO, type Modo } from '../modulos'
 import type { DestaqueCard } from './CardModulo'
 import { GradeModulos } from './GradeModulos'
 import './inicio.css'
@@ -83,7 +83,8 @@ export function Inicio() {
   const destaques = useDestaques()
   const nome = acesso ? primeiroNome(acesso.nome) : ''
   const { modo, trocar } = useModo()
-  const modulos = MODULOS.filter((m) => m.modo === modo)
+  const grupos = GRUPOS[modo]
+  const modulos = grupos.flatMap((g) => MODULOS.filter((m) => m.grupo === g.id))
 
   return (
     <div className="inicio" data-modo={modo}>
@@ -123,7 +124,7 @@ export function Inicio() {
               {modulos.filter((m) => m.status === 'disponivel').length} de {modulos.length} disponíveis
             </span>
           </div>
-          <GradeModulos modulos={modulos} destaques={destaques} />
+          <GradeModulos modulos={modulos} grupos={grupos} destaques={destaques} />
         </section>
       </main>
     </div>
