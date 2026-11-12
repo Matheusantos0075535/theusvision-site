@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth } from './hub/auth'
 import { Inicio } from './hub/inicio/Inicio'
+import { ModoProvider } from './hub/modo'
 import { ConfirmeEmail } from './hub/telas/ConfirmeEmail'
 import { Entrar } from './hub/telas/Entrar'
 import { PrimeiroAcesso } from './hub/telas/PrimeiroAcesso'
@@ -45,6 +46,7 @@ function SoLogado({ children }: { children: ReactNode }) {
 
 export function App() {
   return (
+    <ModoProvider>
     <Routes>
       <Route path="/entrar" element={<Publica><Entrar /></Publica>} />
       <Route path="/primeiro-acesso" element={<Publica><PrimeiroAcesso /></Publica>} />
@@ -56,5 +58,6 @@ export function App() {
       ))}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </ModoProvider>
   )
 }

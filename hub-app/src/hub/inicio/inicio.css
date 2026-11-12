@@ -916,3 +916,39 @@
     animation: none;
   }
 }
+
+/* ---------- modo pessoal / work ---------- */
+.modo-troca {
+  display: inline-flex;
+  margin-top: 16px;
+  padding: 4px;
+  gap: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--borda-forte);
+  background: var(--superf);
+}
+.modo-opcao {
+  min-height: 40px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--texto-2);
+  transition:
+    background var(--t-medio) var(--curva),
+    color var(--t-medio) var(--curva);
+}
+.modo-opcao[aria-pressed='true'] {
+  background: var(--laranja);
+  color: #1a0b33;
+}
+/* modo work: tom azul no lugar do laranja, para você saber onde está */
+.inicio[data-modo='work'] {
+  --laranja: #5aa9ff;
+  --laranja-esc: #3b82f6;
+  --laranja-suave: rgba(90, 169, 255, 0.14);
+  --laranja-borda: rgba(90, 169, 255, 0.5);
+}
+.inicio[data-modo='work'] .modo-opcao[aria-pressed='true'] {
+  color: #06142b;
+}
