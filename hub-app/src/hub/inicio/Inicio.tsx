@@ -1,5 +1,5 @@
 import { Lightbulb, LogOut } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { resumoDoDia } from '../../modulos/dia/resumo'
 import { resumoDoTreino } from '../../modulos/treino/resumo'
 import { supabase } from '../../lib/supabase'
@@ -84,7 +84,7 @@ export function Inicio() {
   const nome = acesso ? primeiroNome(acesso.nome) : ''
   const { modo, trocar } = useModo()
   const grupos = GRUPOS[modo]
-  const modulos = grupos.flatMap((g) => MODULOS.filter((m) => m.grupo === g.id))
+  const modulos = useMemo(() => GRUPOS[modo].flatMap((g) => MODULOS.filter((m) => m.grupo === g.id)), [modo])
 
   return (
     <div className="inicio" data-modo={modo}>

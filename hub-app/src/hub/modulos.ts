@@ -1,4 +1,4 @@
-import { BookOpen, Lightbulb, Briefcase, CalendarCheck, Dumbbell, GraduationCap, HandCoins, House, Rocket, Sprout, Users, Wallet, type LucideIcon } from 'lucide-react'
+import { Apple, BookOpen, Lightbulb, Briefcase, CalendarCheck, Dumbbell, GraduationCap, HandCoins, House, Rocket, Sprout, Users, Wallet, type LucideIcon } from 'lucide-react'
 
 export type Modo = 'pessoal' | 'work'
 
@@ -101,7 +101,21 @@ export const MODULOS: Modulo[] = [
         'Evolução de carga, volume e recordes',
       ],
     },
+  },  {
+    id: 'dieta',
+    modo: 'pessoal',
+    grupo: 'pilares',
+    nome: 'Dieta',
+    categoria: 'Alimentação',
+    descricao: 'Refeições e metas, do seu jeito.',
+    icone: Apple,
+    status: 'em_breve',
+    previa: {
+      resumo: 'O espaço da sua alimentação. Ainda vou desenhar com você como ele deve funcionar.',
+      itens: ['Refeições do dia', 'Metas e acompanhamento', 'Ligação com o Treino'],
+    },
   },
+
   {
     id: 'estudos',
     modo: 'pessoal',

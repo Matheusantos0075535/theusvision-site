@@ -961,30 +961,96 @@
   letter-spacing: 0;
 }
 
-/* ---------- categorias do painel ---------- */
+/* ---------- categorias do painel (recolhíveis) ---------- */
 .grupo-cabeca {
   grid-column: 1 / -1;
   list-style: none;
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 2px 12px;
-  margin-top: 18px;
-  padding-bottom: 8px;
+  margin-top: 14px;
   border-bottom: 1px solid var(--borda);
 }
 .grupo-cabeca:first-child {
   margin-top: 0;
 }
-.grupo-cabeca h3 {
-  margin: 0;
+.grupo-botao {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 6px 2px;
+  text-align: left;
+  color: inherit;
+}
+.grupo-textos {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  flex: 1;
+  min-width: 0;
+}
+.grupo-nome {
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--laranja);
 }
-.grupo-cabeca span {
+.grupo-apoio {
   font-size: 13px;
   color: var(--texto-2);
+}
+.grupo-leque {
+  display: inline-flex;
+}
+.grupo-leque i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-left: -8px;
+  border-radius: 50%;
+  background: var(--superf-2);
+  border: 2px solid var(--fundo, #0a0420);
+  color: var(--texto-2);
+}
+.grupo-leque i:first-child {
+  margin-left: 0;
+}
+.grupo-leque svg {
+  width: 14px;
+  height: 14px;
+}
+.grupo-conta {
+  min-width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--texto-2);
+}
+.grupo-seta {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: var(--texto-2);
+  transition: transform var(--t-medio) var(--curva);
+}
+.grupo-cabeca[data-fechado] .grupo-seta {
+  transform: rotate(-90deg);
+}
+.grupo-cabeca[data-fechado] .grupo-apoio {
+  display: none;
+}
+.grupo-cabeca[data-fechado] .grupo-nome {
+  color: var(--texto-2);
+}
+@media (max-width: 380px) {
+  .grupo-leque i:nth-child(n + 5) {
+    display: none;
+  }
 }
