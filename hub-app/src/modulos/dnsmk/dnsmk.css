@@ -528,3 +528,312 @@ input[type='date'].entrada {
   color: var(--laranja);
   flex: none;
 }
+
+/* ---------- dois caminhos: o que estou evitando x para onde quero ir ---------- */
+.caminhos {
+  --coral: #ff7a6b;
+  --coral-suave: rgba(255, 122, 107, 0.12);
+  --coral-borda: rgba(255, 122, 107, 0.42);
+  position: relative;
+  padding: 20px 16px 16px;
+  border-radius: var(--raio-xg);
+  border: 1px solid var(--borda);
+  box-shadow: var(--sombra);
+  background:
+    radial-gradient(60% 55% at 0% 0%, rgba(255, 122, 107, 0.13), transparent 70%),
+    radial-gradient(60% 55% at 100% 100%, rgba(61, 220, 151, 0.14), transparent 70%), var(--superf);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.caminhos-topo h2 {
+  font-weight: 800;
+  font-size: clamp(22px, 5.6vw, 28px);
+  line-height: 1.15;
+  margin-top: 4px;
+}
+.caminhos-topo p {
+  margin-top: 6px;
+  color: var(--texto-2);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.caminhos-resumo {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+.caminho {
+  padding: 14px 14px 12px;
+  border-radius: var(--raio);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.caminho-evitando {
+  background: linear-gradient(180deg, var(--coral-suave), rgba(255, 122, 107, 0.03)), rgba(5, 2, 15, 0.35);
+  border: 1px solid var(--coral-borda);
+}
+.caminho-querendo {
+  background: linear-gradient(180deg, var(--verde-suave), rgba(61, 220, 151, 0.03)), rgba(5, 2, 15, 0.35);
+  border: 1px solid var(--verde-borda);
+}
+.caminho-rotulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.caminho-rotulo svg {
+  width: 16px;
+  height: 16px;
+}
+.caminho-evitando .caminho-rotulo {
+  color: var(--coral);
+}
+.caminho-querendo .caminho-rotulo {
+  color: var(--verde);
+}
+.caminho h3 {
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.22;
+}
+.caminho > p {
+  color: var(--texto-2);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.caminho-tend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.caminho-tend li {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--texto-2);
+}
+.caminho-tend .caminho-tend-rotulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 800;
+}
+.caminho-tend svg {
+  width: 14px;
+  height: 14px;
+}
+.caminho-evitando .caminho-tend-rotulo {
+  background: var(--coral-suave);
+  color: var(--coral);
+}
+.caminho-querendo .caminho-tend-rotulo {
+  background: var(--verde-suave);
+  color: var(--verde);
+}
+.caminhos-meio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.caminhos-meio i {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--borda-forte), transparent);
+}
+.caminhos-meio b {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--apagado);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--borda-forte);
+  background: var(--fundo);
+}
+.caminhos-alternar {
+  align-self: stretch;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--raio-p);
+  border: 1px solid var(--borda);
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--texto);
+}
+.caminhos-alternar:hover {
+  border-color: var(--borda-forte);
+}
+.caminhos-alternar svg {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--t-medio) var(--curva);
+}
+.caminhos-alternar[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+.caminhos-detalhe {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: aparecer var(--t-medio) var(--curva);
+}
+.caminhos-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+.caminhos-area h4 {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 15px;
+}
+.caminhos-area h4 svg {
+  width: 18px;
+  height: 18px;
+  color: var(--texto-2);
+}
+.caminhos-celula {
+  font-size: 13.5px;
+  line-height: 1.5;
+  padding: 10px 11px;
+  border-radius: var(--raio-p);
+  color: var(--texto);
+}
+.caminhos-celula span {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.caminhos-celula-evitando {
+  background: var(--coral-suave);
+  border-left: 3px solid var(--coral);
+}
+.caminhos-celula-evitando span {
+  color: var(--coral);
+}
+.caminhos-celula-querendo {
+  background: var(--verde-suave);
+  border-left: 3px solid var(--verde);
+}
+.caminhos-celula-querendo span {
+  color: var(--verde);
+}
+.caminhos-frases {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+.caminhos-frases p {
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.35;
+  padding: 10px 11px;
+  border-radius: var(--raio-p);
+}
+.caminhos-frase-e {
+  color: var(--coral);
+  border: 1px solid var(--coral-borda);
+}
+.caminhos-frase-q {
+  color: var(--verde);
+  border: 1px solid var(--verde-borda);
+}
+.caminhos-pe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  padding-top: 4px;
+}
+.caminhos-pe b {
+  font-weight: 800;
+  font-size: 15px;
+}
+.caminhos-pe small {
+  font-size: 12.5px;
+  color: var(--apagado);
+  line-height: 1.45;
+}
+@media (min-width: 720px) {
+  .caminhos {
+    padding: 24px 24px 20px;
+  }
+  .caminhos-resumo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 18px;
+  }
+  .caminhos-meio {
+    flex-direction: column;
+  }
+  .caminhos-meio i {
+    width: 1px;
+    height: auto;
+    background: linear-gradient(180deg, transparent, var(--borda-forte), transparent);
+  }
+  .caminho {
+    padding: 18px;
+  }
+  .caminho h3 {
+    font-size: 19px;
+  }
+  .caminhos-celula {
+    font-size: 14.5px;
+    padding: 12px 14px;
+  }
+  .caminhos-detalhe {
+    gap: 18px;
+  }
+  .caminhos-area {
+    gap: 10px 18px;
+  }
+}
+@media (min-width: 900px) {
+  .shell-miolo .dn-hoje > .caminhos {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 719px) {
+  .caminhos {
+    padding: 16px 14px 14px;
+    gap: 12px;
+  }
+  .caminho {
+    padding: 12px 12px 10px;
+  }
+  .caminho h3 {
+    font-size: 15.5px;
+  }
+  .caminho > p {
+    font-size: 13.5px;
+    line-height: 1.45;
+  }
+  .caminho-tend {
+    display: none;
+  }
+}
