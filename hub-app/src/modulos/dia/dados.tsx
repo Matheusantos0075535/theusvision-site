@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { mensagemDeErroBanco } from '../../lib/erros'
 import { supabase } from '../../lib/supabase'
+import { diaDaSemana, hojeBrasiliaIso, somarDias } from '../../lib/tempo'
 
 export type Bloco = 'manha' | 'noite' | 'essencial'
 export type Quando = 'todos' | 'semana' | 'fim_de_semana'
@@ -31,8 +32,13 @@ export type Despejo = {
 type Inicio = { hoje: string; dow: number; encerrado: boolean }
 
 type Ctx = {
-  hoje: string
+  /** O dia real de hoje (do banco) e o dia que está na tela. */
+  hojeReal: string
+  dia: string
+  /** Só hoje e ontem aceitam marcações (regra do banco); os outros dias são só consulta. */
+  editavel: boolean
   fimDeSemana: boolean
+  irPara: (iso: string) => void
   itens: Item[]
   feitos: Set<string>
   prioridades: Prioridade[]
@@ -53,41 +59,90 @@ const DiaCtx = createContext<Ctx | null>(null)
 export function DiaProvider({ children }: { children: ReactNode }) {
   const [inicio, setInicio] = useState<Inicio | null>(null)
   const [itens, setItens] = useState<Item[] | null>(null)
+  /** null = acompanhando "hoje" (segue sozinho na virada do dia). */
+  const [escolhido, setEscolhido] = useState<string | null>(null)
   const [feitos, setFeitos] = useState<Set<string>>(new Set())
   const [prioridades, setPrioridades] = useState<Prioridade[]>([])
+  const [encerrado, setEncerrado] = useState(false)
   const [despejo, setDespejo] = useState<Despejo[]>([])
   const [erro, setErro] = useState<string | null>(null)
+  const ultimaChecagem = useRef(0)
 
-  const recarregar = useCallback(async () => {
+  const hojeReal = inicio?.hoje ?? ''
+  const dia = escolhido ?? hojeReal
+
+  const carregarBase = useCallback(async () => {
     setErro(null)
     const ini = await supabase.rpc('dia_iniciar')
     if (ini.error) return setErro(mensagemDeErroBanco(ini.error))
-    const i = ini.data as Inicio
-    const [it, fe, pr, de] = await Promise.all([
+    const [it, de] = await Promise.all([
       supabase.from('dia_itens').select('id, bloco, quando, titulo, detalhe, ordem, ativo').order('ordem'),
-      supabase.from('dia_feitos').select('item_id').eq('dia', i.hoje),
-      supabase.from('dia_prioridades').select('id, ordem, titulo, primeira_acao, feita').eq('dia', i.hoje).order('ordem'),
       supabase
         .from('dia_despejo')
         .select('id, texto, categoria, proxima_acao, prioridade, origem, resolvido, criado_em')
         .order('criado_em', { ascending: false }),
     ])
-    const falha = it.error ?? fe.error ?? pr.error ?? de.error
+    const falha = it.error ?? de.error
     if (falha) return setErro(mensagemDeErroBanco(falha))
-    setInicio(i)
+    setInicio(ini.data as Inicio)
     setItens(it.data as Item[])
-    setFeitos(new Set((fe.data as { item_id: string }[]).map((f) => f.item_id)))
-    setPrioridades(pr.data as Prioridade[])
     setDespejo(de.data as Despejo[])
   }, [])
 
+  const carregarDia = useCallback(async (d: string) => {
+    const [fe, pr, en] = await Promise.all([
+      supabase.from('dia_feitos').select('item_id').eq('dia', d),
+      supabase.from('dia_prioridades').select('id, ordem, titulo, primeira_acao, feita').eq('dia', d).order('ordem'),
+      supabase.from('dia_encerramentos').select('dia').eq('dia', d),
+    ])
+    const falha = fe.error ?? pr.error ?? en.error
+    if (falha) return setErro(mensagemDeErroBanco(falha))
+    setFeitos(new Set((fe.data as { item_id: string }[]).map((f) => f.item_id)))
+    setPrioridades(pr.data as Prioridade[])
+    setEncerrado((en.data as unknown[]).length > 0)
+  }, [])
+
+  const recarregar = useCallback(async () => {
+    await carregarBase()
+  }, [carregarBase])
+
   useEffect(() => {
-    void recarregar()
-  }, [recarregar])
+    void carregarBase()
+  }, [carregarBase])
+
+  useEffect(() => {
+    if (hojeReal) void carregarDia(dia)
+  }, [dia, hojeReal, carregarDia])
+
+  // Virada do dia: se o app ficou aberto na meia-noite, pede o dia novo ao banco (no máximo a cada 20 s).
+  useEffect(() => {
+    if (!hojeReal) return
+    const checar = () => {
+      if (document.hidden || hojeReal === hojeBrasiliaIso()) return
+      if (Date.now() - ultimaChecagem.current < 20_000) return
+      ultimaChecagem.current = Date.now()
+      void carregarBase()
+    }
+    const t = window.setInterval(checar, 30_000)
+    document.addEventListener('visibilitychange', checar)
+    window.addEventListener('focus', checar)
+    return () => {
+      window.clearInterval(t)
+      document.removeEventListener('visibilitychange', checar)
+      window.removeEventListener('focus', checar)
+    }
+  }, [hojeReal, carregarBase])
+
+  const irPara = useCallback(
+    (iso: string) => setEscolhido(iso === hojeReal ? null : iso),
+    [hojeReal],
+  )
+
+  const editavel = !!hojeReal && (dia === hojeReal || dia === somarDias(hojeReal, -1))
 
   const alternarFeito = useCallback(
     async (item: string) => {
-      if (!inicio) return null
+      if (!hojeReal) return null
       const tinha = feitos.has(item)
       setFeitos((s) => {
         const n = new Set(s)
@@ -96,30 +151,29 @@ export function DiaProvider({ children }: { children: ReactNode }) {
         return n
       })
       const r = tinha
-        ? await supabase.from('dia_feitos').delete().eq('item_id', item).eq('dia', inicio.hoje)
-        : await supabase.from('dia_feitos').insert({ item_id: item, dia: inicio.hoje })
+        ? await supabase.from('dia_feitos').delete().eq('item_id', item).eq('dia', dia)
+        : await supabase.from('dia_feitos').insert({ item_id: item, dia })
       if (r.error) {
-        void recarregar()
+        void carregarDia(dia)
         return mensagemDeErroBanco(r.error)
       }
       return null
     },
-    [inicio, feitos, recarregar],
+    [hojeReal, dia, feitos, carregarDia],
   )
 
   const salvarPrioridade = useCallback(
     async (ordem: number, titulo: string, acao: string) => {
-      if (!inicio) return null
       const atual = prioridades.find((p) => p.ordem === ordem)
       const dados = { titulo: titulo.trim(), primeira_acao: acao.trim() || null }
       const r = atual
         ? await supabase.from('dia_prioridades').update(dados).eq('id', atual.id)
-        : await supabase.from('dia_prioridades').insert({ dia: inicio.hoje, ordem, ...dados })
+        : await supabase.from('dia_prioridades').insert({ dia, ordem, ...dados })
       if (r.error) return mensagemDeErroBanco(r.error)
-      await recarregar()
+      await carregarDia(dia)
       return null
     },
-    [inicio, prioridades, recarregar],
+    [dia, prioridades, carregarDia],
   )
 
   const alternarPrioridade = useCallback(
@@ -127,45 +181,47 @@ export function DiaProvider({ children }: { children: ReactNode }) {
       setPrioridades((l) => l.map((x) => (x.id === p.id ? { ...x, feita: !x.feita } : x)))
       const r = await supabase.from('dia_prioridades').update({ feita: !p.feita }).eq('id', p.id)
       if (r.error) {
-        void recarregar()
+        void carregarDia(dia)
         return mensagemDeErroBanco(r.error)
       }
       return null
     },
-    [recarregar],
+    [dia, carregarDia],
   )
 
   const apagarPrioridade = useCallback(
     async (p: Prioridade) => {
       const r = await supabase.from('dia_prioridades').delete().eq('id', p.id)
       if (r.error) return mensagemDeErroBanco(r.error)
-      await recarregar()
+      await carregarDia(dia)
       return null
     },
-    [recarregar],
+    [dia, carregarDia],
   )
 
   const encerrarDia = useCallback(
     async (primeiraAcao: string) => {
-      if (!inicio) return null
       const r = await supabase
         .from('dia_encerramentos')
-        .upsert({ dia: inicio.hoje, primeira_acao_amanha: primeiraAcao.trim() || null }, { onConflict: 'user_id,dia' })
+        .upsert({ dia, primeira_acao_amanha: primeiraAcao.trim() || null }, { onConflict: 'user_id,dia' })
       if (r.error) return mensagemDeErroBanco(r.error)
-      await recarregar()
+      await carregarDia(dia)
       return null
     },
-    [inicio, recarregar],
+    [dia, carregarDia],
   )
 
   const valor: Ctx = {
-    hoje: inicio?.hoje ?? '',
-    fimDeSemana: inicio ? inicio.dow === 0 || inicio.dow === 6 : false,
+    hojeReal,
+    dia,
+    editavel,
+    fimDeSemana: dia ? [0, 6].includes(diaDaSemana(dia)) : false,
+    irPara,
     itens: itens ?? [],
     feitos,
     prioridades,
     despejo,
-    encerrado: inicio?.encerrado ?? false,
+    encerrado,
     erro,
     recarregar,
     alternarFeito,

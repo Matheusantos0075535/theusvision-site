@@ -67,3 +67,14 @@ export function diferencaDias(a: string, b: string) {
 export function primeiroNome(nome: string) {
   return nome.trim().split(/\s+/)[0] ?? nome
 }
+
+/** Só para detectar a virada do dia na tela: 'AAAA-MM-DD' em Brasília. A regra de verdade continua no banco. */
+export function hojeBrasiliaIso(data = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: FUSO, year: 'numeric', month: '2-digit', day: '2-digit' }).format(data)
+}
+
+/** "Quinta-feira, 12 de novembro" para qualquer data do banco. */
+export function dataPorExtensoDoBanco(iso: string) {
+  const s = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long' }).format(dataDoBanco(iso))
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
