@@ -535,7 +535,7 @@ input[type='date'].entrada {
   --coral-suave: rgba(255, 122, 107, 0.12);
   --coral-borda: rgba(255, 122, 107, 0.42);
   position: relative;
-  padding: 20px 16px 16px;
+  padding: 6px 16px;
   border-radius: var(--raio-xg);
   border: 1px solid var(--borda);
   box-shadow: var(--sombra);
@@ -546,18 +546,6 @@ input[type='date'].entrada {
   flex-direction: column;
   gap: 14px;
   min-width: 0;
-}
-.caminhos-topo h2 {
-  font-weight: 800;
-  font-size: clamp(22px, 5.6vw, 28px);
-  line-height: 1.15;
-  margin-top: 4px;
-}
-.caminhos-topo p {
-  margin-top: 6px;
-  color: var(--texto-2);
-  font-size: 14.5px;
-  line-height: 1.5;
 }
 .caminhos-resumo {
   display: flex;
@@ -781,7 +769,10 @@ input[type='date'].entrada {
 }
 @media (min-width: 720px) {
   .caminhos {
-    padding: 24px 24px 20px;
+    padding: 8px 24px;
+  }
+  .caminhos[data-aberto] {
+    padding: 8px 24px 20px;
   }
   .caminhos-resumo {
     display: grid;
@@ -820,8 +811,11 @@ input[type='date'].entrada {
 }
 @media (max-width: 719px) {
   .caminhos {
-    padding: 16px 14px 14px;
+    padding: 4px 14px;
     gap: 12px;
+  }
+  .caminhos[data-aberto] {
+    padding: 4px 14px 14px;
   }
   .caminho {
     padding: 12px 12px 10px;
@@ -835,5 +829,214 @@ input[type='date'].entrada {
   }
   .caminho-tend {
     display: none;
+  }
+}
+
+/* ---------- comparação completa: fechada por padrão, lá embaixo ---------- */
+.caminhos-cabeca {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+  padding: 10px 0;
+  text-align: left;
+}
+.caminhos-cabeca-textos {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.caminhos-cabeca h2 {
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.2;
+  margin-top: 1px;
+}
+.caminhos-cabeca small {
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--verde);
+  font-weight: 600;
+}
+.caminhos-cabeca > svg {
+  width: 22px;
+  height: 22px;
+  color: var(--texto-2);
+  flex: none;
+  transition: transform var(--t-medio) var(--curva);
+}
+.caminhos[data-aberto] .caminhos-cabeca > svg {
+  transform: rotate(180deg);
+}
+.caminhos-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 4px;
+  animation: aparecer var(--t-medio) var(--curva);
+}
+.caminhos-apoio {
+  color: var(--texto-2);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+/* ---------- lembrete do topo: curto, vivo, muda todo dia ---------- */
+.lembrete {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 8px;
+  padding: 12px 12px 8px 14px;
+  text-align: left;
+  border-radius: var(--raio-g);
+  border: 1px solid var(--borda-forte);
+  background:
+    linear-gradient(115deg, rgba(255, 122, 107, 0.2) 0%, rgba(28, 7, 82, 0.55) 46%, rgba(61, 220, 151, 0.24) 100%), var(--superf);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform var(--t-medio) var(--curva),
+    border-color var(--t-medio) var(--curva);
+}
+.lembrete:hover {
+  transform: translateY(-1px);
+  border-color: var(--verde-borda);
+}
+.lembrete:active {
+  transform: scale(0.99);
+}
+.lembrete-brilho {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  animation: varre 6s ease-in-out infinite;
+}
+@keyframes varre {
+  0%,
+  35% {
+    background-position: 130% 0;
+  }
+  70%,
+  100% {
+    background-position: -30% 0;
+  }
+}
+.lembrete-lado {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  gap: 3px;
+  min-width: 0;
+}
+.lembrete-rotulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.lembrete-rotulo svg {
+  width: 13px;
+  height: 13px;
+}
+.lembrete-evitando .lembrete-rotulo {
+  color: #ff8f82;
+}
+.lembrete-indo .lembrete-rotulo {
+  color: var(--verde);
+}
+.lembrete-verso {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.lembrete-evitando .lembrete-verso {
+  color: #ffdcd6;
+}
+.lembrete-indo .lembrete-verso {
+  color: #d9fbec;
+}
+.lembrete-seta {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(5, 2, 15, 0.45);
+  border: 1px solid var(--borda-forte);
+  color: var(--verde);
+}
+.lembrete-seta svg {
+  width: 16px;
+  height: 16px;
+}
+.lembrete-seta .seta-v {
+  display: none;
+}
+.lembrete-seta .seta-h {
+  animation: avanca 1.6s ease-in-out infinite;
+}
+@keyframes avanca {
+  0%,
+  100% {
+    transform: translateX(-2px);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateX(2px);
+    opacity: 1;
+  }
+}
+.lembrete-link {
+  grid-column: 1 / -1;
+  justify-self: end;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--verde);
+  letter-spacing: 0.02em;
+}
+.lembrete-link::after {
+  content: ' ›';
+}
+@media (min-width: 720px) {
+  .lembrete {
+    padding: 14px 20px 12px;
+    gap: 6px 18px;
+  }
+  .lembrete-verso {
+    font-size: 17px;
+  }
+  .lembrete-seta {
+    width: 34px;
+    height: 34px;
+  }
+  .lembrete-seta svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+@media (min-width: 900px) {
+  .shell-miolo .dn-hoje > .lembrete {
+    grid-column: 1 / -1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lembrete-brilho,
+  .lembrete-seta .seta-h {
+    animation: none;
   }
 }

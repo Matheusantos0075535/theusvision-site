@@ -14,6 +14,7 @@ import { CheckIn, type ResultadoCheckin } from '../CheckIn'
 import { APOIO_HUMOR, AVISO_EDUCATIVO, COMECAR, LICOES_POR_ID, MENSAGENS_MARCO, MENSAGENS_REFORCO, RECAIDA } from '../conteudo/textosSaude'
 import { useDnsmk, type EstadoDnsmk } from '../dados'
 import { DoisCaminhos } from '../DoisCaminhos'
+import { Lembrete } from '../Lembrete'
 import { Recaida } from '../Recaida'
 
 function Comecar() {
@@ -61,6 +62,7 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
   const [checkin, setCheckin] = useState<{ dia: string; rotulo: 'Hoje' | 'Ontem' | 'Anteontem' } | null>(null)
   const [recaida, setRecaida] = useState(false)
   const [celebrar, setCelebrar] = useState<DadosCelebracao | null>(null)
+  const [porque, setPorque] = useState(false)
 
   if (!estado) return null
   if (!estado.tem_jornada) return <Comecar />
@@ -95,11 +97,16 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
     definirEstado(r.estado)
   }
 
+  function verPorque() {
+    setPorque(true)
+    window.setTimeout(() => document.getElementById('porque')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80)
+  }
+
   const rotuloPendente = (d: string) => (diferencaDias(e.hoje, d) === 1 ? 'Ontem' : 'Anteontem')
 
   return (
     <div className="dn-hoje">
-      <DoisCaminhos />
+      <Lembrete hoje={e.hoje} aoVerPorque={verPorque} />
 
       <section className="bloco-ofensiva" aria-label="Sua ofensiva">
         <Chama numero={e.sequencia_atual} tamanho="grande" apagada={e.sequencia_atual === 0} />
@@ -196,6 +203,8 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
       />
 
       </div>
+
+      <DoisCaminhos aberto={porque} aoAlternar={() => setPorque((a) => !a)} />
 
       <div className="dn-rodape">
         {!e.recaida_hoje && (
