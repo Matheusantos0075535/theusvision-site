@@ -1,17 +1,18 @@
-import { Check, ChevronDown, MoonStar, Pencil, Plus, X } from 'lucide-react'
+import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, MoonStar, Pencil, Plus, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Secao } from '../../../components/compartilhado/ShellModulo'
 import { useToast } from '../../../components/ui/Toast'
 import { useAuth } from '../../../hub/auth'
-import { dataBrasiliaPorExtenso, horaBrasilia, primeiroNome, saudacao } from '../../../lib/tempo'
+import { dataPorExtensoDoBanco, diferencaDias, horaBrasilia, primeiroNome, saudacao, somarDias } from '../../../lib/tempo'
 import { BLOCOS_FIM_DE_SEMANA, BLOCOS_SEMANA, TEXTOS } from '../conteudo'
+import { Calendario, ANO } from '../Calendario'
 import { itensDeHoje, useDia, type Item, type Prioridade } from '../dados'
 
 const horaAtual = () => Number(horaBrasilia().split(':')[0])
 
 function Checklist({ titulo, itens, aberto }: { titulo: string; itens: Item[]; aberto: boolean }) {
-  const { feitos, alternarFeito } = useDia()
+  const { feitos, alternarFeito, editavel } = useDia()
   const { mostrar } = useToast()
   const feitosAqui = itens.filter((i) => feitos.has(i.id)).length
   if (!itens.length) return null
@@ -31,6 +32,7 @@ function Checklist({ titulo, itens, aberto }: { titulo: string; itens: Item[]; a
             <button
               className="dia-item"
               aria-pressed={feitos.has(i.id)}
+              disabled={!editavel}
               onClick={async () => {
                 const e = await alternarFeito(i.id)
                 if (e) mostrar(e, { comNav: true })
@@ -52,7 +54,7 @@ function Checklist({ titulo, itens, aberto }: { titulo: string; itens: Item[]; a
 }
 
 function Slot({ ordem, p }: { ordem: number; p?: Prioridade }) {
-  const { salvarPrioridade, alternarPrioridade, apagarPrioridade } = useDia()
+  const { salvarPrioridade, alternarPrioridade, apagarPrioridade, editavel } = useDia()
   const { mostrar } = useToast()
   const [editando, setEditando] = useState(false)
   const [titulo, setTitulo] = useState(p?.titulo ?? '')
@@ -100,6 +102,19 @@ function Slot({ ordem, p }: { ordem: number; p?: Prioridade }) {
     )
   }
 
+  if (!p && !editavel) {
+    return (
+      <li className="dia-prio dia-prio-vazia">
+        <span className="dia-prio-sem">
+          <span className="dia-prio-num" aria-hidden>
+            {ordem}
+          </span>
+          <span>Sem prioridade neste dia</span>
+        </span>
+      </li>
+    )
+  }
+
   if (!p) {
     return (
       <li className="dia-prio dia-prio-vazia">
@@ -125,6 +140,7 @@ function Slot({ ordem, p }: { ordem: number; p?: Prioridade }) {
       <button
         className="dia-prio-marca"
         aria-pressed={p.feita}
+        disabled={!editavel}
         aria-label={p.feita ? `Desmarcar: ${p.titulo}` : `Concluir: ${p.titulo}`}
         onClick={async () => {
           const e = await alternarPrioridade(p)
@@ -139,6 +155,7 @@ function Slot({ ordem, p }: { ordem: number; p?: Prioridade }) {
         <b>{p.titulo}</b>
         {p.primeira_acao && <small>Começar por: {p.primeira_acao}</small>}
       </div>
+      {editavel && (
       <button
         className="btn-icone"
         aria-label={`Editar prioridade ${ordem}`}
@@ -150,6 +167,8 @@ function Slot({ ordem, p }: { ordem: number; p?: Prioridade }) {
       >
         <Pencil aria-hidden />
       </button>
+      )}
+      {editavel && (
       <button
         className="btn-icone"
         aria-label={`Remover prioridade ${ordem}`}
@@ -160,12 +179,13 @@ function Slot({ ordem, p }: { ordem: number; p?: Prioridade }) {
       >
         <X aria-hidden />
       </button>
+      )}
     </li>
   )
 }
 
 function Encerrar() {
-  const { encerrado, encerrarDia } = useDia()
+  const { encerrado, encerrarDia, editavel } = useDia()
   const { mostrar } = useToast()
   const [aberto, setAberto] = useState(false)
   const [acao, setAcao] = useState('')
@@ -185,11 +205,12 @@ function Encerrar() {
         <MoonStar aria-hidden />
         <div>
           <b>{TEXTOS.encerrarFeito}</b>
-          <p>Amanhã você já começa com a primeira ação pronta.</p>
+          <p>{editavel ? 'Amanhã você já começa com a primeira ação pronta.' : 'Este dia foi encerrado.'}</p>
         </div>
       </div>
     )
   }
+  if (!editavel) return null
   return (
     <>
       <button className="btn btn-secundario btn-grande dia-encerrar" onClick={() => setAberto(true)}>
@@ -226,15 +247,25 @@ function Encerrar() {
   )
 }
 
+function rotuloDoDia(dia: string, hoje: string) {
+  const d = diferencaDias(dia, hoje)
+  if (d === 0) return 'Hoje'
+  if (d === -1) return 'Ontem'
+  if (d === 1) return 'Amanhã'
+  return d < 0 ? 'Dia passado' : 'Dia futuro'
+}
+
 export function Hoje() {
-  const { itens, prioridades, fimDeSemana, feitos } = useDia()
+  const { itens, prioridades, fimDeSemana, feitos, dia, hojeReal, irPara, editavel } = useDia()
   const { acesso } = useAuth()
+  const [calendario, setCalendario] = useState(false)
   const [hora, setHora] = useState(horaAtual)
   useEffect(() => {
     const t = window.setInterval(() => setHora(horaAtual()), 60_000)
     return () => window.clearInterval(t)
   }, [])
 
+  const ehHoje = dia === hojeReal
   const blocos = fimDeSemana ? BLOCOS_FIM_DE_SEMANA : BLOCOS_SEMANA
   const agora = hora < 12 ? blocos[0] : hora < 18 ? blocos[1] : blocos[2]
   const manha = itensDeHoje(itens, 'manha', fimDeSemana)
@@ -243,59 +274,86 @@ export function Hoje() {
   const total = [...manha, ...noite]
   const feitosTotal = total.filter((i) => feitos.has(i.id)).length + prioridades.filter((p) => p.feita).length
   const totalGeral = total.length + prioridades.length
-  const data = dataBrasiliaPorExtenso()
-  const [diaSemana, resto] = data.split(', ')
+  const [diaSemana, resto] = dataPorExtensoDoBanco(dia).split(', ')
+  const anterior = somarDias(dia, -1)
+  const proximo = somarDias(dia, 1)
 
   return (
     <div className="dia-hoje">
-      <section className="dia-hero" aria-label="Hoje">
-        <span className="dia-hero-tipo">{fimDeSemana ? 'Fim de semana' : 'Dia útil'}</span>
-        <p className="dia-hero-saudacao">
-          {saudacao()}, <b>{acesso ? primeiroNome(acesso.nome) : ''}</b>
-        </p>
+      <section className="dia-hero" aria-label={rotuloDoDia(dia, hojeReal)} data-passado={!ehHoje || undefined}>
+        <div className="dia-hero-nav">
+          <button className="btn-icone" onClick={() => irPara(anterior)} disabled={!anterior.startsWith(`${ANO}-`)} aria-label="Dia anterior">
+            <ChevronLeft aria-hidden />
+          </button>
+          <span className="dia-hero-tipo">{rotuloDoDia(dia, hojeReal)} · {fimDeSemana ? 'fim de semana' : 'dia útil'}</span>
+          <button className="btn-icone" onClick={() => irPara(proximo)} disabled={!proximo.startsWith(`${ANO}-`)} aria-label="Próximo dia">
+            <ChevronRight aria-hidden />
+          </button>
+          <button className="btn btn-secundario dia-cal-botao" onClick={() => setCalendario(true)}>
+            <CalendarDays aria-hidden />
+            Calendário
+          </button>
+        </div>
+        {ehHoje ? (
+          <p className="dia-hero-saudacao">
+            {saudacao()}, <b>{acesso ? primeiroNome(acesso.nome) : ''}</b>
+          </p>
+        ) : (
+          <p className="dia-hero-saudacao">
+            {editavel ? 'Você ainda pode ajustar este dia.' : diferencaDias(dia, hojeReal) < 0 ? 'Só consulta: dias antigos não mudam.' : 'Este dia ainda não chegou.'}
+          </p>
+        )}
         <h2 className="dia-hero-data">
           <span>{diaSemana}</span>
           {resto}
         </h2>
-        <div className="dia-hero-bloco">
-          <b>{agora.nome}</b>
-          <span>{agora.foco}</span>
-        </div>
+        {ehHoje && (
+          <div className="dia-hero-bloco">
+            <b>{agora.nome}</b>
+            <span>{agora.foco}</span>
+          </div>
+        )}
         {totalGeral > 0 && (
           <div className="dia-hero-conta">
             <span className="dia-hero-barra" aria-hidden>
               <i style={{ width: `${Math.round((feitosTotal / totalGeral) * 100)}%` }} />
             </span>
             <small>
-              {feitosTotal} de {totalGeral} feitos hoje
+              {feitosTotal} de {totalGeral} feitos
             </small>
           </div>
+        )}
+        {!ehHoje && (
+          <button className="btn btn-primario dia-voltar-hoje" onClick={() => irPara(hojeReal)}>
+            Voltar para hoje
+          </button>
         )}
       </section>
 
       <div className="dia-coluna">
-        <Checklist titulo="Rotina da manhã" itens={manha} aberto={hora < 12} />
+        <Checklist titulo="Rotina da manhã" itens={manha} aberto={!ehHoje || hora < 12} />
 
         <Secao titulo={TEXTOS.prioridadesTitulo}>
-          <p className="dia-apoio">{TEXTOS.prioridadesApoio}</p>
+          {editavel && <p className="dia-apoio">{TEXTOS.prioridadesApoio}</p>}
           <ol className="dia-prios">
             {[1, 2, 3].map((n) => (
-              <Slot key={`${n}-${prioridades.find((p) => p.ordem === n)?.id ?? 'novo'}`} ordem={n} p={prioridades.find((p) => p.ordem === n)} />
+              <Slot key={`${dia}-${n}-${prioridades.find((p) => p.ordem === n)?.id ?? 'novo'}`} ordem={n} p={prioridades.find((p) => p.ordem === n)} />
             ))}
           </ol>
         </Secao>
 
-        <Checklist titulo="Rotina da noite" itens={noite} aberto={hora >= 17} />
+        <Checklist titulo="Rotina da noite" itens={noite} aberto={!ehHoje || hora >= 17} />
       </div>
 
       {essenciais.length > 0 && (
         <aside className="dia-essenciais" aria-label="Essenciais do dia">
-          <span className="rotulo">Essenciais de hoje</span>
+          <span className="rotulo">Essenciais do dia</span>
           <p>{essenciais.map((i) => i.titulo).join(' · ')}</p>
         </aside>
       )}
 
       <Encerrar />
+      {calendario && <Calendario aoFechar={() => setCalendario(false)} />}
     </div>
   )
 }
