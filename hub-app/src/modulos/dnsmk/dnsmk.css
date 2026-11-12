@@ -883,20 +883,21 @@ input[type='date'].entrada {
   line-height: 1.5;
 }
 
-/* ---------- lembrete do topo: curto, vivo, muda todo dia ---------- */
+/* ---------- lembrete do topo: onde você estava → para onde você está indo ---------- */
 .lembrete {
+  --coral: #ff7a6b;
   position: relative;
   width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: 4px 8px;
-  padding: 12px 12px 8px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 16px 12px;
   text-align: left;
   border-radius: var(--raio-g);
   border: 1px solid var(--borda-forte);
   background:
-    linear-gradient(115deg, rgba(255, 122, 107, 0.2) 0%, rgba(28, 7, 82, 0.55) 46%, rgba(61, 220, 151, 0.24) 100%), var(--superf);
+    radial-gradient(70% 90% at 0% 0%, rgba(255, 122, 107, 0.2), transparent 70%),
+    radial-gradient(70% 90% at 100% 100%, rgba(61, 220, 151, 0.24), transparent 70%), var(--superf);
   box-shadow: var(--sombra);
   overflow: hidden;
   isolation: isolate;
@@ -905,7 +906,6 @@ input[type='date'].entrada {
     border-color var(--t-medio) var(--curva);
 }
 .lembrete:hover {
-  transform: translateY(-1px);
   border-color: var(--verde-borda);
 }
 .lembrete:active {
@@ -916,7 +916,7 @@ input[type='date'].entrada {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.08) 50%, transparent 70%);
   background-size: 260% 100%;
   background-position: 130% 0;
   animation: varre 6s ease-in-out infinite;
@@ -931,79 +931,120 @@ input[type='date'].entrada {
     background-position: -30% 0;
   }
 }
-.lembrete-lado {
+
+/* celular: linha do tempo na vertical, fio à esquerda */
+.lembrete-fluxo {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  column-gap: 14px;
+  row-gap: 14px;
+  animation: verso-entra 450ms var(--curva);
+}
+@keyframes verso-entra {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.lembrete-de {
+  grid-column: 2;
+  grid-row: 1;
+}
+.lembrete-para {
+  grid-column: 2;
+  grid-row: 2;
+}
+.lembrete-no {
   display: flex;
   flex-direction: column;
-  align-self: start;
   gap: 3px;
   min-width: 0;
 }
 .lembrete-rotulo {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
   font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.lembrete-rotulo svg {
-  width: 13px;
-  height: 13px;
-}
-.lembrete-evitando .lembrete-rotulo {
+.lembrete-de .lembrete-rotulo {
   color: #ff8f82;
 }
-.lembrete-indo .lembrete-rotulo {
+.lembrete-para .lembrete-rotulo {
   color: var(--verde);
 }
 .lembrete-verso {
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 1.25;
+  font-size: 15px;
+  line-height: 1.28;
   text-wrap: balance;
 }
-.lembrete-evitando .lembrete-verso {
-  color: #ffdcd6;
+.lembrete-de .lembrete-verso {
+  font-weight: 600;
+  color: rgba(255, 220, 214, 0.9);
 }
-.lembrete-indo .lembrete-verso {
-  color: #d9fbec;
+.lembrete-para .lembrete-verso {
+  font-weight: 800;
+  font-size: 16.5px;
+  color: #e4fcf1;
 }
-.lembrete-seta {
-  align-self: center;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
+.lembrete-fio {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: stretch;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 14px;
+  padding: 3px 0;
+}
+.fio-ponta {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: rgba(5, 2, 15, 0.45);
-  border: 1px solid var(--borda-forte);
-  color: var(--verde);
+  flex: none;
 }
-.lembrete-seta svg {
-  width: 16px;
-  height: 16px;
+.fio-ponta-de {
+  background: var(--coral);
+  box-shadow: 0 0 0 4px rgba(255, 122, 107, 0.2);
 }
-.lembrete-seta .seta-v {
-  display: none;
+.fio-ponta-para {
+  background: var(--grad-verde);
+  box-shadow: 0 0 0 4px rgba(61, 220, 151, 0.22), 0 0 14px rgba(61, 220, 151, 0.55);
 }
-.lembrete-seta .seta-h {
-  animation: avanca 1.6s ease-in-out infinite;
+.fio-linha {
+  position: relative;
+  flex: 1;
+  width: 3px;
+  margin: 3px 0;
+  border-radius: 3px;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--coral), var(--verde));
+  opacity: 0.85;
 }
-@keyframes avanca {
-  0%,
-  100% {
-    transform: translateX(-2px);
-    opacity: 0.55;
+.fio-linha::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40%;
+  top: -40%;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+  animation: corre-v 2.2s ease-in-out infinite;
+}
+@keyframes corre-v {
+  from {
+    top: -40%;
   }
-  50% {
-    transform: translateX(2px);
-    opacity: 1;
+  to {
+    top: 100%;
   }
 }
 .lembrete-link {
-  grid-column: 1 / -1;
-  justify-self: end;
+  align-self: flex-end;
   font-size: 11.5px;
   font-weight: 700;
   color: var(--verde);
@@ -1012,21 +1053,95 @@ input[type='date'].entrada {
 .lembrete-link::after {
   content: ' ›';
 }
+/* barrinha: tempo até o próximo verso */
+.lembrete-tempo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.lembrete-tempo i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--coral), var(--verde));
+  animation: tempo 10s linear forwards;
+}
+.lembrete-tempo i[data-pausado] {
+  animation: none;
+  width: 0;
+}
+@keyframes tempo {
+  to {
+    width: 100%;
+  }
+}
+
+/* computador: linha do tempo na horizontal, o fio preenche o meio */
 @media (min-width: 720px) {
   .lembrete {
-    padding: 14px 20px 12px;
-    gap: 6px 18px;
+    padding: 20px 24px 14px;
+  }
+  .lembrete-fluxo {
+    grid-template-columns: minmax(0, 1fr) minmax(90px, 200px) minmax(0, 1fr);
+    column-gap: 18px;
+    row-gap: 0;
+    align-items: center;
+  }
+  .lembrete-de {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: right;
+    align-items: flex-end;
+  }
+  .lembrete-fio {
+    grid-column: 2;
+    grid-row: 1;
+    flex-direction: row;
+    width: auto;
+    height: 14px;
+    justify-self: stretch;
+    align-self: center;
+    padding: 0 3px;
+  }
+  .fio-linha {
+    width: auto;
+    height: 3px;
+    margin: 0 3px;
+    background: linear-gradient(90deg, var(--coral), var(--verde));
+  }
+  .fio-linha::after {
+    top: 0;
+    bottom: 0;
+    height: auto;
+    width: 40%;
+    left: -40%;
+    right: auto;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+    animation: corre-h 2.2s ease-in-out infinite;
+  }
+  .lembrete-para {
+    grid-column: 3;
+    grid-row: 1;
   }
   .lembrete-verso {
-    font-size: 17px;
+    font-size: 18px;
   }
-  .lembrete-seta {
-    width: 34px;
-    height: 34px;
+  .lembrete-para .lembrete-verso {
+    font-size: 20px;
   }
-  .lembrete-seta svg {
-    width: 19px;
-    height: 19px;
+  .lembrete-rotulo {
+    font-size: 11px;
+  }
+}
+@keyframes corre-h {
+  from {
+    left: -40%;
+  }
+  to {
+    left: 100%;
   }
 }
 @media (min-width: 900px) {
@@ -1036,7 +1151,9 @@ input[type='date'].entrada {
 }
 @media (prefers-reduced-motion: reduce) {
   .lembrete-brilho,
-  .lembrete-seta .seta-h {
+  .lembrete-fluxo,
+  .fio-linha::after,
+  .lembrete-tempo i {
     animation: none;
   }
 }
