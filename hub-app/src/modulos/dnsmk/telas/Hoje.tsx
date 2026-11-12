@@ -98,10 +98,10 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
 
   return (
     <div className="dn-hoje">
-      <section className="dn-ofensiva" aria-label="Sua ofensiva">
+      <section className="bloco-ofensiva" aria-label="Sua ofensiva">
         <Chama numero={e.sequencia_atual} tamanho="grande" apagada={e.sequencia_atual === 0} />
-        <p className="dn-ofensiva-rotulo">{e.sequencia_atual === 1 ? 'dia sem fumar' : 'dias sem fumar'}</p>
-        <div className="dn-meta">
+        <p className="bloco-ofensiva-rotulo">{e.sequencia_atual === 1 ? 'dia sem fumar' : 'dias sem fumar'}</p>
+        <div className="bloco-meta">
           <BarraProgresso
             fracao={(e.sequencia_atual - e.meta_anterior) / faixa}
             rotulo={`Progresso até a meta de ${e.proxima_meta} dias`}
@@ -113,7 +113,7 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
       </section>
 
       {e.recaida_hoje ? (
-        <div className="dn-cartao dn-recomeco">
+        <div className="cartao-info dn-recomeco">
           <Sunrise aria-hidden />
           <div>
             <b>Hoje é dia de recomeço.</b>
@@ -121,7 +121,7 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
           </div>
         </div>
       ) : e.checkin_hoje ? (
-        <div className="dn-cartao dn-feito">
+        <div className="cartao-info dn-feito">
           <CalendarCheck aria-hidden />
           <div>
             <b>Check-in de hoje feito</b>
@@ -146,7 +146,7 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
       )}
 
       {e.apoio_humor && (
-        <div className="dn-cartao dn-apoio">
+        <div className="cartao-info dn-apoio">
           <HeartHandshake aria-hidden />
           <div>
             <b>{APOIO_HUMOR.titulo}</b>

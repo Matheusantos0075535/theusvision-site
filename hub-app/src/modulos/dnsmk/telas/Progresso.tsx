@@ -111,7 +111,7 @@ export function Progresso() {
             { rotulo: 'Economia estimada', valor: economia === null ? '—' : real(economia) },
           ]}
         />
-        {economia === null && <p className="dn-dica">Informe quanto gastava por semana no Perfil para ver a economia estimada.</p>}
+        {economia === null && <p className="dica">Informe quanto gastava por semana no Perfil para ver a economia estimada.</p>}
       </Secao>
 
       <Secao titulo={`Linha do tempo de ${analise.ano}`}>

@@ -896,3 +896,80 @@
     border-bottom: 1px solid var(--borda);
   }
 }
+
+/* ---------- blocos reaproveitados pelos módulos ---------- */
+.bloco-ofensiva {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 26px 18px 20px;
+  border-radius: var(--raio-xg);
+  background:
+    radial-gradient(70% 60% at 50% 0%, rgba(255, 159, 17, 0.16), transparent 70%),
+    var(--superf);
+  border: 1px solid var(--borda);
+  box-shadow: var(--sombra);
+}
+.bloco-ofensiva-rotulo {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texto-2);
+}
+.bloco-meta {
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bloco-meta small {
+  color: var(--texto-2);
+  font-size: 14px;
+}
+.bloco-meta small b {
+  color: var(--laranja);
+}
+.cartao-info {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: var(--raio);
+  background: var(--superf);
+  border: 1px solid var(--borda);
+}
+.cartao-info > svg {
+  width: 24px;
+  height: 24px;
+  color: var(--laranja);
+  flex: none;
+  margin-top: 1px;
+}
+.cartao-info p {
+  color: var(--texto-2);
+  font-size: 14.5px;
+  margin-top: 2px;
+}
+.link-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: var(--texto-2);
+  text-decoration: none;
+  font-weight: 600;
+  align-self: flex-start;
+}
+.link-voltar svg {
+  width: 18px;
+  height: 18px;
+}
+.dica {
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: var(--apagado);
+}

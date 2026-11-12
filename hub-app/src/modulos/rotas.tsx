@@ -1,6 +1,7 @@
 import { lazy, Suspense, type ReactNode } from 'react'
 
 const DnsmkApp = lazy(() => import('./dnsmk/DnsmkApp'))
+const LeituraApp = lazy(() => import('./leitura/LeituraApp'))
 
 function Lento({ children }: { children: ReactNode }) {
   return (
@@ -18,4 +19,5 @@ function Lento({ children }: { children: ReactNode }) {
 
 export const ROTAS_MODULOS: { caminho: string; elemento: ReactNode }[] = [
   { caminho: '/dnsmk/*', elemento: <Lento><DnsmkApp /></Lento> },
+  { caminho: '/leitura/*', elemento: <Lento><LeituraApp /></Lento> },
 ]

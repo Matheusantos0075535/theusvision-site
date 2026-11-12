@@ -38,65 +38,17 @@
   flex-direction: column;
   gap: 14px;
 }
-.dn-ofensiva {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 26px 18px 20px;
-  border-radius: var(--raio-xg);
-  background:
-    radial-gradient(70% 60% at 50% 0%, rgba(255, 159, 17, 0.16), transparent 70%),
-    var(--superf);
-  border: 1px solid var(--borda);
-  box-shadow: var(--sombra);
-}
-.dn-ofensiva-rotulo {
-  margin-top: 4px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--texto-2);
-}
-.dn-meta {
-  width: 100%;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.dn-meta small {
-  color: var(--texto-2);
-  font-size: 14px;
-}
-.dn-meta small b {
-  color: var(--laranja);
-}
+
+
+
+
+
 .dn-cta {
   font-size: 18px;
 }
-.dn-cartao {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 14px 16px;
-  border-radius: var(--raio);
-  background: var(--superf);
-  border: 1px solid var(--borda);
-}
-.dn-cartao > svg {
-  width: 24px;
-  height: 24px;
-  color: var(--laranja);
-  flex: none;
-  margin-top: 1px;
-}
-.dn-cartao p {
-  color: var(--texto-2);
-  font-size: 14.5px;
-  margin-top: 2px;
-}
+
+
+
 .dn-feito {
   border-color: rgba(255, 159, 17, 0.35);
 }
@@ -376,20 +328,8 @@ input[type='date'].entrada {
   line-height: 1.15;
   margin-top: -6px;
 }
-.dn-voltar-trilha {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 44px;
-  color: var(--texto-2);
-  text-decoration: none;
-  font-weight: 600;
-  align-self: flex-start;
-}
-.dn-voltar-trilha svg {
-  width: 18px;
-  height: 18px;
-}
+
+
 .dn-bloco {
   padding: 16px;
   border-radius: var(--raio);
@@ -483,11 +423,7 @@ input[type='date'].entrada {
 }
 
 /* ---------- progresso ---------- */
-.dn-dica {
-  margin-top: 10px;
-  font-size: 13.5px;
-  color: var(--apagado);
-}
+
 .dn-padrao {
   margin-top: 14px;
   padding: 12px 14px;

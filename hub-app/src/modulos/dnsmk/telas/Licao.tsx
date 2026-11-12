@@ -68,7 +68,7 @@ export function Licao() {
 
   return (
     <article className="dn-licao-pagina">
-      <Link to="/dnsmk/trilha" className="dn-voltar-trilha">
+      <Link to="/dnsmk/trilha" className="link-voltar">
         <ArrowLeft aria-hidden />
         Trilha
       </Link>

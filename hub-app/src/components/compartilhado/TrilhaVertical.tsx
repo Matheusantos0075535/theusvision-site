@@ -26,15 +26,17 @@ export function TrilhaVertical({
   secoes,
   aoEscolher,
   destaqueId,
+  rolarParaAtual = true,
 }: {
   secoes: SecaoTrilha[]
   aoEscolher: (item: ItemTrilha, secao: SecaoTrilha) => void
   destaqueId?: string
+  rolarParaAtual?: boolean
 }) {
   const refAtual = useRef<HTMLLIElement>(null)
   useEffect(() => {
-    refAtual.current?.scrollIntoView({ block: 'center' })
-  }, [])
+    if (rolarParaAtual) refAtual.current?.scrollIntoView({ block: 'center' })
+  }, [rolarParaAtual])
 
   return (
     <ol className="trilha">
