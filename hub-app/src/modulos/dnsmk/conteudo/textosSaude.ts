@@ -694,3 +694,105 @@ export const DOIS_CAMINHOS = {
   verTudo: 'Ver a comparação completa',
   esconder: 'Fechar a comparação',
 }
+
+/**
+ * "Onde você está": fases da recuperação pelo tempo sem usar. Estimativa baseada em literatura, não promessa:
+ * cada pessoa tem o seu ritmo. Linguagem de tendência, sem diagnóstico. Revisar com um profissional junto com o resto.
+ */
+export type Fase = {
+  id: string
+  nome: string
+  periodo: string
+  /** Primeiro e último dia da fase (ultimoDia null = sem fim). */
+  de: number
+  ate: number | null
+  normal: string
+  foco: string
+  mais: string[]
+}
+
+export const FASES: Fase[] = [
+  {
+    id: 'atravessar',
+    nome: 'Atravessando',
+    periodo: 'Semanas 1 a 4',
+    de: 1,
+    ate: 28,
+    normal: 'Irritação, sono e apetite alterados e fissura mais forte são esperados. Na maior parte, isso costuma ceder em 2 a 4 semanas.',
+    foco: 'Só atravessar. Dormir, comer e se mexer já contam.',
+    mais: [
+      'Sonhos vívidos e sono picado são comuns e tendem a passar.',
+      'Não é hora de planos gigantes. Um dia de cada vez.',
+      'Se estiver pesado demais, o botão de ajuda está sempre aqui.',
+    ],
+  },
+  {
+    id: 'clareza',
+    nome: 'Clareza voltando',
+    periodo: 'Semanas 5 a 8',
+    de: 29,
+    ate: 56,
+    normal: 'A clareza volta e a ansiedade costuma baixar, mas a vontade de agir ainda vem devagar: calma sem tração. Isso não é perda de quem você é.',
+    foco: 'Estrutura mínima e pequenos ciclos fechados todos os dias.',
+    mais: [
+      'O sistema que dá o "vai lá" é o que mais demora a voltar, e ele responde à prática.',
+      'Tarefas pequenas e concluídas valem mais do que grandes e pela metade.',
+      'Cobrar o ritmo de antes só aumenta o peso. Sua régua é você de 30 dias atrás.',
+    ],
+  },
+  {
+    id: 'recalibrar',
+    nome: 'Recalibrando',
+    periodo: 'Meses 2 a 6',
+    de: 57,
+    ate: 180,
+    normal: 'O sistema de recompensa vai se ajustando conforme você age. Os hábitos começam a ficar automáticos (em média uns 66 dias, variando muito de pessoa para pessoa).',
+    foco: 'Constância e progressão gradual, aumentando a carga aos poucos.',
+    mais: [
+      'Subir a exigência no máximo 10 a 20% por semana, só depois de cumprir a atual.',
+      'Semana ruim não derruba o plano: repita a semana, não recomece do zero.',
+      'Cuidado com o "desespero de acelerar": planos grandes demais acabam em vergonha e fuga.',
+    ],
+  },
+  {
+    id: 'consolidar',
+    nome: 'Consolidando',
+    periodo: 'A partir de 6 meses',
+    de: 181,
+    ate: null,
+    normal: 'Você sustenta mais carga com mais estabilidade. Os riscos agora são o excesso de confiança ("já controlo") e voltar ao ritmo que gerou o desgaste.',
+    foco: 'Manutenção, e atenção para não voltar ao overdrive.',
+    mais: [
+      'Sinais de alerta: trabalhar de noite com frequência, pular refeição ou treino, irritação constante.',
+      'Dois ou mais sinais na mesma semana: volte à carga anterior por sete dias.',
+      'Deslize é evento, não identidade. Volta no próximo bloco.',
+    ],
+  },
+]
+
+export const ONDE_ESTOU = {
+  rotulo: 'Onde você está',
+  normal: 'O que é normal agora',
+  foco: 'Foco desta fase',
+  verMais: 'Ver mais',
+  verMenos: 'Ver menos',
+  proxima: (dias: number, nome: string) => `${dias === 1 ? 'falta 1 dia' : `faltam ${dias} dias`} para ${nome}`,
+  ultima: 'Fase de manutenção: o foco é seguir firme.',
+  aviso: 'É uma estimativa baseada em estudos, não uma promessa. Cada pessoa tem o seu ritmo, e o que você faz em cada fase muda a velocidade da seguinte.',
+}
+
+/** Frases-âncora curtas que entram na faixa do topo, misturadas aos pares "onde você estava → para onde está indo". */
+export const FRASES_ANCORA = [
+  { situacao: 'Quando a vontade apertar', frase: 'A onda sobe e desce. Eu rodo o filme até o fim.' },
+  { situacao: 'Quando o dia começar mal', frase: 'O sentimento escolhe a versão do dia, não cancela o dia.' },
+  { situacao: 'Quando escorregar', frase: 'Deslize é evento, não identidade. Volto no próximo bloco.' },
+  { situacao: 'Quando se comparar com o passado', frase: 'Minha régua é eu de 30 dias atrás, não o de antes.' },
+  { situacao: 'Quando quiser acelerar tudo', frase: 'Progressão de carga. Constância ganha de intensidade.' },
+  { situacao: 'Quando travar para começar', frase: 'Qual é a menor ação física que eu consigo fazer agora?' },
+  { situacao: 'Quando der vontade de fugir', frase: 'Do que eu estou fugindo agora?' },
+  { situacao: 'Quando pintar um "só hoje"', frase: 'Isso é um pensamento de permissão. Eu nomeio e deixo passar.' },
+  { situacao: 'Quando for decidir algo importante', frase: 'Fome, raiva, solidão ou cansaço? Então espero 24 horas.' },
+  { situacao: 'Quando o dia for muito bom', frase: 'Paro no horário. O dia bom também tem fim.' },
+  { situacao: 'Quando quiser desistir do dia', frase: 'Imprevisto muda o plano, não cancela o dia.' },
+  { situacao: 'Sobre quem eu sou', frase: 'Identidade não se pensa. Se coleciona como prova.' },
+]
