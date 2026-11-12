@@ -8,6 +8,7 @@ import { supabase } from '../../../lib/supabase'
 import { dataPorExtensoDoBanco, diaDaSemana, somarDias } from '../../../lib/tempo'
 import { nomeExercicio } from '../catalogo'
 import { novoId, useTreino } from '../dados'
+import { ExercicioDetalhe } from '../ExercicioDetalhe'
 import { ExercicioImagem } from '../ExercicioImagem'
 import { duracaoEstimada, inicioDaSemana, planejar, type Plano } from '../plano'
 import type { Ficha } from '../tipos'
@@ -82,6 +83,7 @@ export function Hoje() {
   const { mostrar } = useToast()
   const [escolher, setEscolher] = useState<string | null>(null)
   const [extra, setExtra] = useState(false)
+  const [detalhe, setDetalhe] = useState<{ id: string; alvo: { series: number; min: number; max: number } } | null>(null)
   const [comecando, setComecando] = useState(false)
 
   const domingo = inicioDaSemana(hoje)
@@ -208,20 +210,24 @@ export function Hoje() {
 
       {fichaHoje && !aberta && p?.tipo === 'treino' && (
         <Secao titulo="Exercícios de hoje">
+          <p className="dia-apoio">Toque num exercício para ver como funciona, o que trabalha e por que ele está no treino.</p>
           <ul className="tr-previa">
             {fichaHoje.itens.map((it, i) => {
               const ultimo = ultimoDesempenho(it.exercicio)
               return (
                 <li key={it.id}>
-                  <span className="tr-previa-num">{i + 1}</span>
-                  <ExercicioImagem id={it.exercicio} tamanho="mini" />
-                  <div>
-                    <b>{nomeExercicio(it.exercicio)}</b>
-                    <small>
-                      {it.series} × {it.reps_min}–{it.reps_max}
-                      {ultimo.length > 0 && ` · última: ${resumoSeries(ultimo.slice(0, 2))}`}
-                    </small>
-                  </div>
+                  <button className="tr-previa-item" onClick={() => setDetalhe({ id: it.exercicio, alvo: { series: it.series, min: it.reps_min, max: it.reps_max } })}>
+                    <span className="tr-previa-num">{i + 1}</span>
+                    <ExercicioImagem id={it.exercicio} tamanho="mini" />
+                    <div>
+                      <b>{nomeExercicio(it.exercicio)}</b>
+                      <small>
+                        {it.series} × {it.reps_min}–{it.reps_max}
+                        {ultimo.length > 0 && ` · última: ${resumoSeries(ultimo.slice(0, 2))}`}
+                      </small>
+                    </div>
+                    <ChevronRight aria-hidden />
+                  </button>
                 </li>
               )
             })}
@@ -247,6 +253,7 @@ export function Hoje() {
       </Secao>
 
       {escolher && <EscolherTreino dia={escolher} aoFechar={() => setEscolher(null)} />}
+      {detalhe && <ExercicioDetalhe id={detalhe.id} alvo={detalhe.alvo} aoFechar={() => setDetalhe(null)} />}
       {extra && <EscolherTreino dia={hoje} aoFechar={() => setExtra(false)} aoEscolher={(f) => void comecar(f)} />}
     </div>
   )

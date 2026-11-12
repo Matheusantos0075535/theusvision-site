@@ -6,6 +6,7 @@ import { mensagemDeErroBanco } from '../../../lib/erros'
 import { supabase } from '../../../lib/supabase'
 import { alternativas, EXERCICIO, nomeExercicio } from '../catalogo'
 import { novoId, useTreino } from '../dados'
+import { ExercicioDetalhe } from '../ExercicioDetalhe'
 import { ExercicioImagem } from '../ExercicioImagem'
 import { umRM } from '../plano'
 import type { Serie } from '../tipos'
@@ -316,20 +317,13 @@ export function SessaoTela() {
                   <ExercicioImagem id={b.exercicio} tamanho="grande" />
                   <div className="tr-bloco-acoes">
                     <span className="tr-equip">{ex?.equipamento}</span>
-                    <button className="btn-link" onClick={() => setDicas(dicas === b.chave ? null : b.chave)}>
-                      <Info aria-hidden /> Como fazer
+                    <button className="btn-link" onClick={() => setDicas(b.chave)}>
+                      <Info aria-hidden /> Sobre o exercício
                     </button>
                     <button className="btn-link" onClick={() => setTrocar(b.chave)}>
                       <Repeat2 aria-hidden /> Trocar
                     </button>
                   </div>
-                  {dicas === b.chave && ex && (
-                    <ul className="tr-dicas">
-                      {ex.dicas.map((d) => (
-                        <li key={d}>{d}</li>
-                      ))}
-                    </ul>
-                  )}
                   {anterior.length > 0 && (
                     <p className="tr-anterior">
                       Última vez: <b>{anterior.map((s) => `${fmt(s.carga_kg)}kg×${s.reps ?? '?'}`).join('  ·  ')}</b>
@@ -409,6 +403,13 @@ export function SessaoTela() {
           aoParar={() => setDescanso(null)}
         />
       )}
+      {dicas && (() => {
+        const b = blocos.find((x) => x.chave === dicas)
+        const item = b && ficha?.itens.find((i) => i.exercicio === b.exercicio)
+        return b ? (
+          <ExercicioDetalhe id={b.exercicio} alvo={item ? { series: item.series, min: item.reps_min, max: item.reps_max } : undefined} aoFechar={() => setDicas(null)} />
+        ) : null
+      })()}
       {trocar && (
         <Trocar
           atual={blocos.find((b) => b.chave === trocar)!.exercicio}
