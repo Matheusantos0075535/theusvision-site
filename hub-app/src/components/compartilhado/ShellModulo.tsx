@@ -1,6 +1,7 @@
 import { ChevronLeft, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { BotaoSom } from '../ui/BotaoSom'
 import './compartilhado.css'
 
 export type Aba = { para: string; rotulo: string; icone: LucideIcon; fim?: boolean }
@@ -25,7 +26,10 @@ export function ShellModulo({
           <span>Hub</span>
         </Link>
         <h1 className="shell-titulo">{titulo}</h1>
-        <div className="shell-direita">{direita}</div>
+        <div className="shell-direita">
+          <BotaoSom />
+          {direita}
+        </div>
       </header>
       <main className="shell-miolo">{children}</main>
       <nav className="shell-nav" aria-label={`Navegação de ${titulo}`}>

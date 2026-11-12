@@ -11,6 +11,7 @@ import { AREAS, STATUS, useIdeias, type Etapa } from '../dados'
 import { dominio, embedDoLink, normalizarLink } from '../link'
 import { ImagemIdeia, apagarImagem, enviarImagem } from '../imagem'
 import { IconeLink, SeloData } from '../Selos'
+import { tocar } from '../../../lib/som'
 
 function Campo({ valor, aoSalvar, ...props }: { valor: string; aoSalvar: (v: string) => void } & TextareaHTMLAttributes<HTMLTextAreaElement>) {
   const [v, setV] = useState(valor)
@@ -98,6 +99,7 @@ export function IdeiaTela() {
     const resto = i!.etapas.filter((x) => x.id !== e.id && !x.feita).length
     if (!e.feita && resto === 0 && i!.etapas.length > 1) {
       await atualizar(i!.id, { status: 'feita' })
+      tocar('conquista')
       if (!reduzido) setFesta(true)
       mostrar('Todas as etapas feitas. Ideia executada!', { comNav: true })
       window.setTimeout(() => setFesta(false), 2600)

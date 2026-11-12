@@ -9,6 +9,7 @@ import '../dia/dia.css'
 import { AvisoPrototipo } from '../prototipo/Aviso'
 import { uid, usePersistido } from '../prototipo/estado'
 import '../prototipo/prototipo.css'
+import { tocar } from '../../lib/som'
 
 type Zona = { id: string; nome: string; comodo: string; estado: 0 | 1 | 2 | 3; ultima?: string; regra?: string }
 type Freq = 'diaria' | 'semanal' | 'mensal'
@@ -103,6 +104,7 @@ function Hoje() {
   useEffect(() => {
     if (d.timer && !d.timer.pausado && resta === 0 && !terminou) {
       setTerminou(true)
+      tocar('timer')
       try {
         navigator.vibrate?.([200, 100, 200])
       } catch {
@@ -119,6 +121,7 @@ function Hoje() {
       zonas: x.zonas.map((z) => (z.id === alvo?.id ? { ...z, estado, ultima: hoje } : z)),
     }))
     setTerminou(false)
+    tocar('sucesso')
     if (!reduzido) {
       setFesta(true)
       window.setTimeout(() => setFesta(false), 2600)

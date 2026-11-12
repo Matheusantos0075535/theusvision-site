@@ -2,6 +2,7 @@ import { Lightbulb, LogOut } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { resumoDoDia } from '../../modulos/dia/resumo'
 import { resumoDoTreino } from '../../modulos/treino/resumo'
+import { BotaoSom } from '../../components/ui/BotaoSom'
 import { supabase } from '../../lib/supabase'
 import { dataBrasiliaPorExtenso, horaBrasilia, primeiroNome, saudacao } from '../../lib/tempo'
 import { useAuth } from '../auth'
@@ -91,10 +92,13 @@ export function Inicio() {
       <div className="fita" />
       <header className="inicio-topo">
         <Marca />
-        <button className="btn btn-fantasma" onClick={() => void sair()}>
+        <span className="inicio-topo-acoes">
+          <BotaoSom />
+        <button className="btn btn-fantasma" onClick={() => void sair()} aria-label="Sair">
           <LogOut aria-hidden />
-          Sair
+          <span className="sair-texto">Sair</span>
         </button>
+        </span>
       </header>
       <main className="inicio-miolo">
         <section className="saudacao">

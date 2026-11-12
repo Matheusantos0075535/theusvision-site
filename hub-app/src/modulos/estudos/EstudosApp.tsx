@@ -13,6 +13,7 @@ import { Arvore, especieDaTrilha, estagioPorMinutos } from './Arvore'
 import { CalendarioEstudo } from './CalendarioEstudo'
 import { CORES, EstCtx, INTERVALOS, exemplo, fmtMin, minutosDoDia, sequencia, useE, type Dados, type Topico } from './dados'
 import { Floresta } from './Floresta'
+import { tocar } from '../../lib/som'
 
 function Hoje() {
   const { d, set } = useE()
@@ -47,7 +48,7 @@ function Hoje() {
         /* sem vibração */
       }
       setFesta({ min, trilha: trilhaId })
-      if (!reduzido) window.setTimeout(() => undefined, 0)
+      tocar('plantar')
     }
   }, [resta, d.timer, hoje, set, reduzido])
 
@@ -122,6 +123,7 @@ function Hoje() {
                   const trilhaId = d.timer!.trilha
                   set((x) => ({ ...x, timer: null, sessoes: [...x.sessoes, { id: uid(), dia: hoje, min: feitos, trilha: trilhaId }] }))
                   setFesta({ min: feitos, trilha: trilhaId })
+                  tocar('plantar')
                 }}
               >
                 <Flag aria-hidden /> Terminar agora
@@ -133,6 +135,7 @@ function Hoje() {
                   const trilhaId = d.timer!.trilha
                   set((x) => ({ ...x, timer: null, sessoes: [...x.sessoes, { id: uid(), dia: hoje, min: 0, trilha: trilhaId, ok: false }] }))
                   setFesta({ min: 0, trilha: trilhaId, murcha: true })
+                  tocar('erro')
                 }}
               >
                 <X aria-hidden /> Desistir

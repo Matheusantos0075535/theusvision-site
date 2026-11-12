@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { mensagemDeErroBanco } from '../../lib/erros'
 import { supabase } from '../../lib/supabase'
 import { diaDaSemana, hojeBrasiliaIso, somarDias } from '../../lib/tempo'
+import { atualizarOuCriar } from '../../lib/salvar'
 
 export type Bloco = 'manha' | 'noite' | 'essencial'
 export type Quando = 'todos' | 'semana' | 'fim_de_semana'
@@ -201,10 +202,9 @@ export function DiaProvider({ children }: { children: ReactNode }) {
 
   const encerrarDia = useCallback(
     async (primeiraAcao: string) => {
-      const r = await supabase
-        .from('dia_encerramentos')
-        .upsert({ dia, primeira_acao_amanha: primeiraAcao.trim() || null }, { onConflict: 'user_id,dia' })
-      if (r.error) return mensagemDeErroBanco(r.error)
+      const texto = primeiraAcao.trim() || null
+      const erro = await atualizarOuCriar('dia_encerramentos', { dia }, { primeira_acao_amanha: texto }, { dia, primeira_acao_amanha: texto })
+      if (erro) return mensagemDeErroBanco(erro)
       await carregarDia(dia)
       return null
     },

@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase'
 import { AREAS, useIdeias, type Area } from './dados'
 import { ImagemIdeia, apagarImagem, enviarImagem } from './imagem'
 import { ROTULO_LINK, normalizarLink, tipoDoLink } from './link'
+import { tocar } from '../../lib/som'
 
 /** Captura rápida: cola o link, dá um nome e pronto. O resto você completa depois. */
 export function NovaIdeia({ aoFechar }: { aoFechar: () => void }) {
@@ -75,6 +76,7 @@ export function NovaIdeia({ aoFechar }: { aoFechar: () => void }) {
       }
     }
     setSalvando(false)
+    tocar('sucesso')
     await recarregar()
     aoFechar()
     navegar(`/ideias/ideia/${novoId}`)

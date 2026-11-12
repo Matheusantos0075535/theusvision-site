@@ -8,7 +8,7 @@
   top: 0;
   z-index: 30;
   display: grid;
-  grid-template-columns: minmax(80px, 1fr) auto minmax(80px, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
   padding: calc(6px + var(--seguro-topo)) 12px 6px;
@@ -42,6 +42,17 @@
   letter-spacing: 0.01em;
   text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+@media (max-width: 400px) {
+  .shell-voltar span {
+    display: none;
+  }
+  .shell-titulo {
+    font-size: 16px;
+  }
 }
 .shell-direita {
   justify-self: end;

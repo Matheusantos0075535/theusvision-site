@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import { mensagemDeErroBanco } from '../../lib/erros'
 import { supabase } from '../../lib/supabase'
+import { atualizarOuCriar } from '../../lib/salvar'
 
 export type EstadoLivro = 'quero_ler' | 'lendo' | 'concluido' | 'pausado'
 
@@ -100,7 +101,9 @@ export function LeituraProvider({ children }: { children: ReactNode }) {
       const novo = { ...config, ...parcial }
       setConfig(novo)
       const { data } = await supabase.auth.getUser()
-      const { error } = await supabase.from('leit_config').upsert({ user_id: data.user?.id, ...novo })
+      const uid = data.user?.id
+      if (!uid) return 'Sessão expirada. Entre de novo.'
+      const error = await atualizarOuCriar('leit_config', { user_id: uid }, { ...novo }, { user_id: uid, ...novo })
       if (error) return mensagemDeErroBanco(error)
       void recarregar()
       return null

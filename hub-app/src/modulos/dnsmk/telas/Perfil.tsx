@@ -1,6 +1,7 @@
 import { Award, HeartHandshake, ShieldCheck } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Secao } from '../../../components/compartilhado/ShellModulo'
+import { definirSom, useSomLigado } from '../../../lib/som'
 import { useToast } from '../../../components/ui/Toast'
 import { supabase } from '../../../lib/supabase'
 import { formatarDataLonga } from '../../../lib/tempo'
@@ -21,6 +22,7 @@ function Chave({ ligado, aoMudar, rotulo, sub }: { ligado: boolean; aoMudar: (v:
 
 export function Perfil({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
   const { config, salvarConfig, estado } = useDnsmk()
+  const somGlobal = useSomLigado()
   const { mostrar } = useToast()
   const [gasto, setGasto] = useState(config.gasto_semanal?.toString() ?? '')
   const [conquistas, setConquistas] = useState<{ marco: number; conquistado_em: string }[]>([])
@@ -78,10 +80,10 @@ export function Perfil({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
       <Secao titulo="Preferências">
         <div className="cartao-bloco">
           <Chave
-            rotulo="Som na celebração"
-            sub="Desligado por padrão."
-            ligado={config.som}
-            aoMudar={(v) => void salvar({ som: v })}
+            rotulo="Sons do Hub"
+            sub="Vale para todos os módulos, neste aparelho."
+            ligado={somGlobal}
+            aoMudar={(v) => definirSom(v)}
           />
           <Chave rotulo="Vibração" sub="Vibração curta, se o aparelho permitir." ligado={config.vibracao} aoMudar={(v) => void salvar({ vibracao: v })} />
           <label className="campo dn-gasto">
