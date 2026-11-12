@@ -10,6 +10,7 @@ export type Ideia = {
   id: string
   titulo: string
   link: string | null
+  imagem_path: string | null
   proposito: string | null
   notas: string | null
   area: Area | null
@@ -49,7 +50,7 @@ export function IdeiasProvider({ children }: { children: ReactNode }) {
 
   const recarregar = useCallback(async () => {
     const [i, e] = await Promise.all([
-      supabase.from('ideias').select('id, titulo, link, proposito, notas, area, status, executar_em, favorita, criado_em, atualizado_em').order('atualizado_em', { ascending: false }),
+      supabase.from('ideias').select('id, titulo, link, imagem_path, proposito, notas, area, status, executar_em, favorita, criado_em, atualizado_em').order('atualizado_em', { ascending: false }),
       supabase.from('ideias_etapas').select('id, ideia_id, ordem, texto, feita').order('ordem'),
     ])
     const falha = i.error ?? e.error
