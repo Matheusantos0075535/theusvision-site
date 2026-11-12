@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Secao } from '../../../components/compartilhado/ShellModulo'
 import { useToast } from '../../../components/ui/Toast'
-import { dataBrasiliaPorExtenso, horaBrasilia } from '../../../lib/tempo'
+import { useAuth } from '../../../hub/auth'
+import { dataBrasiliaPorExtenso, horaBrasilia, primeiroNome, saudacao } from '../../../lib/tempo'
 import { BLOCOS_FIM_DE_SEMANA, BLOCOS_SEMANA, TEXTOS } from '../conteudo'
-import { itensDeHoje, useDia, type Bloco, type Item, type Prioridade } from '../dados'
+import { itensDeHoje, useDia, type Item, type Prioridade } from '../dados'
 
 const horaAtual = () => Number(horaBrasilia().split(':')[0])
 
@@ -227,6 +228,7 @@ function Encerrar() {
 
 export function Hoje() {
   const { itens, prioridades, fimDeSemana, feitos } = useDia()
+  const { acesso } = useAuth()
   const [hora, setHora] = useState(horaAtual)
   useEffect(() => {
     const t = window.setInterval(() => setHora(horaAtual()), 60_000)
@@ -238,45 +240,60 @@ export function Hoje() {
   const manha = itensDeHoje(itens, 'manha', fimDeSemana)
   const noite = itensDeHoje(itens, 'noite', fimDeSemana)
   const essenciais = itensDeHoje(itens, 'essencial', fimDeSemana)
-  const lista = (b: Bloco) => (b === 'manha' ? manha : b === 'noite' ? noite : essenciais)
-  const total = [...lista('manha'), ...lista('noite'), ...lista('essencial')]
+  const total = [...manha, ...noite]
   const feitosTotal = total.filter((i) => feitos.has(i.id)).length + prioridades.filter((p) => p.feita).length
   const totalGeral = total.length + prioridades.length
+  const data = dataBrasiliaPorExtenso()
+  const [diaSemana, resto] = data.split(', ')
 
   return (
     <div className="dia-hoje">
-      <section className="dia-agora" aria-label="Bloco do dia">
-        <span className="rotulo">
-          {dataBrasiliaPorExtenso()} · {fimDeSemana ? 'fim de semana' : 'dia útil'}
-        </span>
-        <h2>{agora.nome}</h2>
-        <p>{agora.foco}</p>
-        <ul>
-          {agora.itens.map((i) => (
-            <li key={i}>{i}</li>
-          ))}
-        </ul>
+      <section className="dia-hero" aria-label="Hoje">
+        <span className="dia-hero-tipo">{fimDeSemana ? 'Fim de semana' : 'Dia útil'}</span>
+        <p className="dia-hero-saudacao">
+          {saudacao()}, <b>{acesso ? primeiroNome(acesso.nome) : ''}</b>
+        </p>
+        <h2 className="dia-hero-data">
+          <span>{diaSemana}</span>
+          {resto}
+        </h2>
+        <div className="dia-hero-bloco">
+          <b>{agora.nome}</b>
+          <span>{agora.foco}</span>
+        </div>
         {totalGeral > 0 && (
-          <small className="dia-agora-conta">
-            {feitosTotal} de {totalGeral} feitos hoje
-          </small>
+          <div className="dia-hero-conta">
+            <span className="dia-hero-barra" aria-hidden>
+              <i style={{ width: `${Math.round((feitosTotal / totalGeral) * 100)}%` }} />
+            </span>
+            <small>
+              {feitosTotal} de {totalGeral} feitos hoje
+            </small>
+          </div>
         )}
       </section>
 
-      <Secao titulo={TEXTOS.prioridadesTitulo}>
-        <p className="dia-apoio">{TEXTOS.prioridadesApoio}</p>
-        <ol className="dia-prios">
-          {[1, 2, 3].map((n) => (
-            <Slot key={`${n}-${prioridades.find((p) => p.ordem === n)?.id ?? 'novo'}`} ordem={n} p={prioridades.find((p) => p.ordem === n)} />
-          ))}
-        </ol>
-      </Secao>
-
-      <Secao titulo="Seu dia">
+      <div className="dia-coluna">
         <Checklist titulo="Rotina da manhã" itens={manha} aberto={hora < 12} />
-        <Checklist titulo="Essenciais do dia" itens={essenciais} aberto />
+
+        <Secao titulo={TEXTOS.prioridadesTitulo}>
+          <p className="dia-apoio">{TEXTOS.prioridadesApoio}</p>
+          <ol className="dia-prios">
+            {[1, 2, 3].map((n) => (
+              <Slot key={`${n}-${prioridades.find((p) => p.ordem === n)?.id ?? 'novo'}`} ordem={n} p={prioridades.find((p) => p.ordem === n)} />
+            ))}
+          </ol>
+        </Secao>
+
         <Checklist titulo="Rotina da noite" itens={noite} aberto={hora >= 17} />
-      </Secao>
+      </div>
+
+      {essenciais.length > 0 && (
+        <aside className="dia-essenciais" aria-label="Essenciais do dia">
+          <span className="rotulo">Essenciais de hoje</span>
+          <p>{essenciais.map((i) => i.titulo).join(' · ')}</p>
+        </aside>
+      )}
 
       <Encerrar />
     </div>
