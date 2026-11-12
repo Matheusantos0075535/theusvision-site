@@ -75,6 +75,25 @@ begin
 end
 $$;
 
+-- Uso interno das funções dos módulos: devolve o usuário logado ou recusa.
+create function public.hub_uid_autorizado()
+returns uuid
+language plpgsql
+stable
+security definer
+set search_path = ''
+as $$
+declare
+  v uuid := auth.uid();
+begin
+  if v is null or not public.hub_autorizado() then
+    raise exception 'TV: Acesso negado.' using errcode = '42501';
+  end if;
+  return v;
+end
+$$;
+
+revoke all on function public.hub_uid_autorizado() from public, anon, authenticated;
 revoke all on function public.hub_hoje() from public, anon;
 revoke all on function public.hub_autorizado() from public, anon;
 revoke all on function public.hub_meu_acesso() from public, anon;
