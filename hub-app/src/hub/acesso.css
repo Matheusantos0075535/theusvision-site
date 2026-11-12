@@ -1,0 +1,119 @@
+.acesso {
+  min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
+}
+.acesso-brilho {
+  position: absolute;
+  inset: -240px -30% auto;
+  height: 620px;
+  background:
+    radial-gradient(40% 50% at 24% 40%, rgba(255, 159, 17, 0.22), transparent 70%),
+    radial-gradient(46% 54% at 78% 30%, rgba(61, 23, 115, 0.85), transparent 72%);
+  pointer-events: none;
+}
+.acesso-miolo {
+  position: relative;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: calc(40px + var(--seguro-topo)) var(--margem) calc(32px + var(--seguro-baixo));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+.acesso-cartao {
+  width: 100%;
+  background: rgba(28, 7, 82, 0.82);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-g);
+  box-shadow: var(--sombra);
+  padding: 28px 22px 24px;
+  animation: aparecer var(--t-longo) var(--curva);
+}
+.acesso-cartao h1 {
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+}
+.acesso-apoio {
+  margin-top: 8px;
+  color: var(--texto-2);
+  font-size: 15.5px;
+}
+.acesso-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+.acesso-form .btn-primario {
+  margin-top: 4px;
+}
+.acesso-alternativa {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--borda);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 15px;
+  color: var(--texto-2);
+}
+.acesso-rodape {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--apagado);
+  font-weight: 600;
+  text-align: center;
+}
+.senha-caixa {
+  position: relative;
+}
+.senha-caixa .entrada {
+  padding-right: 52px;
+}
+.senha-olho {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  color: var(--apagado);
+  border-radius: 8px;
+}
+.senha-olho:hover {
+  color: var(--texto);
+}
+.senha-olho svg {
+  width: 20px;
+  height: 20px;
+}
+.envelope {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--laranja-suave);
+  color: var(--laranja);
+  margin-bottom: 18px;
+}
+.envelope svg {
+  width: 26px;
+  height: 26px;
+}
+.acesso-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+}

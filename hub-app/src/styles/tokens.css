@@ -1,0 +1,45 @@
+/* Sistema visual extraído de theusvision.com.br */
+:root {
+  --fundo: #0e0129;
+  --indigo: #150240;
+  --superf: #1c0752;
+  --superf-2: #2a0f63;
+  --superf-3: #34167a;
+  --roxo: #3d1773;
+  --laranja: #ff9f11;
+  --laranja-esc: #e08707;
+  --laranja-suave: rgba(255, 159, 17, 0.14);
+  --laranja-borda: rgba(255, 159, 17, 0.5);
+  --sobre-laranja: #1a0a00;
+
+  --texto: #efeaf7;
+  --texto-2: rgba(239, 234, 247, 0.72);
+  --apagado: rgba(239, 234, 247, 0.45);
+  --borda: rgba(255, 255, 255, 0.13);
+  --borda-forte: rgba(255, 255, 255, 0.22);
+  --vidro: rgba(14, 1, 41, 0.92);
+  --erro: #ff6b6b;
+  --erro-suave: rgba(255, 107, 107, 0.12);
+
+  --raio-p: 10px;
+  --raio: 14px;
+  --raio-g: 16px;
+  --raio-xg: 22px;
+  --raio-pilula: 999px;
+
+  --sombra: 0 18px 40px -20px rgba(0, 0, 0, 0.6);
+  --sombra-flutuante: 0 24px 60px -24px rgba(0, 0, 0, 0.85);
+  --sombra-destaque: 0 0 0 2px rgba(255, 159, 17, 0.45), 0 30px 60px -18px rgba(255, 159, 17, 0.4);
+
+  --curva: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --t-curto: 200ms;
+  --t-medio: 280ms;
+  --t-longo: 400ms;
+
+  --fonte: 'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --margem: 20px;
+  --largura: 1080px;
+  --nav-altura: 64px;
+  --seguro-baixo: env(safe-area-inset-bottom, 0px);
+  --seguro-topo: env(safe-area-inset-top, 0px);
+}
