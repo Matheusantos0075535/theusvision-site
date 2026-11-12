@@ -4,7 +4,8 @@ import { supabase } from '../../lib/supabase'
 import { dataBrasiliaPorExtenso, horaBrasilia, primeiroNome, saudacao } from '../../lib/tempo'
 import { useAuth } from '../auth'
 import { Marca } from '../LayoutAcesso'
-import { MODULOS } from '../modulos'
+import { useModo } from '../modo'
+import { MODULOS, ROTULO_MODO, type Modo } from '../modulos'
 import type { DestaqueCard } from './CardModulo'
 import { GradeModulos } from './GradeModulos'
 import './inicio.css'
@@ -28,6 +29,7 @@ function useAgora() {
 
 function useDestaques() {
   const [destaques, setDestaques] = useState<Record<string, DestaqueCard | null>>({
+    dia: { numero: null, linha: 'Carregando…' },
     dnsmk: { numero: null, linha: 'Carregando…' },
     leitura: { numero: null, linha: 'Carregando…' },
   })
@@ -35,7 +37,7 @@ function useDestaques() {
     let vivo = true
     Promise.allSettled([supabase.rpc('dnsmk_estado'), supabase.rpc('leit_estado')]).then(([d, l]) => {
       if (!vivo) return
-      const novo: Record<string, DestaqueCard | null> = {}
+      const novo: Record<string, DestaqueCard | null> = { dia: { numero: null, linha: 'Prioridades e rotina de hoje' } }
       const dn = d.status === 'fulfilled' && !d.value.error ? d.value.data : null
       novo.dnsmk = dn
         ? dn.tem_jornada
@@ -63,9 +65,11 @@ export function Inicio() {
   const agora = useAgora()
   const destaques = useDestaques()
   const nome = acesso ? primeiroNome(acesso.nome) : ''
+  const { modo, trocar } = useModo()
+  const modulos = MODULOS.filter((m) => m.modo === modo)
 
   return (
-    <div className="inicio">
+    <div className="inicio" data-modo={modo}>
       <div className="fita" />
       <header className="inicio-topo">
         <Marca />
@@ -76,7 +80,7 @@ export function Inicio() {
       </header>
       <main className="inicio-miolo">
         <section className="saudacao">
-          <span className="olho">Seu painel</span>
+          <span className="olho">{modo === 'work' ? 'Modo work' : 'Seu painel'}</span>
           <h1>
             {saudacao(agora)}, <span>{nome}</span>
           </h1>
@@ -87,15 +91,22 @@ export function Inicio() {
               {horaBrasilia(agora)} <small>Brasília</small>
             </span>
           </p>
+          <div className="modo-troca" role="group" aria-label="Modo do painel">
+            {(['pessoal', 'work'] as Modo[]).map((m) => (
+              <button key={m} className="modo-opcao" aria-pressed={modo === m} onClick={() => trocar(m)}>
+                {ROTULO_MODO[m]}
+              </button>
+            ))}
+          </div>
         </section>
         <section aria-labelledby="titulo-modulos">
           <div className="secao-cabeca">
             <h2 id="titulo-modulos">Módulos</h2>
             <span className="rotulo">
-              {MODULOS.filter((m) => m.status === 'disponivel').length} de {MODULOS.length} disponíveis
+              {modulos.filter((m) => m.status === 'disponivel').length} de {modulos.length} disponíveis
             </span>
           </div>
-          <GradeModulos modulos={MODULOS} destaques={destaques} />
+          <GradeModulos modulos={modulos} destaques={destaques} />
         </section>
       </main>
     </div>

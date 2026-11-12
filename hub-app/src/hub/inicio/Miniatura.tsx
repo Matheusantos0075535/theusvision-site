@@ -53,7 +53,20 @@ export function Miniatura({ id, destaque }: { id: string; destaque?: DestaqueCar
     )
   }
 
-  if (id === 'treino') {
+  if (id === 'dia') {
+    return (
+      <div className="mini mini-lista" aria-hidden>
+        {[true, true, true, false].map((ok, i) => (
+          <div key={i}>
+            <i data-ok={ok || undefined} />
+            <b style={{ width: `${[64, 78, 52, 70][i]}%` }} />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  if (id === 'treino' || id === 'financas' || id === 'receita') {
     return (
       <div className="mini mini-colunas" aria-hidden>
         {[40, 62, 48, 78, 66, 92, 74].map((h, i) => (
@@ -63,7 +76,7 @@ export function Miniatura({ id, destaque }: { id: string; destaque?: DestaqueCar
     )
   }
 
-  if (id === 'estudos') {
+  if (id === 'estudos' || id === 'construcao') {
     return (
       <div className="mini mini-trilha" aria-hidden>
         {[0, 1, 2, 3].map((i) => (
@@ -73,7 +86,7 @@ export function Miniatura({ id, destaque }: { id: string; destaque?: DestaqueCar
     )
   }
 
-  if (id === 'rotina') {
+  if (id === 'rotina' || id === 'clientes') {
     return (
       <div className="mini mini-lista" aria-hidden>
         {[true, true, false, false].map((ok, i) => (

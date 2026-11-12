@@ -1,9 +1,12 @@
-import { BookOpen, Dumbbell, GraduationCap, House, Lightbulb, Sprout, type LucideIcon } from 'lucide-react'
+import { BookOpen, Briefcase, CalendarCheck, Dumbbell, GraduationCap, HandCoins, House, Rocket, Sprout, Users, Wallet, type LucideIcon } from 'lucide-react'
+
+export type Modo = 'pessoal' | 'work'
 
 export type StatusModulo = 'disponivel' | 'em_breve'
 
 export type Modulo = {
   id: string
+  modo: Modo
   nome: string
   categoria: string
   descricao: string
@@ -15,7 +18,28 @@ export type Modulo = {
 
 export const MODULOS: Modulo[] = [
   {
+    id: 'dia',
+    modo: 'pessoal',
+    nome: 'Meu dia',
+    categoria: 'Rotina',
+    descricao: 'Prioridades, rotinas e despejo mental.',
+    icone: CalendarCheck,
+    status: 'disponivel',
+    rota: '/dia',
+    previa: {
+      resumo: 'O painel do seu dia: 3 prioridades, rotina da manhã e da noite (diferente no fim de semana), essenciais e um despejo mental para esvaziar a cabeça.',
+      itens: [
+        'As 3 prioridades do dia, cada uma com a primeira ação',
+        'Rotina da manhã e da noite, editável',
+        'Essenciais do dia que não se negociam',
+        'Despejo mental com triagem em categorias',
+        'Encerrar o dia deixando a primeira ação de amanhã pronta',
+      ],
+    },
+  },
+  {
     id: 'dnsmk',
+    modo: 'pessoal',
     nome: 'DuoNoSmkg',
     categoria: 'Saúde',
     descricao: 'Dias sem fumar, um check-in por dia.',
@@ -35,6 +59,7 @@ export const MODULOS: Modulo[] = [
   },
   {
     id: 'leitura',
+    modo: 'pessoal',
     nome: 'Leitura',
     categoria: 'Hábito',
     descricao: 'Vários livros, uma página por vez.',
@@ -54,6 +79,7 @@ export const MODULOS: Modulo[] = [
   },
   {
     id: 'treino',
+    modo: 'pessoal',
     nome: 'Treino',
     categoria: 'Corpo',
     descricao: 'Treinos, cargas e evolução.',
@@ -66,6 +92,7 @@ export const MODULOS: Modulo[] = [
   },
   {
     id: 'estudos',
+    modo: 'pessoal',
     nome: 'Estudos',
     categoria: 'Aprendizado',
     descricao: 'O que estudar e quanto já avancei.',
@@ -78,6 +105,7 @@ export const MODULOS: Modulo[] = [
   },
   {
     id: 'rotina',
+    modo: 'pessoal',
     nome: 'Rotina da casa',
     categoria: 'Casa',
     descricao: 'Tarefas da casa sem esquecer nada.',
@@ -89,15 +117,68 @@ export const MODULOS: Modulo[] = [
     },
   },
   {
-    id: 'ideias',
-    nome: 'Banco de ideias',
-    categoria: 'Criação',
-    descricao: 'Ideias guardadas antes de sumirem.',
-    icone: Lightbulb,
+    id: 'financas',
+    modo: 'pessoal',
+    nome: 'Finanças',
+    categoria: 'Dinheiro',
+    descricao: 'Orçamento, dívidas e o freio de compra.',
+    icone: Wallet,
     status: 'em_breve',
     previa: {
-      resumo: 'Um lugar rápido para guardar ideias e voltar nelas depois.',
-      itens: ['Captura em segundos', 'Etiquetas', 'Ideias favoritas'],
+      resumo: 'Controle do mês sem planilha complicada: para onde o dinheiro vai, dívidas saindo da lista e um freio contra compra por impulso.',
+      itens: ['Orçamento do mês', 'Dívidas com plano de quitação', 'Freio de 24 horas para compras grandes', 'Aportes e metas'],
+    },
+  },
+  {
+    id: 'clientes',
+    modo: 'work',
+    nome: 'Clientes e entregas',
+    categoria: 'Entrega',
+    descricao: 'Uma página por cliente, com a próxima ação.',
+    icone: Users,
+    status: 'em_breve',
+    previa: {
+      resumo: 'Cada cliente ou projeto com o que é entregue, os prazos visíveis, o que está parado e a primeira ação de cada pendência.',
+      itens: ['Página por cliente ou projeto', 'Próximas entregas com prazo', 'Pendências e quem depende de quem', 'Mensagens-padrão prontas'],
+    },
+  },
+  {
+    id: 'receita',
+    modo: 'work',
+    nome: 'Receita e prospecção',
+    categoria: 'Receita',
+    descricao: 'Uma iniciativa por dia, sem depender de sobra de tempo.',
+    icone: HandCoins,
+    status: 'em_breve',
+    previa: {
+      resumo: 'Propostas, follow-ups e renovações em andamento, com uma iniciativa comercial por dia.',
+      itens: ['Funil simples: contato, proposta, fechado', 'Iniciativa do dia', 'Follow-ups programados', 'Cobranças e renovações'],
+    },
+  },
+  {
+    id: 'construcao',
+    modo: 'work',
+    nome: 'Construção do negócio',
+    categoria: 'Estrutura',
+    descricao: 'Processos, ofertas e automações.',
+    icone: Rocket,
+    status: 'em_breve',
+    previa: {
+      resumo: 'O trabalho NO negócio, não DENTRO dele: documentar processos, montar ofertas e automações, em um bloco fixo por semana.',
+      itens: ['Bloco semanal de construção', 'Processos documentados', 'Automações e ofertas', 'Revisão dos 90 dias'],
+    },
+  },
+  {
+    id: 'negocios',
+    modo: 'work',
+    nome: 'Visão do trabalho',
+    categoria: 'Panorama',
+    descricao: 'Tudo o que está rodando, numa tela.',
+    icone: Briefcase,
+    status: 'em_breve',
+    previa: {
+      resumo: 'Um painel único do modo work: entregas da semana, receita em andamento e o que está travado.',
+      itens: ['Entregas da semana', 'Receita em andamento', 'O que está travado e por quê'],
     },
   },
 ]
@@ -106,3 +187,5 @@ export const ROTULO_STATUS: Record<StatusModulo, string> = {
   disponivel: 'Disponível',
   em_breve: 'Em breve',
 }
+
+export const ROTULO_MODO: Record<Modo, string> = { pessoal: 'Pessoal', work: 'Work' }

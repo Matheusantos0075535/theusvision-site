@@ -1,0 +1,449 @@
+/* ---------- Meu dia ---------- */
+.dia-hoje,
+.dia-despejo,
+.dia-rotinas {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.dia-apoio {
+  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--texto-2);
+}
+
+/* bloco agora */
+.dia-agora {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 18px 16px;
+  border-radius: var(--raio-g);
+  border: 1px solid var(--borda-forte);
+  background:
+    radial-gradient(80% 100% at 0% 0%, rgba(255, 159, 17, 0.2), transparent 70%),
+    radial-gradient(70% 100% at 100% 100%, rgba(61, 220, 151, 0.16), transparent 70%), var(--superf);
+}
+.dia-agora h2 {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.2;
+}
+.dia-agora p {
+  margin: 0;
+  color: var(--texto-2);
+  font-size: 14.5px;
+}
+.dia-agora ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 3px;
+  font-size: 14.5px;
+}
+.dia-agora-conta {
+  margin-top: 6px;
+  font-weight: 700;
+  color: var(--verde);
+}
+
+/* caixa de marcar */
+.dia-caixa {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 8px;
+  border: 2px solid var(--borda-forte);
+  color: transparent;
+  transition:
+    background var(--t-medio) var(--curva),
+    border-color var(--t-medio) var(--curva),
+    color var(--t-medio) var(--curva);
+}
+.dia-caixa svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 3;
+}
+[aria-pressed='true'] > .dia-caixa {
+  background: var(--grad-verde);
+  border-color: transparent;
+  color: #06281b;
+}
+
+/* prioridades */
+.dia-prios {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.dia-prio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 8px 12px 12px;
+  min-height: 64px;
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  background: var(--superf);
+}
+.dia-prio-num {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--laranja-suave);
+  color: var(--laranja);
+  font-weight: 800;
+  font-size: 14px;
+}
+.dia-prio-vazia {
+  padding: 0;
+  border-style: dashed;
+  background: transparent;
+}
+.dia-prio-vazia button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 0 14px 0 12px;
+  text-align: left;
+  color: var(--texto-2);
+  font-weight: 600;
+}
+.dia-prio-vazia button svg {
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+}
+.dia-prio-marca {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  flex: none;
+}
+.dia-prio-textos {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dia-prio-textos b {
+  font-size: 16px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.dia-prio-textos small {
+  color: var(--texto-2);
+  font-size: 13px;
+}
+.dia-prio[data-feita] .dia-prio-textos b {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.dia-prio-edicao {
+  align-items: flex-start;
+  flex-direction: row;
+  padding: 12px;
+}
+.dia-prio-edicao form {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+.dia-prio-botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* listas da rotina */
+.dia-lista {
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  background: var(--superf);
+  margin-bottom: 10px;
+}
+.dia-lista summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 14px;
+  cursor: pointer;
+  list-style: none;
+}
+.dia-lista summary::-webkit-details-marker {
+  display: none;
+}
+.dia-lista-titulo {
+  flex: 1;
+  font-weight: 800;
+  font-size: 15.5px;
+}
+.dia-lista-conta {
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--texto-2);
+}
+.dia-lista[data-completo] .dia-lista-conta {
+  color: var(--verde);
+}
+.dia-lista summary svg {
+  width: 18px;
+  height: 18px;
+  color: var(--texto-2);
+  transition: transform var(--t-medio) var(--curva);
+}
+.dia-lista[open] summary svg {
+  transform: rotate(180deg);
+}
+.dia-lista ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 6px 8px;
+}
+.dia-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 8px;
+  text-align: left;
+  border-radius: 12px;
+}
+.dia-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.dia-item-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.dia-item-textos b {
+  font-size: 15.5px;
+  line-height: 1.25;
+}
+.dia-item-textos small {
+  color: var(--texto-2);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.dia-item[aria-pressed='true'] .dia-item-textos b {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* encerrar */
+.dia-encerrar {
+  gap: 10px;
+}
+.dia-encerrar svg {
+  width: 20px;
+  height: 20px;
+}
+.dia-encerrado svg {
+  color: var(--verde);
+}
+.dia-folha-titulo {
+  margin: 4px 0 8px;
+  font-size: 20px;
+}
+.dia-folha-apoio {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--texto-2);
+  line-height: 1.45;
+}
+.dia-folha-apoio a {
+  color: var(--laranja);
+  font-weight: 700;
+}
+
+/* chips */
+.dia-chip {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--borda-forte);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--texto-2);
+}
+.dia-chip[aria-pressed='true'] {
+  background: var(--laranja-suave);
+  border-color: var(--laranja-borda);
+  color: var(--laranja);
+}
+.dia-chip[data-p='alta'][aria-pressed='true'] {
+  background: rgba(255, 122, 107, 0.16);
+  border-color: rgba(255, 122, 107, 0.6);
+  color: #ff8f82;
+}
+
+/* despejo */
+.dep-novo {
+  display: flex;
+  gap: 8px;
+}
+.dep-novo .entrada {
+  flex: 1;
+  min-width: 0;
+}
+.dep-abas,
+.dep-grupo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.dep-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.dep-cartao {
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  background: var(--superf);
+}
+.dep-cartao[data-aberto] {
+  border-color: var(--laranja-borda);
+}
+.dep-cartao[data-resolvido] .dep-texto b {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.dep-linha {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px 4px 4px;
+}
+.dep-texto {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  padding: 10px 0;
+  text-align: left;
+}
+.dep-texto b {
+  font-size: 15.5px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.dep-texto small {
+  color: var(--texto-2);
+  font-size: 13px;
+}
+.dep-selos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.dep-selo {
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--borda-forte);
+  color: var(--texto-2);
+}
+.dep-selo-novo {
+  border-color: var(--laranja-borda);
+  color: var(--laranja);
+}
+.dep-selo[data-p='alta'] {
+  border-color: rgba(255, 122, 107, 0.6);
+  color: #ff8f82;
+}
+.dep-seta {
+  width: 18px;
+  height: 18px;
+  color: var(--texto-2);
+  transition: transform var(--t-medio) var(--curva);
+}
+.dep-cartao[data-aberto] .dep-seta {
+  transform: rotate(180deg);
+}
+.dep-triagem {
+  display: grid;
+  gap: 4px;
+  padding: 4px 14px 14px;
+}
+.dep-apagar {
+  justify-self: flex-start;
+  color: #ff8f82;
+}
+.dep-apagar svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* editar rotinas */
+.rot-lista {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.rot-item {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  background: var(--superf);
+}
+.rot-item[data-inativo] {
+  opacity: 0.55;
+}
+.rot-campos {
+  display: grid;
+  gap: 6px;
+}
+.rot-detalhe {
+  font-size: 16px;
+  color: var(--texto-2);
+}
+.rot-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+}
+@media (min-width: 900px) {
+  .shell-miolo .dia-hoje {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 18px 24px;
+  }
+  .shell-miolo .dia-hoje > .dia-agora,
+  .shell-miolo .dia-hoje > .dia-encerrar,
+  .shell-miolo .dia-hoje > .dia-encerrado {
+    grid-column: 1 / -1;
+  }
+}
