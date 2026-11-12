@@ -9,6 +9,7 @@ import { formatarDataLonga } from '../../../lib/tempo'
 import { useMovimentoReduzido } from '../../../lib/useMidia'
 import { AREAS, STATUS, useIdeias, type Etapa } from '../dados'
 import { dominio, embedDoLink, normalizarLink } from '../link'
+import { ImagemIdeia, apagarImagem, enviarImagem } from '../imagem'
 import { IconeLink, SeloData } from '../Selos'
 
 function Campo({ valor, aoSalvar, ...props }: { valor: string; aoSalvar: (v: string) => void } & TextareaHTMLAttributes<HTMLTextAreaElement>) {
@@ -30,6 +31,8 @@ export function IdeiaTela() {
   const [nova, setNova] = useState('')
   const [festa, setFesta] = useState(false)
   const novaRef = useRef<HTMLInputElement>(null)
+  const arquivoRef = useRef<HTMLInputElement>(null)
+  const [enviando, setEnviando] = useState(false)
 
   useEffect(() => {
     setTitulo(i?.titulo ?? '')
@@ -50,6 +53,31 @@ export function IdeiaTela() {
   const salvar = async (campos: Parameters<typeof atualizar>[1]) => {
     const e = await atualizar(i.id, campos)
     if (e) mostrar(e, { comNav: true })
+  }
+
+  async function trocarImagem(f: File | undefined) {
+    if (!f) return
+    if (!f.type.startsWith('image/')) return mostrar('Escolha um arquivo de imagem.', { comNav: true })
+    setEnviando(true)
+    try {
+      const antigo = i!.imagem_path
+      const caminho = await enviarImagem(i!.id, f)
+      const e = await atualizar(i!.id, { imagem_path: caminho })
+      if (e) {
+        await apagarImagem(caminho)
+        mostrar(e, { comNav: true })
+      } else await apagarImagem(antigo)
+    } catch (err) {
+      mostrar(mensagemDeErroBanco(err as Parameters<typeof mensagemDeErroBanco>[0]), { comNav: true })
+    }
+    setEnviando(false)
+  }
+
+  async function tirarImagem() {
+    const antigo = i!.imagem_path
+    const e = await atualizar(i!.id, { imagem_path: null })
+    if (e) return mostrar(e, { comNav: true })
+    await apagarImagem(antigo)
   }
 
   async function addEtapa() {
@@ -98,6 +126,7 @@ export function IdeiaTela() {
     if (!window.confirm('Apagar esta ideia de vez? (Arquivar guarda ela fora da lista.)')) return
     const { error } = await supabase.from('ideias').delete().eq('id', i!.id)
     if (error) return mostrar(mensagemDeErroBanco(error), { comNav: true })
+    await apagarImagem(i!.imagem_path)
     await recarregar()
     navegar('/ideias')
   }
@@ -137,6 +166,29 @@ export function IdeiaTela() {
             )
           })}
         </div>
+      </section>
+
+      <section className="id-bloco">
+        <h3>Imagem</h3>
+        <input ref={arquivoRef} type="file" accept="image/*" hidden onChange={(e) => {
+          void trocarImagem(e.target.files?.[0])
+          e.target.value = ''
+        }} />
+        {i.imagem_path ? (
+          <>
+            <ImagemIdeia path={i.imagem_path} titulo={i.titulo} />
+            <div className="dia-prio-botoes" style={{ justifyContent: 'flex-start' }}>
+              <button className="btn btn-secundario" onClick={() => arquivoRef.current?.click()} disabled={enviando}>
+                {enviando ? 'Enviando…' : 'Trocar imagem'}
+              </button>
+              <button className="btn btn-fantasma" onClick={() => void tirarImagem()} disabled={enviando}>
+                Tirar
+              </button>
+            </div>
+          </>
+        ) : (
+          <ImagemIdeia path={null} titulo={i.titulo} aoClicar={() => !enviando && arquivoRef.current?.click()} />
+        )}
       </section>
 
       <section className="id-bloco">

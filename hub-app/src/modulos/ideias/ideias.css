@@ -508,3 +508,70 @@ textarea.id-titulo {
   field-sizing: content;
   min-height: 1.3em;
 }
+
+/* imagem da ideia */
+.id-img {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f1ebfb;
+}
+.id-img img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: cover;
+}
+.id-img-vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 120px;
+  border: 2px dashed #d9cdef;
+  color: #7a5fb0;
+  font-weight: 700;
+  font-size: 14px;
+}
+.id-img-vazia svg {
+  width: 28px;
+  height: 28px;
+  color: #b35f00;
+}
+.id-img-previa {
+  display: grid;
+  gap: 8px;
+}
+.id-nova .id-img-vazia {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--borda-forte);
+  color: var(--texto-2);
+}
+.id-nova .id-img-vazia svg {
+  color: var(--laranja);
+}
+/* no cartão: a imagem vira capa no topo */
+.id-cartao-alvo[data-com-imagem] {
+  padding-top: 0;
+}
+.id-cartao-alvo[data-com-imagem] .id-img {
+  margin: 0 -52px 0 -14px;
+  width: auto;
+  border-radius: var(--raio-g) var(--raio-g) 0 0;
+}
+.id-cartao-alvo[data-com-imagem] .id-img img {
+  aspect-ratio: 16 / 9;
+  max-height: none;
+}
+.id-cartao-alvo[data-com-imagem] .id-cartao-topo {
+  margin-top: 12px;
+}
+.id-cartao-alvo[data-com-imagem] ~ .id-estrela {
+  background: rgba(255, 255, 255, 0.9);
+}
+.id-nova .id-img img {
+  max-height: 200px;
+}

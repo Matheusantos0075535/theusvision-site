@@ -2,6 +2,7 @@ import { ListChecks, Plus, Search, Sparkles, Star } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { STATUS, AREAS, useIdeias, type Ideia, type Status } from '../dados'
+import { ImagemIdeia } from '../imagem'
 import { IconeLink, SeloData } from '../Selos'
 
 type Filtro = 'ativas' | Status | 'favoritas'
@@ -11,7 +12,8 @@ export function CartaoIdeia({ i }: { i: Ideia }) {
   const feitas = i.etapas.filter((e) => e.feita).length
   return (
     <li className="id-cartao" data-status={i.status}>
-      <Link to={`/ideias/ideia/${i.id}`} className="id-cartao-alvo">
+      <Link to={`/ideias/ideia/${i.id}`} className="id-cartao-alvo" data-com-imagem={!!i.imagem_path || undefined}>
+        {i.imagem_path && <ImagemIdeia path={i.imagem_path} titulo={i.titulo} />}
         <span className="id-cartao-topo">
           <span className="id-status" data-status={i.status}>
             {STATUS.find((s) => s.id === i.status)?.rotulo}
