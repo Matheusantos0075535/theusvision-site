@@ -12,6 +12,7 @@ import { ExercicioDetalhe } from '../ExercicioDetalhe'
 import { ExercicioImagem } from '../ExercicioImagem'
 import { duracaoEstimada, inicioDaSemana, planejar, type Plano } from '../plano'
 import type { Ficha } from '../tipos'
+import { atualizarOuCriar } from '../../../lib/salvar'
 
 const SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 const SEMANA_LONGA = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado']
@@ -27,11 +28,11 @@ export function EscolherTreino({ dia, aoFechar, aoEscolher }: { dia: string; aoF
   const { fichas, recarregar, agenda } = useTreino()
   const { mostrar } = useToast()
   async function definir(ficha: string | null | 'auto') {
-    const r =
+    const erro =
       ficha === 'auto'
-        ? await supabase.from('treino_agenda').delete().eq('dia', dia)
-        : await supabase.from('treino_agenda').upsert({ dia, ficha_id: ficha }, { onConflict: 'user_id,dia' })
-    if (r.error) return mostrar(mensagemDeErroBanco(r.error), { comNav: true })
+        ? (await supabase.from('treino_agenda').delete().eq('dia', dia)).error
+        : await atualizarOuCriar('treino_agenda', { dia }, { ficha_id: ficha }, { dia, ficha_id: ficha })
+    if (erro) return mostrar(mensagemDeErroBanco(erro), { comNav: true })
     await recarregar()
     aoFechar()
   }

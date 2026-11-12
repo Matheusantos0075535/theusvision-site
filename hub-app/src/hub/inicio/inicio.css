@@ -1054,3 +1054,23 @@
     display: none;
   }
 }
+
+.inicio-topo-acoes {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 400px) {
+  .sair-texto {
+    display: none;
+  }
+  .inicio-topo .btn-fantasma {
+    padding: 0 12px;
+  }
+}
+@media (max-width: 340px) {
+  .inicio-topo .marca > span {
+    display: none;
+  }
+}

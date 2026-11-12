@@ -10,6 +10,7 @@ import { ExercicioDetalhe } from '../ExercicioDetalhe'
 import { ExercicioImagem } from '../ExercicioImagem'
 import { umRM } from '../plano'
 import type { Serie } from '../tipos'
+import { tocar } from '../../../lib/som'
 
 type Linha = { id: string; serie: number; carga: string; reps: string; feita: boolean; salva: boolean }
 type Bloco = { chave: string; exercicio: string; alvo: string; descanso: number; linhas: Linha[] }
@@ -40,6 +41,7 @@ function Descanso({ fim, total, aoMudar, aoParar }: { fim: number; total: number
   useEffect(() => {
     if (resta === 0 && !avisou.current) {
       avisou.current = true
+      tocar('timer')
       try {
         navigator.vibrate?.([200, 100, 200])
       } catch {
@@ -110,11 +112,22 @@ export function SessaoTela() {
   const [trocar, setTrocar] = useState<string | null>(null)
   const [descanso, setDescanso] = useState<{ fim: number; total: number } | null>(null)
   const [fim, setFim] = useState<null | { duracao: number; series: number; volume: number; recordes: string[] }>(null)
+  const [fresco, setFresco] = useState(false)
   const agora = useAgora(1000)
+
+  // Ao abrir, busca de novo as séries salvas: se você saiu do treino e voltou, elas já estão no banco.
+  useEffect(() => {
+    let vivo = true
+    void recarregar().then(() => vivo && setFresco(true))
+    return () => {
+      vivo = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Monta os blocos uma vez: séries já salvas (retomando) ou o plano da ficha, com a carga da última vez.
   useEffect(() => {
-    if (!sessao || blocos) return
+    if (!sessao || blocos || !fresco) return
     const salvas = series.filter((s) => s.sessao_id === sessao.id)
     const ordem: string[] = []
     ;(ficha?.itens ?? []).forEach((i) => ordem.push(i.exercicio))
@@ -144,10 +157,10 @@ export function SessaoTela() {
     setBlocos(novos)
     const primeiro = novos.find((b) => b.linhas.some((l) => !l.feita))
     setAberto(primeiro?.chave ?? novos[0]?.chave ?? null)
-  }, [sessao, ficha, series, blocos, ultimoDesempenho, perfil.descanso_seg])
+  }, [sessao, ficha, series, blocos, fresco, ultimoDesempenho, perfil.descanso_seg])
 
   const salvar = useCallback(
-    async (b: Bloco, l: Linha, idx: number) => {
+    async (b: Bloco, l: Linha, idx: number, existe = l.salva) => {
       if (!sessao) return
       const linha = {
         id: l.id,
@@ -159,8 +172,13 @@ export function SessaoTela() {
         reps: int(l.reps),
         feita: l.feita,
       }
-      const { error } = await supabase.from('treino_series').upsert(linha)
-      if (error) mostrar(mensagemDeErroBanco(error), { comNav: true })
+      const { id: _id, sessao_id: _s, serie: _n, ...mudaveis } = linha
+      // Série já salva: só atualiza. Nova: cria (e, se a criação duplicar por repetição do toque, atualiza).
+      let erro = existe
+        ? (await supabase.from('treino_series').update(mudaveis).eq('id', l.id)).error
+        : (await supabase.from('treino_series').insert(linha)).error
+      if (erro && (erro as { code?: string }).code === '23505') erro = (await supabase.from('treino_series').update(mudaveis).eq('id', l.id)).error
+      if (erro) mostrar(mensagemDeErroBanco(erro), { comNav: true })
     },
     [sessao, mostrar],
   )
@@ -175,7 +193,12 @@ export function SessaoTela() {
       </div>
     )
   }
-  if (!blocos) return null
+  if (!blocos)
+    return (
+      <div className="bloco-carregando" role="status" aria-label="Carregando">
+        <span className="giro" />
+      </div>
+    )
 
   const alterarLinha = (bi: number, li: number, mudanca: Partial<Linha>) =>
     setBlocos((bs) => bs!.map((b, i) => (i !== bi ? b : { ...b, linhas: b.linhas.map((l, j) => (j !== li ? l : { ...l, ...mudanca })) })))
@@ -189,11 +212,12 @@ export function SessaoTela() {
       nova.reps = String(item?.reps_max ?? 10)
     }
     alterarLinha(bi, li, nova)
-    await salvar(b, nova, bi)
+    await salvar(b, nova, bi, l.salva)
     if (nova.feita) {
       setDescanso({ fim: Date.now() + b.descanso * 1000, total: b.descanso })
       const restantes = b.linhas.filter((x, j) => j !== li && !x.feita).length
       if (restantes === 0) {
+        tocar('sucesso')
         const prox = blocos!.find((x, j) => j > bi && x.linhas.some((y) => !y.feita))
         if (prox) setAberto(prox.chave)
       }
@@ -243,6 +267,7 @@ export function SessaoTela() {
       }
     }
     setDescanso(null)
+    tocar(recordes.length ? 'recorde' : 'conquista')
     setFim({
       duracao: Math.round((Date.now() - Date.parse(sessao!.iniciado_em)) / 60000),
       series: feitas.length,
@@ -397,6 +422,7 @@ export function SessaoTela() {
 
       {descanso && !fim && (
         <Descanso
+          key={descanso.fim - descanso.total * 1000}
           fim={descanso.fim}
           total={descanso.total}
           aoMudar={(s) => setDescanso((d) => (d ? { fim: Math.max(Date.now(), d.fim + s * 1000), total: Math.max(15, d.total + s) } : d))}

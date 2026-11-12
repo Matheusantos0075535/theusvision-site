@@ -8,17 +8,19 @@ import { dataPorExtensoDoBanco, diferencaDias, horaBrasilia, primeiroNome, sauda
 import { BLOCOS_FIM_DE_SEMANA, BLOCOS_SEMANA, TEXTOS } from '../conteudo'
 import { Calendario, ANO } from '../Calendario'
 import { itensDeHoje, useDia, type Item, type Prioridade } from '../dados'
+import { tocar } from '../../../lib/som'
 
 const horaAtual = () => Number(horaBrasilia().split(':')[0])
 
 function Checklist({ titulo, itens, aberto }: { titulo: string; itens: Item[]; aberto: boolean }) {
   const { feitos, alternarFeito, editavel } = useDia()
   const { mostrar } = useToast()
+  const [aberta, setAberta] = useState(aberto)
   const feitosAqui = itens.filter((i) => feitos.has(i.id)).length
   if (!itens.length) return null
   const completo = feitosAqui === itens.length
   return (
-    <details className="dia-lista" open={aberto || undefined} data-completo={completo || undefined}>
+    <details className="dia-lista" open={aberta} onToggle={(e) => setAberta(e.currentTarget.open)} data-completo={completo || undefined}>
       <summary>
         <span className="dia-lista-titulo">{titulo}</span>
         <span className="dia-lista-conta">
@@ -196,6 +198,7 @@ function Encerrar() {
     const e = await encerrarDia(acao)
     setSalvando(false)
     if (e) return mostrar(e, { comNav: true })
+    tocar('sucesso')
     setAberto(false)
   }
 
@@ -260,6 +263,7 @@ export function Hoje() {
   const { acesso } = useAuth()
   const [calendario, setCalendario] = useState(false)
   const [hora, setHora] = useState(horaAtual)
+  const completoAntes = useRef<boolean | null>(null)
   useEffect(() => {
     const t = window.setInterval(() => setHora(horaAtual()), 60_000)
     return () => window.clearInterval(t)
@@ -274,6 +278,12 @@ export function Hoje() {
   const total = [...manha, ...noite]
   const feitosTotal = total.filter((i) => feitos.has(i.id)).length + prioridades.filter((p) => p.feita).length
   const totalGeral = total.length + prioridades.length
+  const completo = totalGeral > 0 && feitosTotal === totalGeral
+  useEffect(() => {
+    // Só toca quando você completa tudo agora (não ao abrir um dia que já estava completo).
+    if (completoAntes.current === false && completo && editavel) tocar('sucesso')
+    completoAntes.current = completo
+  }, [completo, editavel, dia])
   const [diaSemana, resto] = dataPorExtensoDoBanco(dia).split(', ')
   const anterior = somarDias(dia, -1)
   const proximo = somarDias(dia, 1)
@@ -331,7 +341,7 @@ export function Hoje() {
       </section>
 
       <div className="dia-coluna">
-        <Checklist titulo="Rotina da manhã" itens={manha} aberto={!ehHoje || hora < 12} />
+        <Checklist key={`m-${dia}`} titulo="Rotina da manhã" itens={manha} aberto={!ehHoje || hora < 12} />
 
         <Secao titulo={TEXTOS.prioridadesTitulo}>
           {editavel && <p className="dia-apoio">{TEXTOS.prioridadesApoio}</p>}
@@ -342,7 +352,7 @@ export function Hoje() {
           </ol>
         </Secao>
 
-        <Checklist titulo="Rotina da noite" itens={noite} aberto={!ehHoje || hora >= 17} />
+        <Checklist key={`n-${dia}`} titulo="Rotina da noite" itens={noite} aberto={!ehHoje || hora >= 17} />
       </div>
 
       {essenciais.length > 0 && (

@@ -1,6 +1,7 @@
 import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useToast } from '../../components/ui/Toast'
+import { definirSom, useSomLigado } from '../../lib/som'
 import { useLeitura } from './dados'
 
 const num = (v: string) => (v.trim() === '' ? null : Number(v))
@@ -11,7 +12,7 @@ export function FolhaAjustes({ aoFechar }: { aoFechar: () => void }) {
   const [paginas, setPaginas] = useState(config.meta_paginas?.toString() ?? '')
   const [minutos, setMinutos] = useState(config.meta_minutos?.toString() ?? '')
   const [anual, setAnual] = useState(String(config.meta_anual_livros))
-  const [som, setSom] = useState(config.som)
+  const som = useSomLigado()
   const [vibracao, setVibracao] = useState(config.vibracao)
   const [erro, setErro] = useState<string | null>(null)
   const ref = useRef<HTMLButtonElement>(null)
@@ -30,7 +31,7 @@ export function FolhaAjustes({ aoFechar }: { aoFechar: () => void }) {
     if (p === null && m === null) return setErro('Defina pelo menos uma meta diária: páginas ou minutos.')
     if ((p !== null && (p < 1 || p > 500)) || (m !== null && (m < 1 || m > 600))) return setErro('Use valores entre 1 e 500 páginas ou 1 e 600 minutos.')
     if (a === null || a < 1 || a > 365) return setErro('A meta anual precisa ser entre 1 e 365 livros.')
-    const e = await salvarConfig({ meta_paginas: p, meta_minutos: m, meta_anual_livros: a, som, vibracao })
+    const e = await salvarConfig({ meta_paginas: p, meta_minutos: m, meta_anual_livros: a, vibracao })
     if (e) return setErro(e)
     mostrar('Ajustes salvos.', { comNav: true })
     aoFechar()
@@ -66,9 +67,9 @@ export function FolhaAjustes({ aoFechar }: { aoFechar: () => void }) {
         <div className="cartao-bloco" style={{ marginTop: 16, padding: '4px 16px' }}>
           <div className="interruptor">
             <span>
-              Som na celebração<small>Desligado por padrão.</small>
+              Sons do Hub<small>Vale para todos os módulos, neste aparelho.</small>
             </span>
-            <button className="chave" role="switch" aria-checked={som} aria-label="Som na celebração" onClick={() => setSom(!som)} />
+            <button className="chave" role="switch" aria-checked={som} aria-label="Sons do Hub" onClick={() => definirSom(!som)} />
           </div>
           <div className="interruptor">
             <span>Vibração</span>
