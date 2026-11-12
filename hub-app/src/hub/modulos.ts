@@ -148,6 +148,26 @@ export const MODULOS: Modulo[] = [
     },
   },
   {
+    id: 'ideias',
+    modo: 'pessoal',
+    nome: 'TheusVision Ideias',
+    categoria: 'Criação',
+    descricao: 'Banco de ideias com link, propósito e plano.',
+    icone: Lightbulb,
+    status: 'disponivel',
+    rota: '/ideias',
+    previa: {
+      resumo: 'Guarde toda ideia antes de ela sumir: cole o link do Instagram ou YouTube que inspirou, escreva o propósito, marque o dia de executar e quebre em etapas.',
+      itens: [
+        'Captura rápida colando o link',
+        'Prévia do reel ou vídeo dentro do app',
+        'Propósito, data e área de cada ideia',
+        'Plano de ação com etapas e progresso',
+        'Agenda: atrasadas, hoje e próximos dias',
+      ],
+    },
+  },
+  {
     id: 'financas',
     modo: 'pessoal',
     nome: 'Finanças',
