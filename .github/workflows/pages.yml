@@ -1,0 +1,56 @@
+# Publica o site (sem alterações) e o TeusVision Hub compilado em /hub.
+# Requer uma vez: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Publicar site e Hub
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  montar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: hub-app/package-lock.json
+
+      - name: Compilar o Hub
+        working-directory: hub-app
+        run: |
+          npm ci
+          npm run build
+
+      - name: Montar a pasta publicada
+        run: |
+          mkdir -p _site
+          rsync -a --exclude '.git' --exclude '.github' --exclude 'hub-app' --exclude '_site' ./ _site/
+          mkdir -p _site/hub
+          cp -r hub-app/dist/. _site/hub/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  publicar:
+    needs: montar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
