@@ -1,9 +1,9 @@
 import { MousePointer2 } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '../../components/ui/Toast'
 import { useMidia, useMovimentoReduzido } from '../../lib/useMidia'
-import type { Modulo } from '../modulos'
+import type { Grupo, Modulo } from '../modulos'
 import { CardModulo, type DestaqueCard } from './CardModulo'
 import { Previa } from './Previa'
 
@@ -20,7 +20,7 @@ type Ponteiro = 'mouse' | 'toque'
  *   tocar de novo no mesmo recolhe. Só a seta do quadrado ou o botão da prévia abrem o módulo.
  * O tipo de ponteiro é lido a cada interação, então notebooks com tela de toque funcionam nos dois jeitos.
  */
-export function GradeModulos({ modulos, destaques }: { modulos: Modulo[]; destaques: Record<string, DestaqueCard | null> }) {
+export function GradeModulos({ modulos, grupos, destaques }: { modulos: Modulo[]; grupos: Grupo[]; destaques: Record<string, DestaqueCard | null> }) {
   const larga = useMidia('(min-width: 641px)')
   const temMouse = useMidia('(hover: hover) and (pointer: fine)')
   const reduzido = useMovimentoReduzido()
@@ -86,43 +86,46 @@ export function GradeModulos({ modulos, destaques }: { modulos: Modulo[]; destaq
       onPointerEnter={(e) => lerPonteiro(e.pointerType)}
     >
       <ul ref={refGrade} className="grade" aria-label="Módulos" onMouseLeave={() => flutuante && setAtivoId(null)}>
-        {modulos.map((m, i) => (
-          <CardModulo
-            key={m.id}
-            modulo={m}
-            ativo={ativoId === m.id}
-            destaque={destaques[m.id]}
-            idPrevia={ID_PREVIA}
-            aoExpandir={caixaNoFim}
-            aoEntrar={() => modo === 'mouse' && setAtivoId(m.id)}
-            aoEscolher={() => {
-              if (modo === 'mouse' && !caixaNoFim) return abrir(m)
-              setAtivoId((atual) => (caixaNoFim && atual === m.id ? null : m.id))
-            }}
-            aoAbrir={() => abrir(m)}
-          >
-            {flutuante && ativoId === m.id && (
-              <div className={`mod-flutuante ${i % 2 === 1 ? 'a-direita' : ''}`}>
-                <Previa modulo={m} destaque={destaques[m.id]} aoAbrir={abrir} variante="flutuante" />
-              </div>
-            )}
-          </CardModulo>
-        ))}
+        {grupos.map((g) => {
+          const doGrupo = modulos.filter((m) => m.grupo === g.id)
+          if (!doGrupo.length) return null
+          return (
+            <Fragment key={g.id}>
+              <li className="grupo-cabeca" role="presentation">
+                <h3>{g.nome}</h3>
+                <span>{g.apoio}</span>
+              </li>
+              {doGrupo.map((m, i) => (
+                <CardModulo
+                  key={m.id}
+                  modulo={m}
+                  ativo={ativoId === m.id}
+                  destaque={destaques[m.id]}
+                  idPrevia={ID_PREVIA}
+                  aoExpandir={caixaNoFim}
+                  aoEntrar={() => modo === 'mouse' && setAtivoId(m.id)}
+                  aoEscolher={() => {
+                    if (modo === 'mouse' && !caixaNoFim) return abrir(m)
+                    setAtivoId((atual) => (caixaNoFim && atual === m.id ? null : m.id))
+                  }}
+                  aoAbrir={() => abrir(m)}
+                >
+                  {flutuante && ativoId === m.id && (
+                    <div className={`mod-flutuante ${i % 2 === 1 ? 'a-direita' : ''}`}>
+                      <Previa modulo={m} destaque={destaques[m.id]} aoAbrir={abrir} variante="flutuante" />
+                    </div>
+                  )}
+                </CardModulo>
+              ))}
+              {caixaNoFim && ativo && ativo.grupo === g.id && (
+                <li className="mod-previa-fim">
+                  <Previa ref={refPrevia} id={ID_PREVIA} modulo={ativo} destaque={destaques[ativo.id]} aoAbrir={abrir} aoFechar={fechar} variante="caixa" />
+                </li>
+              )}
+            </Fragment>
+          )
+        })}
       </ul>
-
-      {caixaNoFim && ativo && (
-        <div className="mod-previa-fim">
-          <Previa
-            ref={refPrevia}
-            id={ID_PREVIA}
-            modulo={ativo}
-            destaque={destaques[ativo.id]}
-            aoAbrir={abrir}
-            aoFechar={fechar}
-            variante="caixa"
-          />
-        </div>
-      )}
 
       {painel && (
         <aside className="painel" aria-live="polite">

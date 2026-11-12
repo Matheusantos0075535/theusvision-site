@@ -7,6 +7,7 @@ export type StatusModulo = 'disponivel' | 'em_breve'
 export type Modulo = {
   id: string
   modo: Modo
+  grupo: string
   nome: string
   categoria: string
   descricao: string
@@ -20,6 +21,7 @@ export const MODULOS: Modulo[] = [
   {
     id: 'dia',
     modo: 'pessoal',
+    grupo: 'pilares',
     nome: 'Meu dia',
     categoria: 'Rotina',
     descricao: 'Prioridades, rotinas e despejo mental.',
@@ -40,6 +42,7 @@ export const MODULOS: Modulo[] = [
   {
     id: 'dnsmk',
     modo: 'pessoal',
+    grupo: 'pilares',
     nome: 'DuoNoSmkg',
     categoria: 'Saúde',
     descricao: 'Dias sem fumar, um check-in por dia.',
@@ -60,6 +63,7 @@ export const MODULOS: Modulo[] = [
   {
     id: 'leitura',
     modo: 'pessoal',
+    grupo: 'crescimento',
     nome: 'Leitura',
     categoria: 'Hábito',
     descricao: 'Vários livros, uma página por vez.',
@@ -80,6 +84,7 @@ export const MODULOS: Modulo[] = [
   {
     id: 'treino',
     modo: 'pessoal',
+    grupo: 'pilares',
     nome: 'Treino',
     categoria: 'Corpo',
     descricao: 'Fichas, cargas, calendário e evolução.',
@@ -100,8 +105,9 @@ export const MODULOS: Modulo[] = [
   {
     id: 'estudos',
     modo: 'pessoal',
+    grupo: 'crescimento',
     nome: 'Estudos',
-    categoria: 'Aprendizado · protótipo',
+    categoria: 'Aprendizado',
     descricao: 'Foco cronometrado e revisões no dia certo.',
     icone: GraduationCap,
     status: 'disponivel',
@@ -115,8 +121,9 @@ export const MODULOS: Modulo[] = [
   {
     id: 'rotina',
     modo: 'pessoal',
+    grupo: 'base',
     nome: 'Rotina da casa',
-    categoria: 'Casa · protótipo',
+    categoria: 'Casa',
     descricao: 'Uma zona por dia, 15 minutos.',
     icone: House,
     status: 'disponivel',
@@ -130,6 +137,7 @@ export const MODULOS: Modulo[] = [
   {
     id: 'ideias',
     modo: 'pessoal',
+    grupo: 'crescimento',
     nome: 'TheusVision Ideias',
     categoria: 'Criação',
     descricao: 'Banco de ideias com link, propósito e plano.',
@@ -150,8 +158,9 @@ export const MODULOS: Modulo[] = [
   {
     id: 'financas',
     modo: 'pessoal',
+    grupo: 'base',
     nome: 'Finanças',
-    categoria: 'Dinheiro · protótipo',
+    categoria: 'Dinheiro',
     descricao: 'Quanto posso gastar hoje, freio e dívidas.',
     icone: Wallet,
     status: 'disponivel',
@@ -165,8 +174,9 @@ export const MODULOS: Modulo[] = [
   {
     id: 'clientes',
     modo: 'work',
+    grupo: 'w-operacao',
     nome: 'Clientes e entregas',
-    categoria: 'Entrega · protótipo',
+    categoria: 'Entrega',
     descricao: 'Fixos e esporádicos, com a próxima ação.',
     icone: Users,
     status: 'disponivel',
@@ -180,8 +190,9 @@ export const MODULOS: Modulo[] = [
   {
     id: 'receita',
     modo: 'work',
+    grupo: 'w-crescimento',
     nome: 'Receita e prospecção',
-    categoria: 'Receita · protótipo',
+    categoria: 'Receita',
     descricao: 'Fluxo de caixa e quem você tem em mente.',
     icone: HandCoins,
     status: 'disponivel',
@@ -195,8 +206,9 @@ export const MODULOS: Modulo[] = [
   {
     id: 'construcao',
     modo: 'work',
+    grupo: 'w-crescimento',
     nome: 'Construção do negócio',
-    categoria: 'Estrutura · protótipo',
+    categoria: 'Estrutura',
     descricao: 'Caixa de ferramentas e processos da TheusVision.',
     icone: Rocket,
     status: 'disponivel',
@@ -210,8 +222,9 @@ export const MODULOS: Modulo[] = [
   {
     id: 'negocios',
     modo: 'work',
+    grupo: 'w-operacao',
     nome: 'Visão do trabalho',
-    categoria: 'Panorama · protótipo',
+    categoria: 'Panorama',
     descricao: 'Tudo o que está rodando, numa tela.',
     icone: Briefcase,
     status: 'disponivel',
@@ -230,3 +243,18 @@ export const ROTULO_STATUS: Record<StatusModulo, string> = {
 }
 
 export const ROTULO_MODO: Record<Modo, string> = { pessoal: 'Pessoal', work: 'Work' }
+
+export type Grupo = { id: string; nome: string; apoio: string }
+
+/** Categorias do painel, na ordem em que aparecem. */
+export const GRUPOS: Record<Modo, Grupo[]> = {
+  pessoal: [
+    { id: 'pilares', nome: 'Pilares', apoio: 'O que sustenta o seu dia a dia' },
+    { id: 'crescimento', nome: 'Crescimento', apoio: 'Aprender, ler e criar' },
+    { id: 'base', nome: 'Base da vida', apoio: 'Casa e dinheiro em ordem' },
+  ],
+  work: [
+    { id: 'w-operacao', nome: 'Operação', apoio: 'Clientes, entregas e visão geral' },
+    { id: 'w-crescimento', nome: 'Crescimento', apoio: 'Receita e estrutura do negócio' },
+  ],
+}
