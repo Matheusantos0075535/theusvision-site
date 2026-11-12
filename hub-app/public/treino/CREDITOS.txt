@@ -1,0 +1,2 @@
+Imagens dos exercícios: free-exercise-db (https://github.com/yuhonas/free-exercise-db), domínio público (Unlicense).
+Redimensionadas para WebP. Dois quadros por exercício, alternados na tela como animação.

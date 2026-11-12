@@ -1,5 +1,7 @@
 import { LogOut } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { resumoDoDia } from '../../modulos/dia/resumo'
+import { resumoDoTreino } from '../../modulos/treino/resumo'
 import { supabase } from '../../lib/supabase'
 import { dataBrasiliaPorExtenso, horaBrasilia, primeiroNome, saudacao } from '../../lib/tempo'
 import { useAuth } from '../auth'
@@ -29,15 +31,24 @@ function useAgora() {
 
 function useDestaques() {
   const [destaques, setDestaques] = useState<Record<string, DestaqueCard | null>>({
-    dia: { numero: null, linha: 'Carregando…' },
+    dia: { numero: null, linha: 'Carregando…', de: 0 },
+    treino: { numero: null, linha: 'Carregando…', de: 0 },
     dnsmk: { numero: null, linha: 'Carregando…' },
     leitura: { numero: null, linha: 'Carregando…' },
   })
   useEffect(() => {
     let vivo = true
-    Promise.allSettled([supabase.rpc('dnsmk_estado'), supabase.rpc('leit_estado')]).then(([d, l]) => {
+    Promise.allSettled([supabase.rpc('dnsmk_estado'), supabase.rpc('leit_estado'), resumoDoDia(), resumoDoTreino()]).then(([d, l, md, tr]) => {
       if (!vivo) return
-      const novo: Record<string, DestaqueCard | null> = { dia: { numero: null, linha: 'Prioridades e rotina de hoje' } }
+      const novo: Record<string, DestaqueCard | null> = {}
+      novo.dia =
+        md.status === 'fulfilled'
+          ? { numero: md.value.feitos, de: md.value.total, linha: md.value.total ? 'tarefas feitas hoje' : 'Monte seu dia' }
+          : { numero: null, linha: 'Prioridades e rotina de hoje' }
+      novo.treino =
+        tr.status === 'fulfilled'
+          ? { numero: tr.value.feitos, de: tr.value.meta, linha: tr.value.linha }
+          : { numero: null, linha: 'Treinos da semana' }
       const dn = d.status === 'fulfilled' && !d.value.error ? d.value.data : null
       novo.dnsmk = dn
         ? dn.tem_jornada
