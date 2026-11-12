@@ -102,4 +102,5 @@ revoke all on function public.hub_hook_antes_de_criar_usuario(jsonb) from public
 grant execute on function public.hub_hoje() to authenticated;
 grant execute on function public.hub_autorizado() to authenticated;
 grant execute on function public.hub_meu_acesso() to authenticated;
+grant usage on schema public to supabase_auth_admin;
 grant execute on function public.hub_hook_antes_de_criar_usuario(jsonb) to supabase_auth_admin;
