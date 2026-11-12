@@ -4,7 +4,7 @@ import { Carregando, ErroCarregar, Secao } from '../../../components/compartilha
 import { TrilhaMetas } from '../../../components/compartilhado/TrilhaMetas'
 import { mensagemDeErroBanco } from '../../../lib/erros'
 import { supabase } from '../../../lib/supabase'
-import { diaDaSemana, formatarDataCurta, somarDias } from '../../../lib/tempo'
+import { diaDaSemana, somarDias } from '../../../lib/tempo'
 import { AVISO_EDUCATIVO, CHECKIN } from '../conteudo/textosSaude'
 import { marcosAte, useDnsmk } from '../dados'
 
@@ -12,7 +12,7 @@ type Checkin = { dia: string; humor: number; fissura: number; sono: string; ansi
 type RecaidaLinha = { dia: string; sequencia_encerrada: number }
 
 const DIAS_SEMANA = ['domingos', 'segundas', 'terças', 'quartas', 'quintas', 'sextas', 'sábados']
-const MESES = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
+const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
 
 const real = (v: number) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
 
@@ -120,7 +120,9 @@ export function Progresso() {
             rotulos={MESES}
             valores={analise.porMes}
             destaque={analise.mesAtual}
+            mostrarValores
             rotuloAria={`Dias sem fumar por mês em ${analise.ano}`}
+            explicacao={`Cada coluna é um mês de ${analise.ano}. O número em cima é quantos dias você ficou sem fumar naquele mês. A coluna laranja é o mês atual.`}
           />
         </div>
       </Secao>
@@ -131,7 +133,8 @@ export function Progresso() {
             <p className="vazio">O gráfico aparece depois de alguns check-ins.</p>
           ) : (
             <GraficoLinhas
-              rotulos={analise.ultimos.map((c) => formatarDataCurta(c.dia))}
+              rotulos={analise.ultimos.map((c) => `${c.dia.slice(8)}/${c.dia.slice(5, 7)}`)}
+              explicacao="Cada ponto é um check-in. Quanto mais alto, melhor o humor. A fissura aparece na outra linha (0 a 10)."
               series={[
                 { nome: 'Humor (1 a 5)', cor: '#FF9F11', valores: analise.ultimos.map((c) => c.humor), min: 1, max: 5 },
                 { nome: 'Fissura (0 a 10)', cor: '#A98BEA', valores: analise.ultimos.map((c) => c.fissura), max: 10 },

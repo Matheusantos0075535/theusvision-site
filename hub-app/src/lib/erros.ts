@@ -15,7 +15,7 @@ export function mensagemDeErroAuth(erro: ErroLike): string {
     return 'Seu e-mail ainda não foi confirmado. Abra o link que enviamos para sua caixa de entrada.'
   }
   if (msg.includes('não tem acesso') || (erro.status === 403 && msg.includes('hook'))) {
-    return 'Este e-mail não está na lista de acesso do TeusVision Hub.'
+    return 'Este e-mail não está na lista de acesso do TheusVision Hub.'
   }
   if (code === 'user_already_exists' || msg.includes('already registered')) {
     return 'Este e-mail já tem conta. Entre com sua senha.'

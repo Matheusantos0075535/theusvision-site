@@ -265,7 +265,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--laranja);
+  background: var(--grad-verde);
   transition: width 700ms var(--curva);
 }
 
@@ -381,6 +381,12 @@
   background: var(--laranja-suave);
   border: 1px solid var(--laranja-borda);
   font-size: 14.5px;
+}
+.celebra .btn-primario,
+.fluxo .btn-primario {
+  background: var(--grad-verde);
+  color: var(--sobre-verde);
+  box-shadow: 0 10px 26px -12px rgba(61, 220, 151, 0.65);
 }
 .celebra-selo svg {
   width: 20px;
@@ -571,12 +577,12 @@
   height: 26px;
 }
 .trilha-no[data-estado='feita'] button {
-  background: var(--laranja);
-  color: var(--sobre-laranja);
-  box-shadow: 0 5px 0 var(--laranja-esc);
+  background: var(--grad-verde);
+  color: var(--sobre-verde);
+  box-shadow: 0 5px 0 var(--verde-fundo);
 }
 .trilha-no[data-estado='feita'] button svg {
-  fill: var(--sobre-laranja);
+  fill: var(--sobre-verde);
 }
 .trilha-no[data-estado='disponivel'] button {
   background: var(--superf-3);
@@ -672,9 +678,9 @@
   height: 16px;
 }
 .meta-no[data-estado='feita'] .meta-bola {
-  background: var(--laranja);
-  border-color: var(--laranja);
-  color: var(--sobre-laranja);
+  background: var(--grad-verde);
+  border-color: transparent;
+  color: var(--sobre-verde);
 }
 .meta-no[data-estado='proxima'] .meta-bola {
   border-color: var(--laranja);
@@ -706,6 +712,18 @@
   font-family: var(--fonte);
   font-weight: 600;
 }
+.grafico-valor {
+  fill: var(--texto-2);
+  font-size: 10px;
+  font-family: var(--fonte);
+  font-weight: 700;
+}
+.grafico-explicacao {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--apagado);
+}
 .grafico-legenda {
   display: flex;
   flex-wrap: wrap;
@@ -725,7 +743,7 @@
   border-radius: 3px;
 }
 .coluna {
-  fill: rgba(255, 159, 17, 0.55);
+  fill: rgba(61, 220, 151, 0.6);
 }
 .coluna-destaque {
   fill: var(--laranja);
@@ -759,7 +777,7 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--laranja);
+  background: var(--grad-verde);
 }
 .barras-h b {
   text-align: right;
@@ -777,7 +795,8 @@
   border: 1px solid var(--borda);
 }
 .numeros > div[data-destaque] {
-  border-color: var(--laranja-borda);
+  border-color: var(--verde-borda);
+  background: linear-gradient(180deg, rgba(61, 220, 151, 0.1), rgba(61, 220, 151, 0.02)), var(--superf);
 }
 .numeros dt {
   font-size: 12px;
@@ -851,11 +870,11 @@
   transition: transform var(--t-curto) var(--curva);
 }
 .chave[aria-checked='true'] {
-  background: var(--laranja);
+  background: var(--grad-verde);
 }
 .chave[aria-checked='true']::after {
   transform: translateX(20px);
-  background: var(--sobre-laranja);
+  background: var(--sobre-verde);
 }
 .folha-fundo {
   position: fixed;
@@ -907,7 +926,7 @@
   border-radius: var(--raio-xg);
   background:
     radial-gradient(70% 60% at 50% 0%, rgba(255, 159, 17, 0.16), transparent 70%),
-    var(--superf);
+    radial-gradient(90% 60% at 50% 110%, rgba(61, 220, 151, 0.16), transparent 70%), var(--superf);
   border: 1px solid var(--borda);
   box-shadow: var(--sombra);
 }
@@ -931,7 +950,7 @@
   font-size: 14px;
 }
 .bloco-meta small b {
-  color: var(--laranja);
+  color: var(--verde);
 }
 .cartao-info {
   display: flex;
@@ -972,4 +991,138 @@
   margin-top: 10px;
   font-size: 13.5px;
   color: var(--apagado);
+}
+
+/* ---------- responsivo ---------- */
+.hoje-lado {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.chama-gigante b {
+  font-size: clamp(64px, 24vw, 104px);
+}
+.chama-gigante svg {
+  width: clamp(40px, 15vw, 64px);
+  height: clamp(40px, 15vw, 64px);
+}
+.chama-grande b {
+  font-size: clamp(52px, 19vw, 72px);
+}
+.chama-grande svg {
+  width: clamp(32px, 11vw, 44px);
+  height: clamp(32px, 11vw, 44px);
+}
+.shell-titulo {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shell-miolo > * {
+  min-width: 0;
+}
+.dn-trilha,
+.dn-licao-pagina,
+.dn-licao-fim,
+.dn-perfil,
+.le-form,
+.le-caderno,
+.le-vazio-inicial,
+.dn-comecar {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 400px) {
+  :root {
+    --margem: 16px;
+  }
+  .numeros dd {
+    font-size: 22px;
+  }
+  .metas-lista {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .metas-destaque {
+    gap: 14px;
+  }
+}
+@media (min-width: 900px) {
+  .shell-miolo {
+    max-width: 1040px;
+    padding-top: 28px;
+  }
+  .shell-miolo .dn-hoje,
+  .shell-miolo .le-hoje {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+  .shell-miolo .dn-hoje > .bloco-ofensiva,
+  .shell-miolo .le-hoje > .bloco-ofensiva {
+    grid-column: 1;
+    position: sticky;
+    top: 84px;
+  }
+  .shell-miolo .dn-hoje > .hoje-lado,
+  .shell-miolo .le-hoje > .hoje-lado {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+  .shell-miolo .dn-hoje > .dn-rodape {
+    grid-column: 1 / -1;
+  }
+  .shell-miolo .le-hoje > .numeros {
+    grid-column: 1;
+  }
+  .shell-miolo .dn-progresso,
+  .shell-miolo .le-progresso {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 20px;
+    align-items: start;
+  }
+  .shell-miolo .dn-progresso > .secao,
+  .shell-miolo .le-progresso > .secao {
+    margin-top: 0;
+  }
+  .shell-miolo .dn-progresso > .aviso-educativo {
+    grid-column: 1 / -1;
+  }
+  .shell-miolo .le-livro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px 32px;
+    align-items: start;
+  }
+  .shell-miolo .le-livro > .link-voltar {
+    grid-column: 1 / -1;
+  }
+  .shell-miolo .le-livro > .le-livro-trilha {
+    grid-column: 2;
+    grid-row: 2 / span 4;
+  }
+  .shell-miolo .le-livro > .le-livro-topo,
+  .shell-miolo .le-livro > .le-livro-acoes,
+  .shell-miolo .le-livro > .le-final,
+  .shell-miolo .le-livro > .le-livro-rodape {
+    grid-column: 1;
+  }
+  .shell-miolo .estante {
+    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  }
+}
+@media (max-height: 640px) and (orientation: landscape) {
+  .celebra-miolo {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 12px 24px;
+    overflow-y: auto;
+  }
+  .shell-miolo {
+    padding-bottom: 80px;
+  }
 }

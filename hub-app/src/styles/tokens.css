@@ -12,6 +12,17 @@
   --laranja-borda: rgba(255, 159, 17, 0.5);
   --sobre-laranja: #1a0a00;
 
+  /* verde: disponível, ofensiva, progresso e ações principais */
+  --verde: #3ddc97;
+  --verde-claro: #7af0c0;
+  --verde-esc: #17a56f;
+  --verde-fundo: #0f6b4a;
+  --verde-suave: rgba(61, 220, 151, 0.14);
+  --verde-borda: rgba(61, 220, 151, 0.5);
+  --sobre-verde: #03261a;
+  --grad-verde: linear-gradient(135deg, #6af0b8 0%, #2fd18f 52%, #17a56f 100%);
+  --grad-laranja: linear-gradient(135deg, #ffbe5c 0%, #ff9f11 55%, #e08707 100%);
+
   --texto: #efeaf7;
   --texto-2: rgba(239, 234, 247, 0.72);
   --apagado: rgba(239, 234, 247, 0.45);

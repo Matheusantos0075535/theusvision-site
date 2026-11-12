@@ -32,7 +32,7 @@ export function AnelMeta({
           cy={tamanho / 2}
           r={r}
           fill="none"
-          stroke="var(--laranja)"
+          stroke="var(--verde)"
           strokeWidth={espessura}
           strokeLinecap="round"
           strokeDasharray={c}

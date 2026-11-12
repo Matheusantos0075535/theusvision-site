@@ -1,5 +1,12 @@
 /** Gráficos simples em SVG, sem biblioteca. */
 
+// Quantos rótulos cabem sem encostar um no outro, conforme o tamanho do texto.
+function passoPara(rotulos: string[], largura: number) {
+  const maior = Math.max(1, ...rotulos.map((r) => r.length))
+  const cabem = Math.max(1, Math.floor(largura / (maior * 5 + 6)))
+  return Math.max(1, Math.ceil(rotulos.length / cabem))
+}
+
 // Mostra um rótulo a cada "passo" e o último, desde que não encoste no anterior.
 function mostrarRotulo(i: number, n: number, passo: number) {
   if (i % passo === 0) return true
@@ -8,14 +15,24 @@ function mostrarRotulo(i: number, n: number, passo: number) {
 
 export type Serie = { nome: string; cor: string; valores: (number | null)[]; max: number; min?: number }
 
-export function GraficoLinhas({ rotulos, series, altura = 150 }: { rotulos: string[]; series: Serie[]; altura?: number }) {
+export function GraficoLinhas({
+  rotulos,
+  series,
+  altura = 150,
+  explicacao,
+}: {
+  rotulos: string[]
+  series: Serie[]
+  altura?: number
+  explicacao?: string
+}) {
   const largura = 320
   const margem = { t: 10, d: 8, b: 22, e: 8 }
   const w = largura - margem.e - margem.d
   const h = altura - margem.t - margem.b
   const n = rotulos.length
   const x = (i: number) => margem.e + (n <= 1 ? w / 2 : (i * w) / (n - 1))
-  const passoRotulo = Math.max(1, Math.ceil(n / 6))
+  const passoRotulo = passoPara(rotulos, largura)
   return (
     <figure className="grafico">
       <svg viewBox={`0 0 ${largura} ${altura}`} role="img" aria-label={series.map((s) => s.nome).join(' e ')}>
@@ -54,6 +71,7 @@ export function GraficoLinhas({ rotulos, series, altura = 150 }: { rotulos: stri
           </span>
         ))}
       </figcaption>
+      {explicacao && <p className="grafico-explicacao">{explicacao}</p>}
     </figure>
   )
 }
@@ -61,24 +79,30 @@ export function GraficoLinhas({ rotulos, series, altura = 150 }: { rotulos: stri
 export function GraficoColunas({
   rotulos,
   valores,
-  altura = 140,
+  altura = 150,
   destaque,
   rotuloAria,
+  explicacao,
+  mostrarValores = false,
+  sufixo = '',
 }: {
   rotulos: string[]
   valores: number[]
   altura?: number
   destaque?: number
   rotuloAria: string
+  explicacao?: string
+  mostrarValores?: boolean
+  sufixo?: string
 }) {
   const largura = 320
-  const margem = { t: 14, b: 22 }
+  const margem = { t: mostrarValores ? 20 : 14, b: 22 }
   const h = altura - margem.t - margem.b
   const max = Math.max(1, ...valores)
   const n = valores.length
   const slot = largura / Math.max(1, n)
   const bw = Math.max(3, Math.min(26, slot * 0.62))
-  const passoRotulo = Math.max(1, Math.ceil(n / 8))
+  const passoRotulo = passoPara(rotulos, largura)
   return (
     <figure className="grafico">
       <svg viewBox={`0 0 ${largura} ${altura}`} role="img" aria-label={rotuloAria}>
@@ -86,15 +110,22 @@ export function GraficoColunas({
         {valores.map((v, i) => {
           const bh = (v / max) * h
           return (
-            <rect
-              key={i}
-              x={i * slot + (slot - bw) / 2}
-              y={margem.t + h - bh}
-              width={bw}
-              height={Math.max(bh, v > 0 ? 2 : 0)}
-              rx={Math.min(4, bw / 2)}
-              className={i === destaque ? 'coluna coluna-destaque' : 'coluna'}
-            />
+            <g key={i}>
+              <rect
+                x={i * slot + (slot - bw) / 2}
+                y={margem.t + h - bh}
+                width={bw}
+                height={Math.max(bh, v > 0 ? 2 : 0)}
+                rx={Math.min(4, bw / 2)}
+                className={i === destaque ? 'coluna coluna-destaque' : 'coluna'}
+              />
+              {mostrarValores && v > 0 && (
+                <text x={i * slot + slot / 2} y={margem.t + h - bh - 4} className="grafico-valor" textAnchor="middle">
+                  {v}
+                  {sufixo}
+                </text>
+              )}
+            </g>
           )
         })}
         {rotulos.map((r, i) =>
@@ -105,6 +136,7 @@ export function GraficoColunas({
           ) : null,
         )}
       </svg>
+      {explicacao && <figcaption className="grafico-explicacao">{explicacao}</figcaption>}
     </figure>
   )
 }

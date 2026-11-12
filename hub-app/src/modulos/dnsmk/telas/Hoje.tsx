@@ -112,6 +112,7 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
         </div>
       </section>
 
+      <div className="hoje-lado">
       {e.recaida_hoje ? (
         <div className="cartao-info dn-recomeco">
           <Sunrise aria-hidden />
@@ -129,7 +130,7 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
           </div>
         </div>
       ) : (
-        <button className="btn btn-primario btn-grande dn-cta" onClick={() => setCheckin({ dia: e.hoje, rotulo: 'Hoje' })}>
+        <button className="btn btn-verde btn-grande dn-cta" onClick={() => setCheckin({ dia: e.hoje, rotulo: 'Hoje' })}>
           Fazer check-in de hoje
         </button>
       )}
@@ -190,6 +191,8 @@ export function Hoje({ aoPedirAjuda }: { aoPedirAjuda: () => void }) {
           { rotulo: 'Total sem fumar', valor: e.total },
         ]}
       />
+
+      </div>
 
       <div className="dn-rodape">
         {!e.recaida_hoje && (

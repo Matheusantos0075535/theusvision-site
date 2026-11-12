@@ -134,12 +134,13 @@
   flex: none;
 }
 .le-meta-dia[data-cumprida] {
-  border-color: rgba(255, 159, 17, 0.35);
+  border-color: var(--verde-borda);
+  background: linear-gradient(180deg, rgba(61, 220, 151, 0.1), rgba(61, 220, 151, 0.02)), var(--superf);
 }
 .le-meta-dia[data-cumprida] .le-meta-check {
-  background: var(--laranja);
-  border-color: var(--laranja);
-  color: var(--sobre-laranja);
+  background: var(--grad-verde);
+  border-color: transparent;
+  color: var(--sobre-verde);
 }
 .le-meta-check svg {
   width: 18px;
@@ -858,4 +859,27 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+@media (max-width: 400px) {
+  .le-continuar {
+    gap: 12px;
+    padding: 12px;
+  }
+  .le-continuar-capa {
+    width: 86px;
+  }
+  .estante {
+    gap: 22px 10px;
+  }
+  .le-livro-topo {
+    gap: 14px;
+  }
+  .capa-grande {
+    width: 112px;
+  }
+  .le-anual {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

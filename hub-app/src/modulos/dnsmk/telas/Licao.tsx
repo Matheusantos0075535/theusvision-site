@@ -109,7 +109,7 @@ export function Licao() {
               <Star aria-hidden /> Você já concluiu esta lição.
             </p>
           ) : (
-            <button className="btn btn-primario btn-grande" onClick={concluir} disabled={enviando}>
+            <button className="btn btn-verde btn-grande" onClick={concluir} disabled={enviando}>
               {enviando ? 'Salvando…' : 'Concluir lição'}
             </button>
           )}

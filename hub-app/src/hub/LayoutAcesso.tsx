@@ -5,7 +5,7 @@ export function Marca() {
   return (
     <span className="marca">
       <img src={`${import.meta.env.BASE_URL}icone.png`} alt="" width={28} height={28} />
-      <b>TeusVision</b>
+      <b>TheusVision</b>
       <span>Hub</span>
     </span>
   )

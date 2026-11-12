@@ -50,7 +50,11 @@
 
 
 .dn-feito {
-  border-color: rgba(255, 159, 17, 0.35);
+  border-color: var(--verde-borda);
+  background: linear-gradient(180deg, rgba(61, 220, 151, 0.1), rgba(61, 220, 151, 0.02)), var(--superf);
+}
+.dn-feito > svg {
+  color: var(--verde);
 }
 .dn-apoio {
   background: var(--superf-2);

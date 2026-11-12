@@ -1,4 +1,4 @@
--- TeusVision Hub: lista de autorizados, acesso e "dia" de Brasília.
+-- TheusVision Hub: lista de autorizados, acesso e "dia" de Brasília.
 -- Nenhum dado pessoal aqui. A lista de autorizados é preenchida direto no SQL Editor.
 
 create table public.hub_autorizados (
@@ -69,7 +69,7 @@ begin
   return jsonb_build_object(
     'error', jsonb_build_object(
       'http_code', 403,
-      'message', 'Este e-mail não tem acesso ao TeusVision Hub.'
+      'message', 'Este e-mail não tem acesso ao TheusVision Hub.'
     )
   );
 end
