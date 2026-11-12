@@ -142,7 +142,7 @@
   color: #06281b;
 }
 
-/* prioridades */
+/* prioridades: cartão branco, texto roxo e laranja */
 .dia-prios {
   list-style: none;
   margin: 0;
@@ -151,14 +151,30 @@
   gap: 10px;
 }
 .dia-prio {
+  --roxo-texto: #3d1773;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 12px 8px 12px 12px;
   min-height: 64px;
   border-radius: var(--raio);
-  border: 1px solid var(--borda);
-  background: var(--superf);
+  border: 1px solid #fff;
+  background: #fff;
+  color: var(--roxo-texto);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25);
+}
+.dia-prio .dia-caixa {
+  border-color: #d9a45a;
+}
+.dia-prio [aria-pressed='true'] > .dia-caixa {
+  background: var(--laranja);
+  border-color: var(--laranja);
+  color: #fff;
+}
+.dia-prio .btn-icone {
+  color: var(--roxo-texto);
+  background: rgba(61, 23, 115, 0.07);
+  border-color: transparent;
 }
 .dia-prio-num {
   display: grid;
@@ -167,15 +183,15 @@
   height: 28px;
   flex: none;
   border-radius: 50%;
-  background: var(--laranja-suave);
-  color: var(--laranja);
+  background: rgba(255, 159, 17, 0.18);
+  color: #b35f00;
   font-weight: 800;
   font-size: 14px;
 }
 .dia-prio-vazia {
   padding: 0;
-  border-style: dashed;
-  background: transparent;
+  border: 2px dashed #ffc26b;
+  background: rgba(255, 255, 255, 0.96);
 }
 .dia-prio-vazia button {
   display: flex;
@@ -185,13 +201,14 @@
   min-height: 64px;
   padding: 0 14px 0 12px;
   text-align: left;
-  color: var(--texto-2);
-  font-weight: 600;
+  color: #7a5fb0;
+  font-weight: 700;
 }
 .dia-prio-vazia button svg {
   margin-left: auto;
   width: 20px;
   height: 20px;
+  color: #b35f00;
 }
 .dia-prio-marca {
   display: grid;
@@ -211,14 +228,15 @@
   font-size: 16px;
   line-height: 1.25;
   overflow-wrap: anywhere;
+  color: var(--roxo-texto);
 }
 .dia-prio-textos small {
-  color: var(--texto-2);
+  color: #7a5fb0;
   font-size: 13px;
 }
 .dia-prio[data-feita] .dia-prio-textos b {
   text-decoration: line-through;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 .dia-prio-edicao {
   align-items: flex-start;
@@ -230,6 +248,17 @@
   min-width: 0;
   display: grid;
   gap: 8px;
+}
+.dia-prio-edicao .entrada {
+  background: #f6f2fc;
+  border-color: #d9cdef;
+  color: var(--roxo-texto);
+}
+.dia-prio-edicao .entrada::placeholder {
+  color: #9b86c4;
+}
+.dia-prio-edicao .btn-fantasma {
+  color: var(--roxo-texto);
 }
 .dia-prio-botoes {
   display: flex;
