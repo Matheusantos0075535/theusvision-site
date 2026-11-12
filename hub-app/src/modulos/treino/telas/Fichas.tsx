@@ -6,6 +6,7 @@ import { mensagemDeErroBanco } from '../../../lib/erros'
 import { supabase } from '../../../lib/supabase'
 import { alternativas, EXERCICIOS, GRUPOS, nomeExercicio, type Grupo } from '../catalogo'
 import { useTreino } from '../dados'
+import { ExercicioDetalhe } from '../ExercicioDetalhe'
 import { ExercicioImagem } from '../ExercicioImagem'
 import { duracaoEstimada } from '../plano'
 import type { Ficha, FichaItem } from '../tipos'
@@ -56,6 +57,7 @@ function Escolher({ titulo, opcoes, aoEscolher, aoFechar }: { titulo: string; op
 function Item({ it, primeiro, ultimo, aoMover, aoMudar }: { it: FichaItem; primeiro: boolean; ultimo: boolean; aoMover: (d: -1 | 1) => void; aoMudar: () => Promise<void> }) {
   const { mostrar } = useToast()
   const [trocar, setTrocar] = useState(false)
+  const [ver, setVer] = useState(false)
   async function atualizar(campos: Partial<FichaItem>) {
     const { error } = await supabase.from('treino_ficha_itens').update(campos).eq('id', it.id)
     if (error) return mostrar(mensagemDeErroBanco(error), { comNav: true })
@@ -70,7 +72,9 @@ function Item({ it, primeiro, ultimo, aoMover, aoMudar }: { it: FichaItem; prime
     <li className="tr-item">
       <ExercicioImagem id={it.exercicio} tamanho="mini" />
       <div className="tr-item-corpo">
-        <b>{nomeExercicio(it.exercicio)}</b>
+        <button className="tr-item-nome" onClick={() => setVer(true)}>
+          {nomeExercicio(it.exercicio)}
+        </button>
         <div className="tr-item-ajustes">
           <span className="tr-passo" aria-label="Séries">
             <button className="btn-icone" onClick={() => void atualizar({ series: Math.max(1, it.series - 1) })} aria-label="Menos uma série">
@@ -110,6 +114,7 @@ function Item({ it, primeiro, ultimo, aoMover, aoMudar }: { it: FichaItem; prime
           </button>
         </div>
       </div>
+      {ver && <ExercicioDetalhe id={it.exercicio} alvo={{ series: it.series, min: it.reps_min, max: it.reps_max }} aoFechar={() => setVer(false)} />}
       {trocar && (
         <Escolher
           titulo={`Trocar ${nomeExercicio(it.exercicio)}`}

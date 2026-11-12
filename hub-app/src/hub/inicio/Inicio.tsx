@@ -1,4 +1,4 @@
-import { LogOut } from 'lucide-react'
+import { Lightbulb, LogOut } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { resumoDoDia } from '../../modulos/dia/resumo'
 import { resumoDoTreino } from '../../modulos/treino/resumo'
@@ -33,18 +33,24 @@ function useDestaques() {
   const [destaques, setDestaques] = useState<Record<string, DestaqueCard | null>>({
     dia: { numero: null, linha: 'Carregando…', de: 0 },
     treino: { numero: null, linha: 'Carregando…', de: 0 },
+    ideias: { numero: null, linha: 'Carregando…' },
     dnsmk: { numero: null, linha: 'Carregando…' },
     leitura: { numero: null, linha: 'Carregando…' },
   })
   useEffect(() => {
     let vivo = true
-    Promise.allSettled([supabase.rpc('dnsmk_estado'), supabase.rpc('leit_estado'), resumoDoDia(), resumoDoTreino()]).then(([d, l, md, tr]) => {
+    Promise.allSettled([supabase.rpc('dnsmk_estado'), supabase.rpc('leit_estado'), resumoDoDia(), resumoDoTreino(), supabase.from('ideias').select('status, executar_em')]).then(([d, l, md, tr, id]) => {
       if (!vivo) return
       const novo: Record<string, DestaqueCard | null> = {}
       novo.dia =
         md.status === 'fulfilled'
           ? { numero: md.value.feitos, de: md.value.total, linha: md.value.total ? 'tarefas feitas hoje' : 'Monte seu dia' }
           : { numero: null, linha: 'Prioridades e rotina de hoje' }
+      const ids = id.status === 'fulfilled' && !id.value.error ? (id.value.data as { status: string; executar_em: string | null }[]) : null
+      const vivas = ids?.filter((x) => x.status !== 'feita' && x.status !== 'arquivada') ?? []
+      novo.ideias = ids
+        ? { numero: vivas.length, icone: Lightbulb, linha: vivas.length ? `${vivas.filter((x) => x.executar_em).length} com data marcada` : 'Guarde a primeira ideia' }
+        : { numero: null, linha: 'Banco de ideias' }
       novo.treino =
         tr.status === 'fulfilled'
           ? { numero: tr.value.feitos, de: tr.value.meta, linha: tr.value.linha }

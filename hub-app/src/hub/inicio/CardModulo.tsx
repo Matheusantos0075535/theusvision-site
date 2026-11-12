@@ -1,4 +1,4 @@
-import { ArrowUpRight, CircleCheckBig, Flame } from 'lucide-react'
+import { ArrowUpRight, CircleCheckBig, Flame, type LucideIcon } from 'lucide-react'
 import type { PointerEvent, ReactNode } from 'react'
 import type { Modulo } from '../modulos'
 import { Selo } from './Selo'
@@ -8,6 +8,8 @@ export type DestaqueCard = {
   linha: string
   /** Mostra "3/7" com um check no lugar da chama (tarefas, não ofensiva). */
   de?: number
+  /** Ícone no lugar da chama. */
+  icone?: LucideIcon
 }
 
 type Props = {
@@ -55,7 +57,7 @@ export function CardModulo({ modulo, ativo, destaque, aoEscolher, aoEntrar, aoAb
         </span>
         {destaque && (
           <span className="mod-numero" aria-hidden>
-            {destaque.de != null ? <CircleCheckBig /> : <Flame />}
+            {destaque.icone ? <destaque.icone /> : destaque.de != null ? <CircleCheckBig /> : <Flame />}
             <b>
               {destaque.numero ?? '—'}
               {destaque.de != null && <small>/{destaque.de}</small>}

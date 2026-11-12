@@ -982,3 +982,129 @@
 .tr-evolucao .cartao-bloco select {
   margin-bottom: 10px;
 }
+
+/* ficha do exercício */
+.tr-previa-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+}
+.tr-previa li {
+  padding: 0;
+}
+.tr-previa-item {
+  padding: 10px 12px;
+}
+.tr-previa-item > svg {
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+  flex: none;
+  color: #b35f00;
+}
+.tr-item-nome {
+  text-align: left;
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.25;
+  color: #3d1773;
+  text-decoration: underline;
+  text-decoration-color: #e0cfa8;
+  text-underline-offset: 3px;
+}
+.tr-detalhe {
+  display: grid;
+  gap: 12px;
+}
+.tr-detalhe .tr-folha-topo h2 {
+  font-size: 19px;
+  line-height: 1.2;
+}
+.tr-det-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tr-det-tag {
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--borda-forte);
+  color: var(--texto-2);
+}
+.tr-det-tag-forte {
+  background: var(--laranja);
+  border-color: var(--laranja);
+  color: #1a0b33;
+}
+.tr-det-bloco {
+  padding: 12px 14px;
+  border-radius: var(--raio);
+  background: #fff;
+  color: #3d1773;
+}
+.tr-det-bloco h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #b35f00;
+}
+.tr-det-bloco h3 svg {
+  width: 16px;
+  height: 16px;
+}
+.tr-det-bloco p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.tr-det-reps {
+  margin-top: 8px !important;
+  font-size: 13.5px !important;
+  color: #7a5fb0;
+}
+.tr-det-musculos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tr-det-musculos li {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f1ebfb;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.tr-det-musculos li[data-principal] {
+  background: #3d1773;
+  color: #fff;
+}
+.tr-det-passos {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 14px;
+  color: #5a3d93;
+  display: grid;
+  gap: 4px;
+}
+.tr-det-erro {
+  background: #fff4f2;
+}
+.tr-det-erro h3 {
+  color: #c2412f;
+}
+.folha.tr-detalhe {
+  max-height: 88vh;
+  overflow: auto;
+}
