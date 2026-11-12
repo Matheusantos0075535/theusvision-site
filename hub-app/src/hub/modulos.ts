@@ -82,12 +82,19 @@ export const MODULOS: Modulo[] = [
     modo: 'pessoal',
     nome: 'Treino',
     categoria: 'Corpo',
-    descricao: 'Treinos, cargas e evolução.',
+    descricao: 'Fichas, cargas, calendário e evolução.',
     icone: Dumbbell,
-    status: 'em_breve',
+    status: 'disponivel',
+    rota: '/treino',
     previa: {
-      resumo: 'Registro de treinos e acompanhamento de evolução.',
-      itens: ['Fichas de treino', 'Cargas e repetições', 'Evolução ao longo das semanas'],
+      resumo: 'Divisão de 5 dias para ganhar massa, com o treino do dia já montado, cargas e séries anotadas na hora e o calendário de 2026 se ajustando sozinho.',
+      itens: [
+        'Treino do dia e próximos dias com descanso planejado',
+        'Anotar carga e repetições de cada série',
+        'Cronômetro de descanso entre séries',
+        'Imagens animadas de cada exercício',
+        'Evolução de carga, volume e recordes',
+      ],
     },
   },
   {
