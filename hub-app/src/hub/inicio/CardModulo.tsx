@@ -1,5 +1,5 @@
 import { ArrowUpRight, Flame } from 'lucide-react'
-import type { ReactNode } from 'react'
+import type { PointerEvent, ReactNode } from 'react'
 import type { Modulo } from '../modulos'
 import { Selo } from './Selo'
 
@@ -16,11 +16,19 @@ type Props = {
   aoEntrar: () => void
   aoAbrir: () => void
   idPrevia: string
-  modoToque: boolean
+  aoExpandir: boolean
   children?: ReactNode
 }
 
-export function CardModulo({ modulo, ativo, destaque, aoEscolher, aoEntrar, aoAbrir, idPrevia, modoToque, children }: Props) {
+/** O brilho em degradê acompanha o mouse por dentro do cartão (só variáveis CSS, sem re-render). */
+function seguirMouse(e: PointerEvent<HTMLElement>) {
+  if (e.pointerType !== 'mouse') return
+  const r = e.currentTarget.getBoundingClientRect()
+  e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`)
+  e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`)
+}
+
+export function CardModulo({ modulo, ativo, destaque, aoEscolher, aoEntrar, aoAbrir, idPrevia, aoExpandir, children }: Props) {
   const Icone = modulo.icone
   const linha = destaque?.linha ?? (modulo.status === 'em_breve' ? 'Em construção' : modulo.descricao)
   return (
@@ -29,12 +37,14 @@ export function CardModulo({ modulo, ativo, destaque, aoEscolher, aoEntrar, aoAb
         type="button"
         className="mod-alvo"
         onClick={aoEscolher}
-        onMouseEnter={aoEntrar}
+        onPointerEnter={(e) => e.pointerType === 'mouse' && aoEntrar()}
+        onPointerMove={seguirMouse}
         onFocus={aoEntrar}
-        aria-expanded={modoToque ? ativo : undefined}
-        aria-controls={modoToque ? idPrevia : undefined}
+        aria-expanded={aoExpandir ? ativo : undefined}
+        aria-controls={aoExpandir ? idPrevia : undefined}
         aria-label={`${modulo.nome}, ${modulo.categoria}. ${modulo.status === 'disponivel' ? 'Disponível' : 'Em breve'}. ${linha}`}
       >
+        <span className="mod-brilho" aria-hidden />
         <span className="mod-topo">
           <span className="mod-icone" aria-hidden>
             <Icone />
@@ -50,7 +60,10 @@ export function CardModulo({ modulo, ativo, destaque, aoEscolher, aoEntrar, aoAb
         <span className="mod-textos" aria-hidden>
           <span className="mod-categoria">{modulo.categoria}</span>
           <span className="mod-nome">{modulo.nome}</span>
-          <span className="mod-linha">{linha}</span>
+          <span className="mod-desc">{modulo.descricao}</span>
+        </span>
+        <span className="mod-linha" aria-hidden>
+          {linha}
         </span>
       </button>
       <button type="button" className="mod-seta" onClick={aoAbrir} aria-label={`Abrir ${modulo.nome}`}>

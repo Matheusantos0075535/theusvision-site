@@ -38,6 +38,7 @@ export function Progresso() {
     const porDia = dias30.map((d) => sessoes.filter((s) => s.dia === d).reduce((x, s) => x + s.paginas, 0))
     // Minutos por semana (últimas 12 semanas)
     const semanas = Array.from({ length: 12 }, (_, i) => 11 - i)
+    const iniSemana = semanas.map((k) => somarDias(somarDias(hoje, -7 * k), -6))
     const minSemana = semanas.map((k) => {
       const fim = somarDias(hoje, -7 * k)
       const ini = somarDias(fim, -6)
@@ -58,7 +59,7 @@ export function Progresso() {
     const esperado = (estado.meta_anual * diaDoAno) / 365
     const situacao =
       doAno.length >= esperado + 0.5 ? 'adiantado' : doAno.length <= esperado - 0.5 ? 'atrasado' : 'no ritmo'
-    return { dias30, porDia, minSemana, horas, picoHora, media, doAno, esperado, situacao, ano }
+    return { dias30, porDia, minSemana, iniSemana, horas, picoHora, media, doAno, esperado, situacao, ano }
   }, [sessoes, estado, livros])
 
   if (erro) return <ErroCarregar mensagem={erro} tentar={carregar} />
@@ -121,6 +122,7 @@ export function Progresso() {
             valores={a.porDia}
             destaque={29}
             rotuloAria="Páginas lidas por dia nos últimos 30 dias"
+            explicacao="Cada coluna é um dia dos últimos 30 (o número embaixo é o dia do mês). A altura é quantas páginas você leu. A coluna laranja é hoje."
           />
         </div>
       </Secao>
@@ -128,10 +130,12 @@ export function Progresso() {
       <Secao titulo="Minutos por semana">
         <div className="cartao-bloco">
           <GraficoColunas
-            rotulos={a.minSemana.map((_, i) => (i === 11 ? 'esta' : `-${11 - i}`))}
+            rotulos={a.iniSemana.map((d) => `${d.slice(8)}/${d.slice(5, 7)}`)}
             valores={a.minSemana}
             destaque={11}
+            mostrarValores
             rotuloAria="Minutos de leitura por semana nas últimas 12 semanas"
+            explicacao="Cada coluna é uma semana (embaixo, o dia em que ela começa). O número em cima são os minutos lidos. A coluna laranja é a semana atual."
           />
         </div>
       </Secao>
@@ -145,8 +149,8 @@ export function Progresso() {
                 valores={a.horas}
                 destaque={a.picoHora}
                 rotuloAria="Sessões por hora do dia"
+                explicacao={`Cada coluna é uma hora do dia (0h a 23h) e mostra em quantas sessões você registrou leitura nesse horário. Seu horário mais frequente é por volta das ${a.picoHora}h.`}
               />
-              <p className="dica">Seu horário mais frequente é por volta das {a.picoHora}h.</p>
             </>
           ) : (
             <p className="vazio">Os horários aparecem depois das primeiras sessões.</p>

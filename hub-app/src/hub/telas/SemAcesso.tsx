@@ -10,7 +10,7 @@ export function SemAcesso() {
       apoio={
         falhaAoVerificar
           ? 'Houve uma falha de conexão ao checar sua permissão. Tente de novo.'
-          : `A conta ${sessao?.user.email ?? ''} não está na lista de acesso do TeusVision Hub. Se isso for um engano, fale com quem administra o sistema.`
+          : `A conta ${sessao?.user.email ?? ''} não está na lista de acesso do TheusVision Hub. Se isso for um engano, fale com quem administra o sistema.`
       }
     >
       <div className="envelope" aria-hidden style={{ marginTop: 22 }}>

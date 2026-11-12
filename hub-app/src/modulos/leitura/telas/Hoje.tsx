@@ -65,6 +65,7 @@ export function Hoje({ aoRegistrar }: { aoRegistrar: (livroId?: string) => void 
         </div>
       </section>
 
+      <div className="hoje-lado">
       <div className="le-meta-dia" data-cumprida={estado.hoje_cumprido || undefined}>
         <span className="le-meta-check" aria-hidden>
           {estado.hoje_cumprido ? <Check /> : null}
@@ -78,7 +79,7 @@ export function Hoje({ aoRegistrar }: { aoRegistrar: (livroId?: string) => void 
         </div>
       </div>
 
-      <button className="btn btn-primario btn-grande" onClick={() => aoRegistrar()}>
+      <button className="btn btn-verde btn-grande" onClick={() => aoRegistrar()}>
         Registrar leitura
       </button>
 
@@ -140,6 +141,8 @@ export function Hoje({ aoRegistrar }: { aoRegistrar: (livroId?: string) => void 
           </ul>
         </section>
       )}
+
+      </div>
 
       <Numeros
         itens={[

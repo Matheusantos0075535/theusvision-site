@@ -131,7 +131,7 @@ export function LivroDetalhe({ aoRegistrar }: { aoRegistrar: (livroId: string) =
         </div>
       ) : (
         <div className="le-livro-acoes">
-          <button className="btn btn-primario btn-grande" onClick={() => aoRegistrar(livro.id)}>
+          <button className="btn btn-verde btn-grande" onClick={() => aoRegistrar(livro.id)}>
             Registrar leitura
           </button>
           <div className="le-filtros" role="radiogroup" aria-label="Estado do livro">
