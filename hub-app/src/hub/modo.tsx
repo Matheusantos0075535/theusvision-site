@@ -5,7 +5,8 @@ const CHAVE = 'tv-modo'
 
 function ler(): Modo {
   try {
-    return localStorage.getItem(CHAVE) === 'work' ? 'work' : 'pessoal'
+    const v = localStorage.getItem(CHAVE)
+    return v === 'work' || v === 'creative' ? v : 'pessoal'
   } catch {
     return 'pessoal'
   }
@@ -14,7 +15,7 @@ function ler(): Modo {
 type Ctx = { modo: Modo; trocar: (m: Modo) => void }
 const ModoCtx = createContext<Ctx | null>(null)
 
-/** Pessoal ou Work: lembrado neste aparelho. Só muda quais módulos aparecem no painel. */
+/** Pessoal, Creative ou Work: lembrado neste aparelho. Só muda quais módulos aparecem no painel. */
 export function ModoProvider({ children }: { children: ReactNode }) {
   const [modo, setModo] = useState<Modo>(ler)
   const trocar = useCallback((m: Modo) => {

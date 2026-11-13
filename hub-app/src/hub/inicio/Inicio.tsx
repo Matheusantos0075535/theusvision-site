@@ -102,7 +102,7 @@ export function Inicio() {
       </header>
       <main className="inicio-miolo">
         <section className="saudacao">
-          <span className="olho">{modo === 'work' ? 'Modo work' : 'Seu painel'}</span>
+          <span className="olho">{modo === 'work' ? 'Modo work' : modo === 'creative' ? 'Modo creative' : 'Seu painel'}</span>
           <h1>
             {saudacao(agora)}, <span>{nome}</span>
           </h1>
@@ -114,7 +114,7 @@ export function Inicio() {
             </span>
           </p>
           <div className="modo-troca" role="group" aria-label="Modo do painel">
-            {(['pessoal', 'work'] as Modo[]).map((m) => (
+            {(['pessoal', 'work', 'creative'] as Modo[]).map((m) => (
               <button key={m} className="modo-opcao" aria-pressed={modo === m} onClick={() => trocar(m)}>
                 {ROTULO_MODO[m]}
               </button>
