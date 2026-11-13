@@ -1,6 +1,6 @@
 import { Apple, BookOpen, Lightbulb, Briefcase, CalendarCheck, Dumbbell, GraduationCap, HandCoins, House, Rocket, Sprout, Users, Wallet, type LucideIcon } from 'lucide-react'
 
-export type Modo = 'pessoal' | 'work'
+export type Modo = 'pessoal' | 'work' | 'creative'
 
 export type StatusModulo = 'disponivel' | 'em_breve'
 
@@ -62,8 +62,8 @@ export const MODULOS: Modulo[] = [
   },
   {
     id: 'leitura',
-    modo: 'pessoal',
-    grupo: 'crescimento',
+    modo: 'creative',
+    grupo: 'creative',
     nome: 'Leitura',
     categoria: 'Hábito',
     descricao: 'Vários livros, uma página por vez.',
@@ -118,8 +118,8 @@ export const MODULOS: Modulo[] = [
 
   {
     id: 'estudos',
-    modo: 'pessoal',
-    grupo: 'crescimento',
+    modo: 'creative',
+    grupo: 'creative',
     nome: 'Estudos',
     categoria: 'Aprendizado',
     descricao: 'Foco cronometrado e revisões no dia certo.',
@@ -135,7 +135,7 @@ export const MODULOS: Modulo[] = [
   {
     id: 'rotina',
     modo: 'pessoal',
-    grupo: 'base',
+    grupo: 'pilares',
     nome: 'Rotina da casa',
     categoria: 'Casa',
     descricao: 'Uma zona por dia, 15 minutos.',
@@ -150,8 +150,8 @@ export const MODULOS: Modulo[] = [
 
   {
     id: 'ideias',
-    modo: 'pessoal',
-    grupo: 'crescimento',
+    modo: 'creative',
+    grupo: 'creative',
     nome: 'TheusVision Ideias',
     categoria: 'Criação',
     descricao: 'Banco de ideias com link, propósito e plano.',
@@ -172,7 +172,7 @@ export const MODULOS: Modulo[] = [
   {
     id: 'financas',
     modo: 'pessoal',
-    grupo: 'base',
+    grupo: 'pilares',
     nome: 'Finanças',
     categoria: 'Dinheiro',
     descricao: 'Quanto posso gastar hoje, freio e dívidas.',
@@ -256,17 +256,15 @@ export const ROTULO_STATUS: Record<StatusModulo, string> = {
   em_breve: 'Em breve',
 }
 
-export const ROTULO_MODO: Record<Modo, string> = { pessoal: 'Pessoal', work: 'Work' }
+export const ROTULO_MODO: Record<Modo, string> = { pessoal: 'Pessoal', work: 'Work', creative: 'Creative' }
 
-export type Grupo = { id: string; nome: string; apoio: string }
+/** semCabeca: a categoria é a única da tela e não precisa de título. */
+export type Grupo = { id: string; nome: string; apoio: string; semCabeca?: boolean }
 
 /** Categorias do painel, na ordem em que aparecem. */
 export const GRUPOS: Record<Modo, Grupo[]> = {
-  pessoal: [
-    { id: 'pilares', nome: 'Pilares', apoio: 'O que sustenta o seu dia a dia' },
-    { id: 'crescimento', nome: 'Crescimento', apoio: 'Aprender, ler e criar' },
-    { id: 'base', nome: 'Base da vida', apoio: 'Casa e dinheiro em ordem' },
-  ],
+  pessoal: [{ id: 'pilares', nome: 'Pilares', apoio: 'O que sustenta o seu dia a dia', semCabeca: true }],
+  creative: [{ id: 'creative', nome: 'Creative', apoio: 'Ler, estudar e criar', semCabeca: true }],
   work: [
     { id: 'w-operacao', nome: 'Operação', apoio: 'Clientes, entregas e visão geral' },
     { id: 'w-crescimento', nome: 'Crescimento', apoio: 'Receita e estrutura do negócio' },
