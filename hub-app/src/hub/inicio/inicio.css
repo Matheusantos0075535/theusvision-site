@@ -1176,3 +1176,33 @@
     margin-top: 0;
   }
 }
+
+/* celular: os módulos vêm logo depois da troca de modo; a semana fica no fim, mais discreta */
+@media (max-width: 899px) {
+  .inicio-miolo {
+    display: flex;
+    flex-direction: column;
+  }
+  .inicio-cabeca {
+    display: contents;
+  }
+  .inicio-cabeca .saudacao {
+    margin-bottom: 30px;
+  }
+  .uso {
+    order: 2;
+    margin-top: 32px;
+    padding: 12px 14px 10px;
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .uso-topo h2 {
+    font-size: 12px;
+  }
+  .uso-topo b {
+    font-size: 15px;
+  }
+  .uso-barras {
+    height: 56px;
+  }
+}
