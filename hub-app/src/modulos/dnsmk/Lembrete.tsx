@@ -1,17 +1,21 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMovimentoReduzido } from '../../lib/useMidia'
-import { DOIS_CAMINHOS as T, FRASES_ANCORA } from './conteudo/textosSaude'
+import { DOIS_CAMINHOS as T, FRASES_ANCORA, FRASES_CIENCIA } from './conteudo/textosSaude'
 
 const INTERVALO = 10_000
 
-type Item = { tipo: 'par'; de: string; para: string } | { tipo: 'ancora'; situacao: string; frase: string }
+type Item =
+  | { tipo: 'par'; de: string; para: string }
+  | { tipo: 'ancora'; situacao: string; frase: string }
+  | { tipo: 'ciencia'; frase: string; fonte: string }
 
-/** Pares "onde você estava → para onde está indo" e frases-âncora, alternados. */
+/** Pares "onde você estava → para onde está indo", frases-âncora e achados de pesquisa, alternados. */
 const ITENS: Item[] = (() => {
   const out: Item[] = []
-  const n = Math.max(T.lembretes.length, FRASES_ANCORA.length)
+  const n = Math.max(T.lembretes.length, FRASES_ANCORA.length, FRASES_CIENCIA.length)
   for (let i = 0; i < n; i++) {
     if (T.lembretes[i]) out.push({ tipo: 'par', ...T.lembretes[i] })
+    if (FRASES_CIENCIA[i]) out.push({ tipo: 'ciencia', ...FRASES_CIENCIA[i] })
     if (FRASES_ANCORA[i]) out.push({ tipo: 'ancora', ...FRASES_ANCORA[i] })
   }
   return out
@@ -24,7 +28,8 @@ function indiceDoDia(hoje: string) {
   return ((dias % N) + N) % N
 }
 
-const textoDe = (it: Item) => (it.tipo === 'par' ? `${T.lembreteDe}: ${it.de} ${T.lembretePara}: ${it.para}.` : `${it.situacao}: ${it.frase}`)
+const textoDe = (it: Item) =>
+  it.tipo === 'par' ? `${T.lembreteDe}: ${it.de} ${T.lembretePara}: ${it.para}.` : it.tipo === 'ciencia' ? `O que a ciência diz: ${it.frase} (${it.fonte})` : `${it.situacao}: ${it.frase}`
 
 /**
  * Faixa curta antes da ofensiva. Troca sozinha; pausa com o mouse em cima, com foco ou com a aba escondida;
@@ -84,6 +89,14 @@ export function Lembrete({ hoje, aoVerPorque }: { hoje: string; aoVerPorque: () 
               <span className="lembrete-no lembrete-para">
                 <span className="lembrete-rotulo">{T.lembretePara}</span>
                 <span className="lembrete-verso">{it.para}</span>
+              </span>
+            </span>
+          ) : it.tipo === 'ciencia' ? (
+            <span key={i} className="lembrete-fluxo lembrete-ancora lembrete-ciencia" data-ativo={i === indice || undefined}>
+              <span className="lembrete-no">
+                <span className="lembrete-rotulo">O que a ciência diz</span>
+                <span className="lembrete-verso">{it.frase}</span>
+                <span className="lembrete-fonte">({it.fonte})</span>
               </span>
             </span>
           ) : (

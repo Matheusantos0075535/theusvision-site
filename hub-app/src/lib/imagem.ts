@@ -9,6 +9,9 @@ export async function comprimirImagem(arquivo: File, lado = 720, qualidade = 0.8
   canvas.height = h
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Sem suporte a imagem')
+  // Fundo branco: PNG transparente (print) não fica preto ao virar JPEG.
+  ctx.fillStyle = '#fff'
+  ctx.fillRect(0, 0, w, h)
   ctx.drawImage(bitmap, 0, 0, w, h)
   bitmap.close()
   return new Promise((resolver, rejeitar) =>

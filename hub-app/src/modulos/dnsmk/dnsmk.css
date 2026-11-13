@@ -965,6 +965,25 @@ input[type='date'].entrada {
   font-weight: 800;
   color: #fff;
 }
+/* achado de pesquisa: mesmo bloco, rótulo verde e a fonte discreta embaixo */
+.lembrete-ciencia {
+  border-image: linear-gradient(180deg, var(--verde), #7ab8ff) 1;
+}
+.lembrete-ciencia .lembrete-rotulo {
+  color: var(--verde);
+}
+.lembrete-ciencia .lembrete-verso {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.lembrete-fonte {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.62);
+}
 @keyframes verso-entra {
   from {
     opacity: 0;
@@ -1171,6 +1190,9 @@ input[type='date'].entrada {
   }
   .lembrete-ancora .lembrete-verso {
     font-size: 21px;
+  }
+  .lembrete-ciencia .lembrete-verso {
+    font-size: 17px;
   }
 }
 @keyframes corre-h {

@@ -200,10 +200,17 @@ a {
   width: 100%;
 }
 .btn-icone {
+  /* Ícone sempre no centro do círculo, sem encolher dentro de barras flex. */
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  box-sizing: border-box;
   width: 42px;
   height: 42px;
+  min-width: 42px;
   min-height: 0;
   padding: 0;
+  line-height: 0;
   border-radius: 50%;
   border: 1px solid var(--borda);
   background: rgba(10, 10, 10, 0.35);
@@ -215,8 +222,10 @@ a {
   color: var(--sobre-laranja);
 }
 .btn-icone svg {
+  display: block;
   width: 19px;
   height: 19px;
+  flex: none;
 }
 
 /* ---------- formulários ---------- */

@@ -1,4 +1,4 @@
-/** Textos do Meu dia. A rotina em si fica no banco (editável); aqui só o roteiro dos blocos do dia. */
+/** Textos do A fazer (antigo Meu dia). A rotina em si fica no banco (editável); aqui só o roteiro dos blocos do dia. */
 
 export type BlocoDoDia = { id: 'manha' | 'tarde' | 'noite'; nome: string; foco: string; itens: string[] }
 
@@ -59,8 +59,8 @@ export const PRIORIDADES = [
 ] as const
 
 export const TEXTOS = {
-  prioridadesTitulo: 'As 3 prioridades de hoje',
-  prioridadesApoio: 'No máximo três. O que importa mais vem primeiro, com a primeira ação já escrita.',
+  prioridadesTitulo: 'A fazer hoje',
+  prioridadesApoio: 'Comece pelas três que mais importam, com a primeira ação já escrita. Se sobrar fôlego, adicione mais.',
   prioridadeVazia: 'Escolher a prioridade',
   acaoRotulo: 'Primeira ação (menos de 10 minutos)',
   acaoExemplo: 'Ex.: abrir o arquivo e escrever o título',

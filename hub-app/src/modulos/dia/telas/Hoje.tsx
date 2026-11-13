@@ -1,4 +1,4 @@
-import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, MoonStar, Pencil, Plus, X } from 'lucide-react'
+import { ArrowDownToLine, BellRing, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, MoonStar, NotebookPen, Pencil, Plus, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Secao } from '../../../components/compartilhado/ShellModulo'
@@ -7,7 +7,8 @@ import { useAuth } from '../../../hub/auth'
 import { dataPorExtensoDoBanco, diferencaDias, horaBrasilia, primeiroNome, saudacao, somarDias } from '../../../lib/tempo'
 import { BLOCOS_FIM_DE_SEMANA, BLOCOS_SEMANA, TEXTOS } from '../conteudo'
 import { Calendario, ANO } from '../Calendario'
-import { itensDeHoje, useDia, type Item, type Prioridade } from '../dados'
+import { itensDeHoje, MAX_PRIORIDADES, useDia, type Atrasada, type Item, type Prioridade } from '../dados'
+import { PomodoroCartao } from '../Pomodoro'
 import { tocar } from '../../../lib/som'
 
 const horaAtual = () => Number(horaBrasilia().split(':')[0])
@@ -55,10 +56,14 @@ function Checklist({ titulo, itens, aberto }: { titulo: string; itens: Item[]; a
   )
 }
 
-function Slot({ ordem, p }: { ordem: number; p?: Prioridade }) {
+function Slot({ ordem, p, novo, aoFechar }: { ordem: number; p?: Prioridade; novo?: boolean; aoFechar?: () => void }) {
   const { salvarPrioridade, alternarPrioridade, apagarPrioridade, editavel } = useDia()
   const { mostrar } = useToast()
-  const [editando, setEditando] = useState(false)
+  const [editando, setEditandoBase] = useState(!!novo)
+  const setEditando = (v: boolean) => {
+    setEditandoBase(v)
+    if (!v) aoFechar?.()
+  }
   const [titulo, setTitulo] = useState(p?.titulo ?? '')
   const [acao, setAcao] = useState(p?.primeira_acao ?? '')
   const [salvando, setSalvando] = useState(false)
@@ -250,6 +255,176 @@ function Encerrar() {
   )
 }
 
+const DIA_CURTO = new Intl.DateTimeFormat('pt-BR', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
+function quandoFoi(dia: string, hoje: string) {
+  const d = diferencaDias(dia, hoje)
+  if (d === -1) return 'ontem'
+  if (d === -2) return 'anteontem'
+  return DIA_CURTO.format(new Date(`${dia}T12:00:00Z`)).replace(/\./g, '')
+}
+
+/** Aviso do que ficou para trás nos últimos dias, com "trazer para hoje". */
+function FicouParaTras() {
+  const { atrasadas, trazerParaHoje, deixarPraLa, hojeReal } = useDia()
+  const { mostrar } = useToast()
+  const [aberto, setAberto] = useState(false)
+  const [ocupado, setOcupado] = useState<string | null>(null)
+  if (!atrasadas.length) return null
+  async function agir(p: Atrasada, trazer: boolean) {
+    setOcupado(p.id)
+    const e = trazer ? await trazerParaHoje(p) : await deixarPraLa(p)
+    setOcupado(null)
+    if (e) return mostrar(e, { comNav: true })
+    if (trazer) tocar('plantar')
+  }
+  const n = atrasadas.length
+  return (
+    <section className="dia-atras" data-aberto={aberto || undefined} aria-label="Ficou para trás">
+      <button className="dia-atras-topo" onClick={() => setAberto((a) => !a)} aria-expanded={aberto}>
+        <span className="dia-atras-sino" aria-hidden>
+          <BellRing />
+          <i>{n}</i>
+        </span>
+        <span className="dia-atras-textos">
+          <b>{n === 1 ? '1 tarefa ficou para trás' : `${n} tarefas ficaram para trás`}</b>
+          <small>{aberto ? 'Traga para hoje ou deixe ir. Sem culpa.' : 'Toque para ver e trazer para hoje'}</small>
+        </span>
+        <ChevronDown aria-hidden />
+      </button>
+      {aberto && (
+        <ul className="dia-atras-lista">
+          {atrasadas.map((p) => (
+            <li key={p.id}>
+              <div className="dia-atras-item">
+                <b>{p.titulo}</b>
+                <small>
+                  {quandoFoi(p.dia, hojeReal)}
+                  {p.primeira_acao && ` · começar por: ${p.primeira_acao}`}
+                </small>
+              </div>
+              <div className="dia-atras-acoes">
+                <button className="btn btn-fantasma" disabled={ocupado === p.id} onClick={() => void agir(p, false)}>
+                  Deixar pra lá
+                </button>
+                <button className="btn btn-primario" disabled={ocupado === p.id} onClick={() => void agir(p, true)}>
+                  <ArrowDownToLine aria-hidden />
+                  Trazer para hoje
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )
+}
+
+/** Folha para escolher itens pendentes do Despejo mental e colocar no A fazer de hoje. */
+function PuxarDoDespejo({ aoFechar }: { aoFechar: () => void }) {
+  const { despejo, despejoParaHoje } = useDia()
+  const { mostrar } = useToast()
+  const [ocupado, setOcupado] = useState<string | null>(null)
+  const abertos = despejo.filter((d) => !d.resolvido)
+  return (
+    <div className="folha-fundo" onClick={aoFechar}>
+      <div className="folha" role="dialog" aria-modal="true" aria-labelledby="dia-puxar" onClick={(e) => e.stopPropagation()}>
+        <div className="folha-alca" aria-hidden />
+        <h2 id="dia-puxar" className="dia-folha-titulo">
+          Puxar do Despejo mental
+        </h2>
+        <p className="dia-folha-apoio">O item entra no A fazer de hoje e sai dos pendentes do despejo.</p>
+        {abertos.length === 0 ? (
+          <p className="vazio">Nada pendente no despejo.</p>
+        ) : (
+          <ul className="dia-puxar-lista">
+            {abertos.map((d) => (
+              <li key={d.id}>
+                <div>
+                  <b>{d.texto}</b>
+                  {d.proxima_acao && <small>Próxima ação: {d.proxima_acao}</small>}
+                </div>
+                <button
+                  className="btn btn-secundario"
+                  disabled={ocupado === d.id}
+                  onClick={async () => {
+                    setOcupado(d.id)
+                    const e = await despejoParaHoje(d)
+                    setOcupado(null)
+                    if (e) return mostrar(e, { comNav: true })
+                    tocar('plantar')
+                  }}
+                >
+                  <Plus aria-hidden />
+                  Hoje
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="dia-prio-botoes">
+          <button className="btn btn-fantasma" onClick={aoFechar}>
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Prioridades() {
+  const { prioridades, editavel, dia, hojeReal, despejo } = useDia()
+  const [extra, setExtra] = useState<number | null>(null)
+  const [puxar, setPuxar] = useState(false)
+  const usadas = new Set(prioridades.map((p) => p.ordem))
+  // Três lugares sempre à vista; depois disso, as que você adicionou.
+  const ordens = [...new Set([...(editavel || !prioridades.length ? [1, 2, 3] : []), ...usadas, ...(extra ? [extra] : [])])].sort((a, b) => a - b)
+  const temVazia = ordens.some((n) => !usadas.has(n))
+  const proxima = Array.from({ length: MAX_PRIORIDADES }, (_, i) => i + 1).find((n) => !usadas.has(n) && n !== extra)
+  const pendentesDespejo = despejo.filter((d) => !d.resolvido).length
+  const feitas = prioridades.filter((p) => p.feita).length
+  return (
+    <Secao titulo={TEXTOS.prioridadesTitulo}>
+      {editavel && <p className="dia-apoio">{TEXTOS.prioridadesApoio}</p>}
+      {prioridades.length > 3 && (
+        <p className="dia-prio-conta">
+          {feitas} de {prioridades.length} feitas
+        </p>
+      )}
+      <ol className="dia-prios">
+        {ordens.map((n) => {
+          const p = prioridades.find((x) => x.ordem === n)
+          return (
+            <Slot
+              key={`${dia}-${n}-${p?.id ?? 'novo'}`}
+              ordem={n}
+              p={p}
+              novo={!p && n === extra}
+              aoFechar={n === extra ? () => setExtra(null) : undefined}
+            />
+          )
+        })}
+      </ol>
+      {editavel && (
+        <div className="dia-prio-mais">
+          {!temVazia && proxima && (
+            <button className="btn btn-secundario" onClick={() => setExtra(proxima)}>
+              <Plus aria-hidden />
+              Adicionar mais uma
+            </button>
+          )}
+          {dia === hojeReal && pendentesDespejo > 0 && (
+            <button className="btn btn-fantasma" onClick={() => setPuxar(true)}>
+              <NotebookPen aria-hidden />
+              Puxar do Despejo ({pendentesDespejo})
+            </button>
+          )}
+        </div>
+      )}
+      {puxar && <PuxarDoDespejo aoFechar={() => setPuxar(false)} />}
+    </Secao>
+  )
+}
+
 function rotuloDoDia(dia: string, hoje: string) {
   const d = diferencaDias(dia, hoje)
   if (d === 0) return 'Hoje'
@@ -340,17 +515,13 @@ export function Hoje() {
         )}
       </section>
 
+      {ehHoje && <FicouParaTras />}
+      {ehHoje && <PomodoroCartao />}
+
       <div className="dia-coluna">
         <Checklist key={`m-${dia}`} titulo="Rotina da manhã" itens={manha} aberto={!ehHoje || hora < 12} />
 
-        <Secao titulo={TEXTOS.prioridadesTitulo}>
-          {editavel && <p className="dia-apoio">{TEXTOS.prioridadesApoio}</p>}
-          <ol className="dia-prios">
-            {[1, 2, 3].map((n) => (
-              <Slot key={`${dia}-${n}-${prioridades.find((p) => p.ordem === n)?.id ?? 'novo'}`} ordem={n} p={prioridades.find((p) => p.ordem === n)} />
-            ))}
-          </ol>
-        </Secao>
+        <Prioridades />
 
         <Checklist key={`n-${dia}`} titulo="Rotina da noite" itens={noite} aberto={!ehHoje || hora >= 17} />
       </div>

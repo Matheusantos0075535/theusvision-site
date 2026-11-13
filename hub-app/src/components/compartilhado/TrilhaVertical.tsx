@@ -34,9 +34,13 @@ export function TrilhaVertical({
   rolarParaAtual?: boolean
 }) {
   const refAtual = useRef<HTMLLIElement>(null)
+  // Abre no começo e, logo depois, desliza até onde você está na trilha.
   useEffect(() => {
-    if (rolarParaAtual) refAtual.current?.scrollIntoView({ block: 'center' })
-  }, [rolarParaAtual])
+    if (!rolarParaAtual) return
+    const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const t = window.setTimeout(() => refAtual.current?.scrollIntoView({ block: 'center', behavior: reduzido ? 'auto' : 'smooth' }), 350)
+    return () => window.clearTimeout(t)
+  }, [rolarParaAtual, destaqueId])
 
   return (
     <ol className="trilha">

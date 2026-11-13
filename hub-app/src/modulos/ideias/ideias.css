@@ -575,3 +575,27 @@ textarea.id-titulo {
 .id-nova .id-img img {
   max-height: 200px;
 }
+
+/* atalho para o Creative Studio */
+.id-studio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  box-shadow: inset 4px 0 0 var(--verde);
+}
+.id-studio > div {
+  flex: 1 1 220px;
+}
+.id-studio .dia-apoio {
+  margin: 4px 0 0;
+  color: #7a5fb0;
+}
+.id-studio .btn {
+  min-height: 44px;
+}
+.id-studio .btn svg {
+  width: 18px;
+  height: 18px;
+}

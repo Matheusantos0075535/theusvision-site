@@ -505,6 +505,14 @@
   gap: 4px;
   padding: 4px 14px 14px;
 }
+.dep-levar {
+  justify-self: flex-start;
+  min-height: 44px;
+}
+.dep-levar svg {
+  width: 18px;
+  height: 18px;
+}
 .dep-apagar {
   justify-self: flex-start;
   color: #ff8f82;
@@ -696,4 +704,408 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+/* ---------- A fazer: mais prioridades ---------- */
+.dia-prio-conta {
+  margin: -4px 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--laranja);
+}
+.dia-prio-mais {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.dia-prio-mais .btn {
+  min-height: 44px;
+}
+.dia-prio-mais svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- Ficou para trás (aviso tipo notificação) ---------- */
+.dia-atras {
+  border-radius: var(--raio-g);
+  background: #fff;
+  color: #3d1773;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: atras-entra 380ms var(--curva, ease-out);
+}
+@keyframes atras-entra {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+.dia-atras-topo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 14px;
+  text-align: left;
+  color: inherit;
+}
+.dia-atras-topo > svg {
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+  flex: none;
+  color: #7a5fb0;
+  transition: transform 200ms;
+}
+.dia-atras[data-aberto] .dia-atras-topo > svg {
+  transform: rotate(180deg);
+}
+.dia-atras-sino {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  background: rgba(255, 159, 17, 0.16);
+  color: #b35f00;
+}
+.dia-atras-sino svg {
+  width: 20px;
+  height: 20px;
+  animation: sino 2.4s ease-in-out 600ms 2;
+  transform-origin: 50% 10%;
+}
+.dia-atras-sino i {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--laranja);
+  color: #fff;
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+}
+@keyframes sino {
+  0%, 30%, 100% {
+    transform: none;
+  }
+  6%, 18% {
+    transform: rotate(14deg);
+  }
+  12%, 24% {
+    transform: rotate(-14deg);
+  }
+}
+.dia-atras-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.dia-atras-textos b {
+  font-size: 15px;
+}
+.dia-atras-textos small {
+  font-size: 13px;
+  color: #7a5fb0;
+}
+.dia-atras-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0 14px 14px;
+  display: grid;
+  gap: 10px;
+}
+.dia-atras-lista li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 12px;
+  border-radius: var(--raio);
+  background: rgba(61, 23, 115, 0.05);
+}
+.dia-atras-item {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dia-atras-item b {
+  overflow-wrap: anywhere;
+}
+.dia-atras-item small {
+  font-size: 13px;
+  color: #7a5fb0;
+}
+.dia-atras-acoes {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+.dia-atras-acoes .btn {
+  min-height: 44px;
+  font-size: 14px;
+}
+.dia-atras-acoes .btn-fantasma {
+  color: #7a5fb0;
+}
+.dia-atras-acoes svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Puxar do despejo ---------- */
+.dia-puxar-lista {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+.dia-puxar-lista li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 14px;
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  background: rgba(255, 255, 255, 0.04);
+}
+.dia-puxar-lista li > div {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dia-puxar-lista b {
+  overflow-wrap: anywhere;
+}
+.dia-puxar-lista small {
+  font-size: 13px;
+  color: var(--texto-2);
+}
+.dia-puxar-lista .btn {
+  min-height: 44px;
+  flex: none;
+}
+.dia-puxar-lista svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Pomodoro ---------- */
+.pomo {
+  --pomo-cor: var(--laranja);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 12px 12px 12px 14px;
+  border-radius: var(--raio-g);
+  border: 1px solid var(--borda);
+  background: rgba(255, 255, 255, 0.04);
+  transition: border-color 300ms, background 300ms;
+}
+.pomo[data-fase='pausa'] {
+  --pomo-cor: var(--verde);
+}
+.pomo[data-rodando] {
+  border-color: color-mix(in srgb, var(--pomo-cor) 45%, transparent);
+  background: color-mix(in srgb, var(--pomo-cor) 8%, transparent);
+}
+.pomo-relogio {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+}
+.pomo-relogio > svg:not(.pomo-anel) {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  color: var(--pomo-cor);
+}
+.pomo-anel-fundo {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 4;
+}
+.pomo-anel-progresso {
+  fill: none;
+  stroke: var(--pomo-cor);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 500ms linear;
+}
+.pomo-textos {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pomo-fase {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pomo-cor);
+}
+.pomo-fase i {
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--texto-2);
+}
+.pomo-tempo {
+  font-size: 26px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+.pomo-textos small {
+  font-size: 13px;
+  color: var(--texto-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pomo-botoes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pomo-play {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--pomo-cor);
+  color: #1c0752;
+  box-shadow: 0 8px 20px -8px var(--pomo-cor);
+  transition: transform 150ms;
+}
+.pomo-play:active {
+  transform: scale(0.94);
+}
+.pomo-play svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+.pomo-ajustes {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--borda);
+  margin-top: 6px;
+}
+.pomo-ajustes label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 110px;
+  font-size: 13px;
+  color: var(--texto-2);
+}
+.pomo-ajustes .btn {
+  min-height: 44px;
+}
+@media (max-width: 400px) {
+  .pomo {
+    gap: 4px 10px;
+  }
+  .pomo-botoes {
+    grid-column: 2 / -1;
+    justify-content: flex-end;
+  }
+  .pomo-relogio {
+    grid-row: span 2;
+  }
+  .pomo-tempo {
+    font-size: 22px;
+  }
+}
+
+.pomo-flutuante {
+  --pomo-cor: var(--laranja);
+  position: fixed;
+  right: 14px;
+  bottom: calc(var(--nav-altura) + var(--seguro-baixo) + 14px);
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--vidro, rgba(28, 7, 82, 0.92));
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--pomo-cor) 50%, transparent);
+  box-shadow: var(--sombra-flutuante);
+  animation: flut-entra 260ms var(--curva, ease-out);
+}
+.pomo-flutuante[data-fase='pausa'] {
+  --pomo-cor: var(--verde);
+}
+@keyframes flut-entra {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.92);
+  }
+}
+.pomo-flut-tempo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding-right: 6px;
+  color: var(--texto);
+}
+.pomo-flut-tempo b {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.pomo-flut-play {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--pomo-cor);
+  color: #1c0752;
+}
+.pomo-flut-play svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+.pomo-flutuante:not([data-rodando]) .pomo-flut-tempo b {
+  opacity: 0.7;
+}
+@media (min-width: 900px) {
+  .pomo-flutuante {
+    right: 24px;
+    bottom: 24px;
+  }
 }

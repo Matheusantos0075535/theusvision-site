@@ -73,7 +73,7 @@ export function Trilha() {
       </p>
       <TrilhaVertical
         secoes={secoes}
-        destaqueId={estado.proxima_licao?.liberada ? estado.proxima_licao.id : undefined}
+        destaqueId={estado.proxima_licao?.id ?? [...secoes].flatMap((x) => x.itens).filter((i) => i.estado === 'feita').pop()?.id}
         aoEscolher={(item) => {
           if (item.estado === 'bloqueada') mostrar(`Essa lição ${item.dica}.`, { comNav: true })
           else navegar(`/dnsmk/licao/${item.id}`)

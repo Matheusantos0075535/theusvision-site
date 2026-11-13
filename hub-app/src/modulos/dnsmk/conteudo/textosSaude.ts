@@ -796,3 +796,63 @@ export const FRASES_ANCORA = [
   { situacao: 'Quando quiser desistir do dia', frase: 'Imprevisto muda o plano, não cancela o dia.' },
   { situacao: 'Sobre quem eu sou', frase: 'Identidade não se pensa. Se coleciona como prova.' },
 ]
+
+/**
+ * "O que a ciência diz": achados de pesquisa sobre parar a cannabis e sobre hábito, sono e cérebro.
+ * Texto resumido com a fonte entre parênteses. Linguagem de tendência (estudos com grupos, não promessa individual).
+ * Revisar com um profissional junto com o resto deste arquivo.
+ */
+export const FRASES_CIENCIA = [
+  {
+    frase: 'Os receptores CB1, que diminuem com o uso diário, voltaram ao nível normal após cerca de 4 semanas sem usar.',
+    fonte: 'Hirvonen et al., 2012 · Molecular Psychiatry',
+  },
+  {
+    frase: 'A recuperação dos receptores CB1 começa rápido: já aparece nos primeiros 2 dias sem usar.',
+    fonte: "D'Souza et al., 2016 · Biological Psychiatry: CNNI",
+  },
+  {
+    frase: 'Numa revisão de 69 estudos, depois de mais de 72 horas sem uso os prejuízos de memória e atenção ficaram pequenos ou sumiram.',
+    fonte: 'Scott et al., 2018 · JAMA Psychiatry',
+  },
+  {
+    frase: 'Efeitos cognitivos residuais do uso não apareceram mais em quem estava sem usar há cerca de 25 dias ou mais.',
+    fonte: 'Schreiner & Dunn, 2012 · Experimental and Clinical Psychopharmacology',
+  },
+  {
+    frase: 'A abstinência costuma começar em 1 a 3 dias, ter pico na primeira semana e ceder em 1 a 2 semanas. O sono pode levar mais.',
+    fonte: 'Budney et al., 2004 · American Journal of Psychiatry',
+  },
+  {
+    frase: 'Em usuários frequentes, a menor produção de dopamina acompanhou o uso, o que ajuda a explicar a apatia. O sistema responde ao que você faz.',
+    fonte: 'Bloomfield et al., 2014 · Biological Psychiatry',
+  },
+  {
+    frase: 'A fissura sobe, chega a um pico e desce, em geral em minutos. Cada onda atravessada sem usar enfraquece a associação.',
+    fonte: 'Bowen, Chawla & Marlatt, 2010 · prevenção de recaída',
+  },
+  {
+    frase: 'Correr aumentou a anandamida, um canabinoide produzido pelo próprio corpo, ligado à sensação boa depois do exercício.',
+    fonte: 'Raichlen et al., 2012 · Journal of Experimental Biology',
+  },
+  {
+    frase: 'Uma noite sem dormir deixou a amígdala cerca de 60% mais reativa a estímulos negativos. Dormir bem protege suas decisões.',
+    fonte: 'Yoo et al., 2007 · Current Biology',
+  },
+  {
+    frase: 'Em média, um hábito novo levou 66 dias para ficar automático, variando de 18 a 254 dias.',
+    fonte: 'Lally et al., 2010 · European Journal of Social Psychology',
+  },
+  {
+    frase: 'A passividade é a resposta padrão ao estresse longo. O que se aprende é o controle: perceber que a sua ação teve efeito.',
+    fonte: 'Maier & Seligman, 2016 · Psychological Review',
+  },
+  {
+    frase: 'Planos no formato "quando X acontecer, eu faço Y" tiveram efeito médio a grande em alcançar metas.',
+    fonte: 'Gollwitzer & Sheeran, 2006 · Advances in Experimental Social Psychology',
+  },
+  {
+    frase: 'Neurônios que disparam juntos se conectam: o que você repete, o cérebro fortalece.',
+    fonte: 'Princípio de Hebb, 1949',
+  },
+]

@@ -12,6 +12,7 @@ const ProcessosApp = lazy(() => import('./work/ProcessosApp'))
 const VisaoApp = lazy(() => import('./work/VisaoApp'))
 const DnsmkApp = lazy(() => import('./dnsmk/DnsmkApp'))
 const LeituraApp = lazy(() => import('./leitura/LeituraApp'))
+const StudioApp = lazy(() => import('./studio/StudioApp'))
 
 function Lento({ children }: { children: ReactNode }) {
   return (
@@ -40,4 +41,5 @@ export const ROTAS_MODULOS: { caminho: string; elemento: ReactNode }[] = [
   { caminho: '/visao/*', elemento: <Lento><VisaoApp /></Lento> },
   { caminho: '/dnsmk/*', elemento: <Lento><DnsmkApp /></Lento> },
   { caminho: '/leitura/*', elemento: <Lento><LeituraApp /></Lento> },
+  { caminho: '/studio/*', elemento: <Lento><StudioApp /></Lento> },
 ]

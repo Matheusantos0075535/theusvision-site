@@ -1,4 +1,4 @@
-import { Apple, BookOpen, Lightbulb, Briefcase, CalendarCheck, Dumbbell, GraduationCap, HandCoins, House, Rocket, Sprout, Users, Wallet, type LucideIcon } from 'lucide-react'
+import { Apple, BookOpen, Lightbulb, Briefcase, CalendarCheck, Dumbbell, GraduationCap, HandCoins, House, Palette, Rocket, Sprout, Users, Wallet, type LucideIcon } from 'lucide-react'
 
 export type Modo = 'pessoal' | 'work' | 'creative'
 
@@ -22,16 +22,17 @@ export const MODULOS: Modulo[] = [
     id: 'dia',
     modo: 'pessoal',
     grupo: 'pilares',
-    nome: 'Meu dia',
+    nome: 'A fazer',
     categoria: 'Rotina',
-    descricao: 'Prioridades, rotinas e despejo mental.',
+    descricao: 'Tarefas do dia, rotinas, foco e despejo mental.',
     icone: CalendarCheck,
     status: 'disponivel',
     rota: '/dia',
     previa: {
-      resumo: 'O painel do seu dia: 3 prioridades, rotina da manhã e da noite (diferente no fim de semana), essenciais e um despejo mental para esvaziar a cabeça.',
+      resumo: 'O painel do seu dia: o que fazer hoje, timer de foco, rotina da manhã e da noite (diferente no fim de semana), essenciais e um despejo mental para esvaziar a cabeça.',
       itens: [
-        'As 3 prioridades do dia, cada uma com a primeira ação',
+        'As tarefas do dia, cada uma com a primeira ação, e o que ficou de ontem',
+        'Timer Pomodoro que acompanha você pela tela',
         'Rotina da manhã e da noite, editável',
         'Essenciais do dia que não se negociam',
         'Despejo mental com triagem em categorias',
@@ -61,6 +62,48 @@ export const MODULOS: Modulo[] = [
     },
   },
   {
+    id: 'studio',
+    modo: 'creative',
+    grupo: 'creative',
+    nome: 'Creative Studio',
+    categoria: 'Criação',
+    descricao: 'Mood board, mapa mental e storyboard.',
+    icone: Palette,
+    status: 'disponivel',
+    rota: '/studio',
+    previa: {
+      resumo: 'Um quadro infinito por projeto, no estilo Miro: cole prints e referências, monte mapas mentais e o storyboard das cenas dos seus vídeos com IA.',
+      itens: [
+        'Notas coloridas, textos, títulos e links',
+        'Imagens e prints: cole com Ctrl+V ou arraste',
+        'Mapa mental com ramos ligados (Tab cria um ramo)',
+        'Storyboard: cena, imagem, fala/prompt e câmera',
+        'Projetos criados direto de uma ideia',
+      ],
+    },
+  },
+  {
+    id: 'ideias',
+    modo: 'creative',
+    grupo: 'creative',
+    nome: 'TheusVision Ideias',
+    categoria: 'Criação',
+    descricao: 'Banco de ideias com link, propósito e plano.',
+    icone: Lightbulb,
+    status: 'disponivel',
+    rota: '/ideias',
+    previa: {
+      resumo: 'Guarde toda ideia antes de ela sumir: cole o link do Instagram ou YouTube que inspirou, escreva o propósito, marque o dia de executar e quebre em etapas.',
+      itens: [
+        'Captura rápida colando o link',
+        'Prévia do reel ou vídeo dentro do app',
+        'Propósito, data e área de cada ideia',
+        'Plano de ação com etapas e progresso',
+        'Agenda: atrasadas, hoje e próximos dias',
+      ],
+    },
+  },
+  {
     id: 'leitura',
     modo: 'creative',
     grupo: 'creative',
@@ -79,6 +122,21 @@ export const MODULOS: Modulo[] = [
         'Trilha de capítulos com estrelas',
         'Meu caderno: frases e trechos favoritos',
       ],
+    },
+  },
+  {
+    id: 'estudos',
+    modo: 'creative',
+    grupo: 'creative',
+    nome: 'Estudos',
+    categoria: 'Aprendizado',
+    descricao: 'Foco cronometrado e revisões no dia certo.',
+    icone: GraduationCap,
+    status: 'disponivel',
+    rota: '/estudos',
+    previa: {
+      resumo: 'Cada foco concluído planta uma árvore na sua floresta. Resumo do dia e do mês, calendário de 2026 com o tempo estudado e revisão espaçada dos assuntos.',
+      itens: ['Timer de foco: a árvore cresce enquanto você estuda', 'Floresta do dia e do mês', 'Calendário de 2026 com minutos por dia', 'Revisões no dia certo e trilhas de assuntos'],
     },
   },
   {
@@ -115,23 +173,6 @@ export const MODULOS: Modulo[] = [
       itens: ['Refeições do dia', 'Metas e acompanhamento', 'Ligação com o Treino'],
     },
   },
-
-  {
-    id: 'estudos',
-    modo: 'creative',
-    grupo: 'creative',
-    nome: 'Estudos',
-    categoria: 'Aprendizado',
-    descricao: 'Foco cronometrado e revisões no dia certo.',
-    icone: GraduationCap,
-    status: 'disponivel',
-    rota: '/estudos',
-    previa: {
-      resumo: 'Cada foco concluído planta uma árvore na sua floresta. Resumo do dia e do mês, calendário de 2026 com o tempo estudado e revisão espaçada dos assuntos.',
-      itens: ['Timer de foco: a árvore cresce enquanto você estuda', 'Floresta do dia e do mês', 'Calendário de 2026 com minutos por dia', 'Revisões no dia certo e trilhas de assuntos'],
-    },
-  },
-
   {
     id: 'rotina',
     modo: 'pessoal',
@@ -147,44 +188,21 @@ export const MODULOS: Modulo[] = [
       itens: ['Missão de 15 minutos na zona da vez', 'Mapa da casa: caótica a organizada', 'Rotina diária, semanal e mensal', 'Lista de compras'],
     },
   },
-
-  {
-    id: 'ideias',
-    modo: 'creative',
-    grupo: 'creative',
-    nome: 'TheusVision Ideias',
-    categoria: 'Criação',
-    descricao: 'Banco de ideias com link, propósito e plano.',
-    icone: Lightbulb,
-    status: 'disponivel',
-    rota: '/ideias',
-    previa: {
-      resumo: 'Guarde toda ideia antes de ela sumir: cole o link do Instagram ou YouTube que inspirou, escreva o propósito, marque o dia de executar e quebre em etapas.',
-      itens: [
-        'Captura rápida colando o link',
-        'Prévia do reel ou vídeo dentro do app',
-        'Propósito, data e área de cada ideia',
-        'Plano de ação com etapas e progresso',
-        'Agenda: atrasadas, hoje e próximos dias',
-      ],
-    },
-  },
   {
     id: 'financas',
     modo: 'pessoal',
     grupo: 'pilares',
     nome: 'Finanças',
     categoria: 'Dinheiro',
-    descricao: 'Quanto posso gastar hoje, freio e dívidas.',
+    descricao: 'Entradas, gastos, contas fixas e dias verdes.',
     icone: Wallet,
     status: 'disponivel',
     rota: '/financas',
     previa: {
-      resumo: 'Controle simples: quanto dá para gastar por dia, freio de 24 horas contra compra por impulso, dívidas em bola de neve e metas para o futuro.',
-      itens: ['Pode gastar hoje, por categoria', 'Freio de compra com contador', 'Dívidas: foco na menor primeiro', 'Reserva e investimentos'],
+      resumo: 'Controle simples: o que entrou, gastos com forma de pagamento, contas fixas do mês, quanto dá para gastar por dia e um calendário que fica verde nos dias em que você guarda.',
+      itens: ['Pode gastar hoje, já tirando as contas fixas', 'Pix, crédito ou débito em cada gasto', 'Assinaturas e parcelas do cartão (parcela X de Y)', 'Freio de compra e dívidas em bola de neve', 'Dias verdes: sequência guardando dinheiro'],
     },
   },
-
   {
     id: 'clientes',
     modo: 'work',
@@ -200,7 +218,6 @@ export const MODULOS: Modulo[] = [
       itens: ['Clientes fixos e esporádicos', 'Entregas com prazo e status', 'Pendências com primeira ação', 'Todas as entregas pela urgência', 'Mensagens-padrão para copiar'],
     },
   },
-
   {
     id: 'receita',
     modo: 'work',
@@ -216,7 +233,6 @@ export const MODULOS: Modulo[] = [
       itens: ['Fluxo de caixa das 3 fontes de renda', 'Recebido por mês em 2026', 'Funil: em mente, contatado, proposta, fechado', 'Iniciativa comercial do dia'],
     },
   },
-
   {
     id: 'construcao',
     modo: 'work',
@@ -232,7 +248,6 @@ export const MODULOS: Modulo[] = [
       itens: ['5 processos com regra fixa', 'Executar para um cliente e marcar os passos', 'O que a TheusVision faz', 'Bloco semanal de construção'],
     },
   },
-
   {
     id: 'negocios',
     modo: 'work',
@@ -248,7 +263,6 @@ export const MODULOS: Modulo[] = [
       itens: ['Entregas da semana e atrasadas', 'Receita do mês contra o previsto', 'O que está travado e por quê', 'Processos em andamento'],
     },
   },
-
 ]
 
 export const ROTULO_STATUS: Record<StatusModulo, string> = {

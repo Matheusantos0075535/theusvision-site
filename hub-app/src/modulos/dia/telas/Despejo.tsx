@@ -1,4 +1,4 @@
-import { Check, ChevronDown, Trash2 } from 'lucide-react'
+import { ArrowRightToLine, Check, ChevronDown, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Secao } from '../../../components/compartilhado/ShellModulo'
 import { useToast } from '../../../components/ui/Toast'
@@ -6,10 +6,13 @@ import { mensagemDeErroBanco } from '../../../lib/erros'
 import { supabase } from '../../../lib/supabase'
 import { CATEGORIAS, PRIORIDADES, TEXTOS } from '../conteudo'
 import { useDia, type Despejo as ItemDespejo } from '../dados'
+import { tocar } from '../../../lib/som'
 
 function Cartao({ d, aoMudar }: { d: ItemDespejo; aoMudar: () => Promise<void> }) {
   const { mostrar } = useToast()
+  const { despejoParaHoje } = useDia()
   const [aberto, setAberto] = useState(false)
+  const [levando, setLevando] = useState(false)
   const [acao, setAcao] = useState(d.proxima_acao ?? '')
 
   async function atualizar(campos: Record<string, unknown>) {
@@ -72,6 +75,23 @@ function Cartao({ d, aoMudar }: { d: ItemDespejo; aoMudar: () => Promise<void> }
             <span>Próxima ação direta</span>
             <input className="entrada" maxLength={200} value={acao} onChange={(e) => setAcao(e.target.value)} onBlur={() => acao !== (d.proxima_acao ?? '') && void atualizar({ proxima_acao: acao.trim() || null })} placeholder={TEXTOS.acaoExemplo} />
           </label>
+          {!d.resolvido && (
+            <button
+              className="btn btn-primario dep-levar"
+              disabled={levando}
+              onClick={async () => {
+                setLevando(true)
+                const e = await despejoParaHoje({ ...d, proxima_acao: acao.trim() || d.proxima_acao })
+                setLevando(false)
+                if (e) return mostrar(e, { comNav: true })
+                tocar('plantar')
+                mostrar('Colocado no A fazer de hoje.', { comNav: true })
+              }}
+            >
+              <ArrowRightToLine aria-hidden />
+              {levando ? 'Levando…' : 'Colocar no A fazer de hoje'}
+            </button>
+          )}
           <button className="btn btn-fantasma dep-apagar" onClick={() => void apagar()}>
             <Trash2 aria-hidden />
             Apagar
