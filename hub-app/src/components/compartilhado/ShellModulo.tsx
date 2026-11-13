@@ -2,6 +2,7 @@ import { ChevronLeft, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { BotaoSom } from '../ui/BotaoSom'
+import { useRegistrarUso } from '../../lib/uso'
 import './compartilhado.css'
 
 export type Aba = { para: string; rotulo: string; icone: LucideIcon; fim?: boolean }
@@ -17,6 +18,7 @@ export function ShellModulo({
   abas: Aba[]
   children: ReactNode
 }) {
+  useRegistrarUso()
   return (
     <div className="shell">
       <div className="fita" />
@@ -32,6 +34,7 @@ export function ShellModulo({
         </div>
       </header>
       <main className="shell-miolo">{children}</main>
+      {abas.length > 0 && (
       <nav className="shell-nav" aria-label={`Navegação de ${titulo}`}>
         {abas.map(({ para, rotulo, icone: Icone, fim }) => (
           <NavLink key={para} to={para} end={fim} className="shell-aba">
@@ -40,6 +43,7 @@ export function ShellModulo({
           </NavLink>
         ))}
       </nav>
+      )}
     </div>
   )
 }

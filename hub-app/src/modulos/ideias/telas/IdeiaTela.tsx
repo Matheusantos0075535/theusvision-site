@@ -12,6 +12,7 @@ import { dominio, embedDoLink, normalizarLink } from '../link'
 import { ImagemIdeia, apagarImagem, enviarImagem } from '../imagem'
 import { IconeLink, SeloData } from '../Selos'
 import { tocar } from '../../../lib/som'
+import { BlocoStudio } from '../BlocoStudio'
 
 function Campo({ valor, aoSalvar, ...props }: { valor: string; aoSalvar: (v: string) => void } & TextareaHTMLAttributes<HTMLTextAreaElement>) {
   const [v, setV] = useState(valor)
@@ -169,6 +170,8 @@ export function IdeiaTela() {
           })}
         </div>
       </section>
+
+      <BlocoStudio ideia={i} />
 
       <section className="id-bloco">
         <h3>Imagem</h3>

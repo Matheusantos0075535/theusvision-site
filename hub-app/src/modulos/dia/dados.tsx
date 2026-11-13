@@ -18,6 +18,11 @@ export type Item = {
 }
 
 export type Prioridade = { id: string; ordem: number; titulo: string; primeira_acao: string | null; feita: boolean }
+/** Prioridade de um dia anterior que não foi feita nem trazida para hoje. */
+export type Atrasada = Prioridade & { dia: string }
+
+/** Limite do banco: até 20 prioridades por dia. */
+export const MAX_PRIORIDADES = 20
 
 export type Despejo = {
   id: string
@@ -53,6 +58,14 @@ type Ctx = {
   alternarPrioridade: (p: Prioridade) => Promise<string | null>
   apagarPrioridade: (p: Prioridade) => Promise<string | null>
   encerrarDia: (primeiraAcao: string) => Promise<string | null>
+  /** O que ficou para trás nos últimos 7 dias. */
+  atrasadas: Atrasada[]
+  trazerParaHoje: (p: Atrasada) => Promise<string | null>
+  deixarPraLa: (p: Atrasada) => Promise<string | null>
+  /** Cria uma prioridade hoje (no primeiro número livre). */
+  adicionarHoje: (titulo: string, acao: string | null) => Promise<string | null>
+  /** Leva um item do Despejo para o A fazer de hoje e o marca como resolvido. */
+  despejoParaHoje: (d: Despejo) => Promise<string | null>
 }
 
 const DiaCtx = createContext<Ctx | null>(null)
@@ -67,6 +80,7 @@ export function DiaProvider({ children }: { children: ReactNode }) {
   const [encerrado, setEncerrado] = useState(false)
   const [despejo, setDespejo] = useState<Despejo[]>([])
   const [erro, setErro] = useState<string | null>(null)
+  const [atrasadas, setAtrasadas] = useState<Atrasada[]>([])
   const ultimaChecagem = useRef(0)
 
   const hojeReal = inicio?.hoje ?? ''
@@ -103,9 +117,27 @@ export function DiaProvider({ children }: { children: ReactNode }) {
     setEncerrado((en.data as unknown[]).length > 0)
   }, [])
 
+  const carregarAtrasadas = useCallback(async (hoje: string) => {
+    const r = await supabase
+      .from('dia_prioridades')
+      .select('id, dia, ordem, titulo, primeira_acao, feita')
+      .gte('dia', somarDias(hoje, -7))
+      .lt('dia', hoje)
+      .eq('feita', false)
+      .eq('levada', false)
+      .order('dia', { ascending: false })
+      .order('ordem')
+    // Sem a coluna nova (migração ainda não rodada) a lista só fica vazia.
+    setAtrasadas(r.error ? [] : (r.data as Atrasada[]))
+  }, [])
+
   const recarregar = useCallback(async () => {
     await carregarBase()
   }, [carregarBase])
+
+  useEffect(() => {
+    if (hojeReal) void carregarAtrasadas(hojeReal)
+  }, [hojeReal, carregarAtrasadas])
 
   useEffect(() => {
     void carregarBase()
@@ -211,6 +243,57 @@ export function DiaProvider({ children }: { children: ReactNode }) {
     [dia, carregarDia],
   )
 
+  /** Primeiro número livre de hoje, olhando o banco (a tela pode estar em outro dia). */
+  const proximaOrdemHoje = useCallback(async (): Promise<number | string> => {
+    const r = await supabase.from('dia_prioridades').select('ordem').eq('dia', hojeReal)
+    if (r.error) return mensagemDeErroBanco(r.error)
+    const usadas = new Set((r.data as { ordem: number }[]).map((x) => x.ordem))
+    for (let n = 1; n <= MAX_PRIORIDADES; n++) if (!usadas.has(n)) return n
+    return `Hoje já tem ${MAX_PRIORIDADES} prioridades. Conclua ou remova alguma antes.`
+  }, [hojeReal])
+
+  const adicionarHoje = useCallback(
+    async (titulo: string, acao: string | null) => {
+      const ordem = await proximaOrdemHoje()
+      if (typeof ordem === 'string') return ordem
+      const r = await supabase
+        .from('dia_prioridades')
+        .insert({ dia: hojeReal, ordem, titulo: titulo.trim().slice(0, 160), primeira_acao: acao?.trim().slice(0, 200) || null })
+      if (r.error) return mensagemDeErroBanco(r.error)
+      if (dia === hojeReal) await carregarDia(dia)
+      return null
+    },
+    [proximaOrdemHoje, hojeReal, dia, carregarDia],
+  )
+
+  const trazerParaHoje = useCallback(
+    async (p: Atrasada) => {
+      const e = await adicionarHoje(p.titulo, p.primeira_acao)
+      if (e) return e
+      const r = await supabase.from('dia_prioridades').update({ levada: true }).eq('id', p.id)
+      setAtrasadas((l) => l.filter((x) => x.id !== p.id))
+      return r.error ? mensagemDeErroBanco(r.error) : null
+    },
+    [adicionarHoje],
+  )
+
+  const deixarPraLa = useCallback(async (p: Atrasada) => {
+    setAtrasadas((l) => l.filter((x) => x.id !== p.id))
+    const r = await supabase.from('dia_prioridades').update({ levada: true }).eq('id', p.id)
+    return r.error ? mensagemDeErroBanco(r.error) : null
+  }, [])
+
+  const despejoParaHoje = useCallback(
+    async (d: Despejo) => {
+      const e = await adicionarHoje(d.texto, d.proxima_acao)
+      if (e) return e
+      const r = await supabase.from('dia_despejo').update({ resolvido: true }).eq('id', d.id)
+      setDespejo((l) => l.map((x) => (x.id === d.id ? { ...x, resolvido: true } : x)))
+      return r.error ? mensagemDeErroBanco(r.error) : null
+    },
+    [adicionarHoje],
+  )
+
   const valor: Ctx = {
     hojeReal,
     dia,
@@ -229,6 +312,11 @@ export function DiaProvider({ children }: { children: ReactNode }) {
     alternarPrioridade,
     apagarPrioridade,
     encerrarDia,
+    atrasadas,
+    trazerParaHoje,
+    deixarPraLa,
+    adicionarHoje,
+    despejoParaHoje,
   }
   return (
     <DiaCtx.Provider value={valor}>

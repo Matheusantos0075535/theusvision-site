@@ -634,3 +634,24 @@
   font-size: 14.5px;
   line-height: 1.45;
 }
+
+/* contraste dentro dos cartões brancos */
+.pt-card .entrada::placeholder,
+.pt-folha-clara .entrada::placeholder {
+  color: #9a86c4;
+}
+.pt-card .dia-chip {
+  border-color: #d9cdef;
+  color: #7a5fb0;
+}
+.pt-card .dia-chip[aria-pressed='true'] {
+  background: rgba(255, 159, 17, 0.14);
+  border-color: #ffb347;
+  color: #b35f00;
+}
+.pt-card .barras-h-rotulo {
+  color: #7a5fb0;
+}
+.pt-card .barras-h-trilho {
+  background: #efe8fa;
+}

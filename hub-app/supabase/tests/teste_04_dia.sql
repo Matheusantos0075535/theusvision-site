@@ -27,8 +27,8 @@ begin
 
   insert into public.dia_prioridades (ordem, titulo, primeira_acao) values (1, 'Fechar proposta', 'Abrir o modelo');
   begin
-    insert into public.dia_prioridades (ordem, titulo) values (4, 'quarta');
-    raise exception 'FALHA: aceitou 4ª prioridade';
+    insert into public.dia_prioridades (ordem, titulo) values (21, 'vigésima primeira');
+    raise exception 'FALHA: aceitou 21ª prioridade';
   exception when check_violation then null; end;
   begin
     insert into public.dia_prioridades (ordem, titulo) values (1, 'duplicada');

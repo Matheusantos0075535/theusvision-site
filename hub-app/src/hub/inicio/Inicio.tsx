@@ -1,4 +1,4 @@
-import { Lightbulb, LogOut } from 'lucide-react'
+import { Lightbulb, LogOut, Palette } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { resumoDoDia } from '../../modulos/dia/resumo'
 import { resumoDoTreino } from '../../modulos/treino/resumo'
@@ -10,6 +10,7 @@ import { Marca } from '../LayoutAcesso'
 import { useModo } from '../modo'
 import { GRUPOS, MODULOS, ROTULO_MODO, type Modo } from '../modulos'
 import type { DestaqueCard } from './CardModulo'
+import { UsoSemanal } from './UsoSemanal'
 import { GradeModulos } from './GradeModulos'
 import './inicio.css'
 
@@ -37,16 +38,19 @@ function useDestaques() {
     ideias: { numero: null, linha: 'Carregando…' },
     dnsmk: { numero: null, linha: 'Carregando…' },
     leitura: { numero: null, linha: 'Carregando…' },
+    studio: { numero: null, linha: 'Carregando…' },
   })
   useEffect(() => {
     let vivo = true
-    Promise.allSettled([supabase.rpc('dnsmk_estado'), supabase.rpc('leit_estado'), resumoDoDia(), resumoDoTreino(), supabase.from('ideias').select('status, executar_em')]).then(([d, l, md, tr, id]) => {
+    Promise.allSettled([supabase.rpc('dnsmk_estado'), supabase.rpc('leit_estado'), resumoDoDia(), resumoDoTreino(), supabase.from('ideias').select('status, executar_em'), supabase.from('studio_projetos').select('id', { count: 'exact', head: true })]).then(([d, l, md, tr, id, st]) => {
       if (!vivo) return
       const novo: Record<string, DestaqueCard | null> = {}
       novo.dia =
         md.status === 'fulfilled'
           ? { numero: md.value.feitos, de: md.value.total, linha: md.value.total ? 'tarefas feitas hoje' : 'Monte seu dia' }
           : { numero: null, linha: 'Prioridades e rotina de hoje' }
+      const nSt = st.status === 'fulfilled' && !st.value.error ? (st.value.count ?? 0) : null
+      novo.studio = nSt == null ? { numero: null, linha: 'Quadros criativos' } : { numero: nSt, icone: Palette, linha: nSt ? (nSt === 1 ? 'projeto no quadro' : 'projetos nos quadros') : 'Crie o primeiro quadro' }
       const ids = id.status === 'fulfilled' && !id.value.error ? (id.value.data as { status: string; executar_em: string | null }[]) : null
       const vivas = ids?.filter((x) => x.status !== 'feita' && x.status !== 'arquivada') ?? []
       novo.ideias = ids
@@ -101,6 +105,7 @@ export function Inicio() {
         </span>
       </header>
       <main className="inicio-miolo">
+        <div className="inicio-cabeca">
         <section className="saudacao">
           <span className="olho">{modo === 'work' ? 'Modo work' : modo === 'creative' ? 'Modo creative' : 'Seu painel'}</span>
           <h1>
@@ -121,6 +126,8 @@ export function Inicio() {
             ))}
           </div>
         </section>
+        <UsoSemanal />
+        </div>
         <section aria-labelledby="titulo-modulos">
           <div className="secao-cabeca">
             <h2 id="titulo-modulos">Módulos</h2>

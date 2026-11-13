@@ -1,7 +1,7 @@
 import { supabase } from '../../lib/supabase'
 import { itensDeHoje, type Item } from './dados'
 
-/** Para o card do Hub: quantas tarefas do Meu dia (rotinas + prioridades) já foram feitas hoje. */
+/** Para o card do Hub: quantas tarefas do A fazer (rotinas + prioridades) já foram feitas hoje. */
 export async function resumoDoDia() {
   const ini = await supabase.rpc('dia_iniciar')
   if (ini.error) throw ini.error
