@@ -1,45 +1,17 @@
 import { Check, House, Pencil, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import { Confete } from '../../components/compartilhado/Confete'
 import { Secao, ShellModulo } from '../../components/compartilhado/ShellModulo'
 import { diaDaSemana, diferencaDias, formatarDataCurta, hojeBrasiliaIso, somarDias } from '../../lib/tempo'
 import { useMovimentoReduzido } from '../../lib/useMidia'
 import '../dia/dia.css'
-import { AvisoPrototipo } from '../prototipo/Aviso'
-import { uid, usePersistido } from '../prototipo/estado'
 import '../prototipo/prototipo.css'
 import { tocar } from '../../lib/som'
-
-type Freq = 'diaria' | 'semanal' | 'mensal'
-type Tarefa = { id: string; nome: string; freq: Freq; dia?: number; feitas: string[] }
-type Item = { id: string; nome: string; comprado: boolean }
-type Dados = { tarefas: Tarefa[]; compras: Item[]; missoes: string[]; timer: { fim: number; pausado?: number } | null }
+import { novoId as uid, useCasaDados, type Dados, type Freq, type Tarefa } from './dados'
 
 const SEMANA = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado']
 const MISSAO = 15 * 60_000
-
-function exemplo(): Dados {
-  const t = (nome: string, freq: Freq, dia?: number): Tarefa => ({ id: uid(), nome, freq, dia, feitas: [] })
-  return {
-    tarefas: [
-      t('Arrumar a cama', 'diaria'),
-      t('Louça do dia', 'diaria'),
-      t('Recolher roupas e objetos soltos', 'diaria'),
-      t('Lavar roupa', 'semanal', 6),
-      t('Limpar banheiro', 'semanal', 6),
-      t('Trocar roupa de cama', 'semanal', 0),
-      t('Tirar o lixo reciclável', 'semanal', 3),
-      t('Limpar geladeira', 'mensal'),
-    ],
-    compras: [
-      { id: uid(), nome: 'Detergente', comprado: false },
-      { id: uid(), nome: 'Saco de lixo', comprado: false },
-    ],
-    missoes: [],
-    timer: null,
-  }
-}
 
 type Ctx = { d: Dados; set: Dispatch<SetStateAction<Dados>> }
 const C = createContext<Ctx | null>(null)
@@ -448,20 +420,32 @@ const ABAS = [
 ]
 
 export default function CasaApp() {
-  const [d, set, recomecar] = usePersistido<Dados>('tv-proto-casa', exemplo)
-  const valor = useMemo(() => ({ d, set }), [d, set])
+  const { d, set, erro, recarregar } = useCasaDados()
   return (
     <ShellModulo titulo="Rotina da casa" abas={ABAS}>
-      <C.Provider value={valor}>
-        <AvisoPrototipo aoRecomecar={recomecar} />
-        <div style={{ height: 12 }} />
-        <Routes>
-          <Route index element={<Hoje />} />
-          <Route path="rotina" element={<Rotina />} />
-          <Route path="compras" element={<Compras />} />
-          <Route path="*" element={<Hoje />} />
-        </Routes>
-      </C.Provider>
+      {!d ? (
+        erro ? (
+          <div className="bloco-erro" role="alert">
+            <p>{erro}</p>
+            <button className="btn btn-secundario" onClick={() => void recarregar()}>
+              Tentar de novo
+            </button>
+          </div>
+        ) : (
+          <div className="carregando" role="status" aria-label="Carregando">
+            <span className="giro" />
+          </div>
+        )
+      ) : (
+        <C.Provider value={{ d, set }}>
+          <Routes>
+            <Route index element={<Hoje />} />
+            <Route path="rotina" element={<Rotina />} />
+            <Route path="compras" element={<Compras />} />
+            <Route path="*" element={<Hoje />} />
+          </Routes>
+        </C.Provider>
+      )}
     </ShellModulo>
   )
 }
