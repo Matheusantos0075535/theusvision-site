@@ -17,12 +17,12 @@ type Ctx = { d: Dados; set: Dispatch<SetStateAction<Dados>> }
 const C = createContext<Ctx | null>(null)
 const useC = () => useContext(C)!
 
-/** Tarefa vale para hoje? Diária sempre; semanal no dia marcado (ou se passou 7 dias); mensal se passou 30 dias. */
+/** Tarefa vale para hoje? Diária sempre; semanal só no dia da semana marcado; mensal até ser feita no mês (ou 30 dias depois da última vez). */
 function devidaHoje(t: Tarefa, hoje: string) {
   const ultima = t.feitas[t.feitas.length - 1]
   if (t.freq === 'diaria') return true
-  if (t.freq === 'semanal') return t.dia === diaDaSemana(hoje) || !ultima || diferencaDias(hoje, ultima) >= 7
-  return !ultima || diferencaDias(hoje, ultima) >= 30
+  if (t.freq === 'semanal') return t.dia === diaDaSemana(hoje)
+  return !ultima || diferencaDias(hoje, ultima) >= 30 || t.feitas.includes(hoje)
 }
 
 function sequencia(dias: string[], hoje: string) {
