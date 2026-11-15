@@ -11,11 +11,17 @@ import { tocar } from '../../lib/som'
 import { novoId as uid, useCasaDados, type Dados, type Freq, type Tarefa } from './dados'
 
 const SEMANA = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado']
-const MISSAO = 15 * 60_000
+const MISSAO_PADRAO = 15
+const MINUTOS_RAPIDOS = [5, 10, 15, 20, 30, 45, 60]
+const minutosDe = (t?: { minutos: number | null }) => t?.minutos ?? MISSAO_PADRAO
 
 type Ctx = { d: Dados; set: Dispatch<SetStateAction<Dados>> }
 const C = createContext<Ctx | null>(null)
 const useC = () => useContext(C)!
+
+function alternarPausa(t: NonNullable<Dados['timer']>): NonNullable<Dados['timer']> {
+  return t.pausado ? { total: t.total, fim: Date.now() + t.pausado } : { ...t, pausado: t.fim - Date.now() }
+}
 
 /** Troca de lugar a tarefa `id` com a vizinha da lista visível `ordem` (sobe ou desce), mexendo só nessas duas na lista toda. */
 function mover(x: Dados, visiveis: Tarefa[], id: string, dir: -1 | 1): Dados {
@@ -76,7 +82,8 @@ function Hoje() {
 
   const doDia = d.tarefas.filter((t) => devidaHoje(t, hoje))
   // Tarefas mensais ficam numa seção própria e recolhida, para não misturar com as do dia.
-  const tarefas = doDia.filter((t) => t.freq !== 'mensal')
+  // Entram na rotina de hoje: as do dia (diárias e semanais) e as do mês que você colocou lá.
+  const tarefas = d.tarefas.filter((t) => (t.freq !== 'mensal' && devidaHoje(t, hoje)) || d.extras.includes(t.id))
   const mensais = doDia.filter((t) => t.freq === 'mensal')
   const [mensaisAbertas, setMensaisAbertas] = useState(false)
   const [reordenando, setReordenando] = useState(false)
@@ -93,7 +100,9 @@ function Hoje() {
     return () => o.disconnect()
   }, [])
 
-  const resta = d.timer ? Math.max(0, (d.timer.pausado ?? d.timer.fim - agora)) : MISSAO
+  const duracao = minutosDe(alvo) * 60_000
+  const total = d.timer?.total ?? duracao
+  const resta = d.timer ? Math.max(0, (d.timer.pausado ?? d.timer.fim - agora)) : duracao
   const rodando = !!d.timer && !d.timer.pausado && resta > 0
   useEffect(() => {
     if (d.timer && !d.timer.pausado && resta === 0 && !terminou) {
@@ -123,10 +132,16 @@ function Hoje() {
   }
 
   const alternar = (t: Tarefa) =>
-    set((x) => ({
-      ...x,
-      tarefas: x.tarefas.map((y) => (y.id !== t.id ? y : { ...y, feitas: y.feitas.includes(hoje) ? y.feitas.filter((f) => f !== hoje) : [...y.feitas, hoje] })),
-    }))
+    set((x) => {
+      // Marcar a tarefa da vez como feita encerra o timer e conta a missão do dia.
+      const encerra = !t.feitas.includes(hoje) && t.id === alvo?.id && !!x.timer
+      return {
+        ...x,
+        timer: encerra ? null : x.timer,
+        missoes: encerra && !x.missoes.includes(hoje) ? [...x.missoes, hoje] : x.missoes,
+        tarefas: x.tarefas.map((y) => (y.id !== t.id ? y : { ...y, feitas: y.feitas.includes(hoje) ? y.feitas.filter((f) => f !== hoje) : [...y.feitas, hoje] })),
+      }
+    })
   const linha = (t: Tarefa, i: number, lista: Tarefa[]) => {
     const feita = t.feitas.includes(hoje)
     return (
@@ -138,8 +153,20 @@ function Hoje() {
         </button>
         <span>
           <b>{t.nome}</b>
-          <small>{rotuloFreq(t)}</small>
+          <small>
+            {t.freq === 'mensal' ? 'Do mês' : rotuloFreq(t)}
+            {t.minutos ? ` · ${t.minutos} min` : ''}
+          </small>
         </span>
+        {t.freq === 'mensal' && !reordenando && (
+          <button
+            className="btn btn-fantasma ca-hoje"
+            aria-pressed={d.extras.includes(t.id)}
+            onClick={() => set((x) => ({ ...x, extras: x.extras.includes(t.id) ? x.extras.filter((e) => e !== t.id) : [...x.extras, t.id] }))}
+          >
+            {d.extras.includes(t.id) ? 'Na rotina de hoje ✓' : '+ Rotina de hoje'}
+          </button>
+        )}
         {reordenando && <Setas nome={t.nome} podeSubir={i > 0} podeDescer={i < lista.length - 1} aoMover={(dir) => set((x) => mover(x, lista, t.id, dir))} />}
       </li>
     )
@@ -152,13 +179,13 @@ function Hoje() {
   return (
     <div className="pt-tela">
       <section className="dia-hero pt-hero">
-        <span className="dia-hero-tipo">Missão de 15 minutos</span>
+        <span className="dia-hero-tipo">Missão de {Math.round(total / 60_000)} minutos</span>
         <p className="dia-hero-saudacao">{alvo ? 'Agora' : 'Rotina de hoje'}</p>
         <h2 className="dia-hero-data">
           <span>{alvo?.nome ?? (tarefas.length ? 'Tudo feito hoje 🎉' : 'Sem tarefas hoje')}</span>
           {alvo ? rotuloFreq(alvo) : tarefas.length ? 'Descanse ou adiante algo de amanhã.' : 'Cadastre tarefas na aba Rotina.'}
         </h2>
-        <div ref={heroRef} className="pt-anel" style={{ ['--p' as string]: ((MISSAO - resta) / MISSAO) * 100 }}>
+        <div ref={heroRef} className="pt-anel" style={{ ['--p' as string]: ((total - resta) / total) * 100 }}>
           <div>
             <span className="pt-relogio">
               {mm}:{String(ss).padStart(2, '0')}
@@ -168,8 +195,8 @@ function Hoje() {
         </div>
         <div className="pt-botoes">
           {!d.timer ? (
-            <button className="btn btn-verde btn-grande" disabled={!alvo} onClick={() => set((x) => ({ ...x, timer: { fim: Date.now() + MISSAO } }))}>
-              <Play aria-hidden /> Começar 15 minutos
+            <button className="btn btn-verde btn-grande" disabled={!alvo} onClick={() => set((x) => ({ ...x, timer: { fim: Date.now() + duracao, total: duracao } }))}>
+              <Play aria-hidden /> Começar {Math.round(duracao / 60_000)} minutos
             </button>
           ) : resta > 0 ? (
             <>
@@ -178,13 +205,13 @@ function Hoje() {
                 onClick={() =>
                   set((x) => ({
                     ...x,
-                    timer: x.timer!.pausado ? { fim: Date.now() + x.timer!.pausado } : { ...x.timer!, pausado: x.timer!.fim - Date.now() },
+                    timer: alternarPausa(x.timer!),
                   }))
                 }
               >
                 {d.timer.pausado ? <Play aria-hidden /> : <Pause aria-hidden />} {d.timer.pausado ? 'Continuar' : 'Pausar'}
               </button>
-              <button className="btn btn-primario" onClick={() => set((x) => ({ ...x, timer: { fim: Date.now() } }))}>
+              <button className="btn btn-primario" onClick={() => set((x) => ({ ...x, timer: { ...x.timer!, fim: Date.now(), pausado: undefined } }))}>
                 <Check aria-hidden /> Terminei antes
               </button>
             </>
@@ -277,7 +304,7 @@ function Hoje() {
             <button
               className="ca-flut-play"
               aria-label={d.timer.pausado ? 'Continuar' : 'Pausar'}
-              onClick={() => set((x) => ({ ...x, timer: x.timer!.pausado ? { fim: Date.now() + x.timer!.pausado } : { ...x.timer!, pausado: x.timer!.fim - Date.now() } }))}
+              onClick={() => set((x) => ({ ...x, timer: alternarPausa(x.timer!) }))}
             >
               {d.timer.pausado ? <Play aria-hidden /> : <Pause aria-hidden />}
             </button>
@@ -304,7 +331,7 @@ const rotuloFreq = (t: { freq: Freq; dias: number[] }) => {
   return `${t.dias.every((d) => [0, 6].includes(d)) ? 'Todo' : 'Toda'} ${lista}`
 }
 
-type Rascunho = { nome: string; freq: Freq; dias: number[] }
+type Rascunho = { nome: string; freq: Freq; dias: number[]; minutos: number | null }
 const GRUPOS_FREQ: [Freq, string][] = [
   ['diaria', 'Todo dia'],
   ['semanal', 'Toda semana'],
@@ -348,6 +375,29 @@ function FormTarefa({ inicial, rotulo, aoSalvar, aoCancelar }: { inicial: Rascun
           <small className="ca-dica">Marque todos os dias em que a tarefa se repete.</small>
         </>
       )}
+      <div className="ca-tempo">
+        <span className="fin-rotulo ca-rotulo">Quanto tempo leva?</span>
+        <div className="tr-chips" role="group" aria-label="Tempo em minutos">
+          {MINUTOS_RAPIDOS.map((m) => (
+            <button key={m} type="button" className="dia-chip" aria-pressed={r.minutos === m} onClick={() => setR({ ...r, minutos: r.minutos === m ? null : m })}>
+              {m} min
+            </button>
+          ))}
+        </div>
+        <label className="ca-tempo-outro">
+          <span>Outro tempo (min)</span>
+          <input
+            className="entrada"
+            inputMode="numeric"
+            placeholder={`${MISSAO_PADRAO} (padrão)`}
+            value={r.minutos ?? ''}
+            onChange={(e) => {
+              const n = Number(e.target.value.replace(/\D/g, '').slice(0, 3))
+              setR({ ...r, minutos: n >= 1 ? Math.min(480, n) : null })
+            }}
+          />
+        </label>
+      </div>
       <div className="dia-prio-botoes">
         {aoCancelar && (
           <button type="button" className="btn btn-fantasma" onClick={aoCancelar}>
@@ -368,7 +418,7 @@ function Rotina() {
   const [chave, setChave] = useState(0)
   const [reordenando, setReordenando] = useState(false)
   const salvar = (id: string, r: Rascunho) =>
-    set((x) => ({ ...x, tarefas: x.tarefas.map((y) => (y.id === id ? { ...y, nome: r.nome, freq: r.freq, dias: r.dias } : y)) }))
+    set((x) => ({ ...x, tarefas: x.tarefas.map((y) => (y.id === id ? { ...y, nome: r.nome, freq: r.freq, dias: r.dias, minutos: r.minutos } : y)) }))
   return (
     <div className="pt-tela">
       <div className="ca-topo-rotina">
@@ -388,7 +438,7 @@ function Rotina() {
                   editando === t.id ? (
                     <li key={t.id} className="ca-editando">
                       <FormTarefa
-                        inicial={{ nome: t.nome, freq: t.freq, dias: t.dias.length ? t.dias : [6] }}
+                        inicial={{ nome: t.nome, freq: t.freq, dias: t.dias.length ? t.dias : [6], minutos: t.minutos }}
                         rotulo="Salvar"
                         aoCancelar={() => setEditando(null)}
                         aoSalvar={(r) => {
@@ -402,7 +452,7 @@ function Rotina() {
                       <span>
                         <b>{t.nome}</b>
                         <small>
-                          {rotuloFreq(t)} · {t.feitas.length ? `última vez ${formatarDataCurta(t.feitas[t.feitas.length - 1])}` : 'ainda não feita'}
+                          {rotuloFreq(t)}{t.minutos ? ` · ${t.minutos} min` : ''} · {t.feitas.length ? `última vez ${formatarDataCurta(t.feitas[t.feitas.length - 1])}` : 'ainda não feita'}
                         </small>
                       </span>
                       {reordenando && <Setas nome={t.nome} podeSubir={i > 0} podeDescer={i < lista.length - 1} aoMover={(dir) => set((x) => mover(x, lista, t.id, dir))} />}
@@ -428,10 +478,10 @@ function Rotina() {
         <b>Nova tarefa da casa</b>
         <FormTarefa
           key={chave}
-          inicial={{ nome: '', freq: 'semanal', dias: [6] }}
+          inicial={{ nome: '', freq: 'semanal', dias: [6], minutos: null }}
           rotulo="Adicionar"
           aoSalvar={(r) => {
-            set((x) => ({ ...x, tarefas: [...x.tarefas, { id: uid(), nome: r.nome, freq: r.freq, dias: r.dias, feitas: [] }] }))
+            set((x) => ({ ...x, tarefas: [...x.tarefas, { id: uid(), nome: r.nome, freq: r.freq, dias: r.dias, minutos: r.minutos, feitas: [] }] }))
             setChave((k) => k + 1)
           }}
         />

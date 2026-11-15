@@ -792,3 +792,36 @@
 .ca-topo-rotina .dia-apoio {
   margin: 0;
 }
+
+/* casa: tempo de cada tarefa e tarefa do mês na rotina de hoje */
+.ca-tempo {
+  display: grid;
+  gap: 8px;
+}
+.ca-rotulo {
+  color: #7a5fb0;
+}
+.ca-tempo-outro {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: #7a5fb0;
+}
+.ca-hoje {
+  flex: none;
+  min-height: 40px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #7a5fb0;
+  border: 1px solid #d9cdef;
+  border-radius: 999px;
+}
+.ca-hoje[aria-pressed='true'] {
+  color: #148a58;
+  border-color: var(--verde);
+  background: rgba(61, 220, 151, 0.12);
+}
+.ca-mensais .pt-linha {
+  flex-wrap: wrap;
+}
