@@ -1,4 +1,4 @@
-import { Check, House, Pencil, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
+import { Check, ChevronDown, House, Pencil, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
 import { createContext, useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import { Confete } from '../../components/compartilhado/Confete'
@@ -48,7 +48,12 @@ function Hoje() {
     return () => window.clearInterval(t)
   }, [])
 
-  const tarefas = d.tarefas.filter((t) => devidaHoje(t, hoje))
+  const doDia = d.tarefas.filter((t) => devidaHoje(t, hoje))
+  // Tarefas mensais ficam numa seção própria e recolhida, para não misturar com as do dia.
+  const tarefas = doDia.filter((t) => t.freq !== 'mensal')
+  const mensais = doDia.filter((t) => t.freq === 'mensal')
+  const [mensaisAbertas, setMensaisAbertas] = useState(false)
+  const mensaisFeitas = mensais.filter((t) => t.feitas.includes(hoje)).length
   // O título do timer é sempre a próxima tarefa da rotina de hoje que ainda não foi marcada.
   const alvo = tarefas.find((t) => !t.feitas.includes(hoje))
   const heroRef = useRef<HTMLDivElement>(null)
@@ -95,6 +100,22 @@ function Hoje() {
       ...x,
       tarefas: x.tarefas.map((y) => (y.id !== t.id ? y : { ...y, feitas: y.feitas.includes(hoje) ? y.feitas.filter((f) => f !== hoje) : [...y.feitas, hoje] })),
     }))
+  const linha = (t: Tarefa) => {
+    const feita = t.feitas.includes(hoje)
+    return (
+      <li key={t.id} className="pt-linha" data-feita={feita || undefined}>
+        <button className="dia-prio-marca" aria-pressed={feita} aria-label={feita ? `Desmarcar ${t.nome}` : `Concluir ${t.nome}`} onClick={() => alternar(t)}>
+          <span className="dia-caixa" aria-hidden>
+            <Check />
+          </span>
+        </button>
+        <span>
+          <b>{t.nome}</b>
+          <small>{rotuloFreq(t)}</small>
+        </span>
+      </li>
+    )
+  }
   const seq = sequencia(d.missoes, hoje)
   const feitasHoje = tarefas.filter((t) => t.feitas.includes(hoje)).length
   const mm = Math.floor(resta / 60000)
@@ -191,25 +212,23 @@ function Hoje() {
       >
         <div className="pt-card">
           <ul className="pt-linhas">
-            {tarefas.map((t) => {
-              const feita = t.feitas.includes(hoje)
-              return (
-                <li key={t.id} className="pt-linha" data-feita={feita || undefined}>
-                  <button className="dia-prio-marca" aria-pressed={feita} aria-label={feita ? `Desmarcar ${t.nome}` : `Concluir ${t.nome}`} onClick={() => alternar(t)}>
-                    <span className="dia-caixa" aria-hidden>
-                      <Check />
-                    </span>
-                  </button>
-                  <span>
-                    <b>{t.nome}</b>
-                    <small>{rotuloFreq(t)}</small>
-                  </span>
-                </li>
-              )
-            })}
+            {tarefas.map(linha)}
           </ul>
+          {tarefas.length === 0 && <small>Nenhuma tarefa para hoje.</small>}
         </div>
       </Secao>
+      {mensais.length > 0 && (
+        <details className="dia-lista ca-mensais" open={mensaisAbertas} onToggle={(e) => setMensaisAbertas(e.currentTarget.open)} data-completo={mensaisFeitas === mensais.length || undefined}>
+          <summary>
+            <span className="dia-lista-titulo">Do mês</span>
+            <span className="dia-lista-conta">
+              {mensaisFeitas}/{mensais.length}
+            </span>
+            <ChevronDown aria-hidden />
+          </summary>
+          <ul className="pt-linhas">{mensais.map(linha)}</ul>
+        </details>
+      )}
       {d.timer && !heroVisivel && (
         <div className="ca-flutuante" data-rodando={rodando || undefined} role="region" aria-label="Missão em andamento">
           <div className="ca-flut-textos">
