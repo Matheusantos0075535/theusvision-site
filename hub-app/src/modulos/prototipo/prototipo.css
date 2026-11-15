@@ -762,3 +762,33 @@
 .ca-mensais > ul {
   padding: 4px 14px 10px;
 }
+
+/* casa: reordenar */
+.ca-acoes {
+  display: inline-flex;
+  gap: 4px;
+}
+.ca-editar[aria-pressed='true'] {
+  color: var(--laranja);
+}
+.ca-setas {
+  display: inline-flex;
+  gap: 4px;
+  flex: none;
+}
+.ca-setas .btn-icone {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+}
+.ca-setas .btn-icone:disabled {
+  opacity: 0.3;
+}
+.ca-topo-rotina {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.ca-topo-rotina .dia-apoio {
+  margin: 0;
+}
