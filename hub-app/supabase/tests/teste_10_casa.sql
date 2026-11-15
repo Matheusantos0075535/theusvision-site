@@ -53,3 +53,23 @@ begin
   exception when check_violation then null; end;
 end $$;
 rollback;
+
+begin;
+select public.teste_logar('11111111-1111-1111-1111-111111111111');
+do $$
+declare v_t uuid;
+begin
+  perform public.casa_iniciar(true);
+  select id into v_t from public.casa_tarefas where nome = 'Limpar geladeira';
+  update public.casa_tarefas set minutos = 45 where id = v_t;
+  begin
+    update public.casa_tarefas set minutos = 0 where id = v_t;
+    raise exception 'FALHA: aceitou 0 minutos';
+  exception when check_violation then null; end;
+  insert into public.casa_extras (tarefa_id) values (v_t);
+  assert (select count(*) from public.casa_extras) = 1, 'FALHA: não guardou a tarefa do mês na rotina de hoje';
+  delete from public.casa_extras where tarefa_id = v_t;
+end $$;
+select public.teste_logar('22222222-2222-2222-2222-222222222222');
+do $$ begin assert (select count(*) from public.casa_extras) = 0, 'FALHA: vê extras de outro usuário'; end $$;
+rollback;
