@@ -179,13 +179,13 @@ export const MODULOS: Modulo[] = [
     grupo: 'pilares',
     nome: 'Rotina da casa',
     categoria: 'Casa',
-    descricao: 'Uma zona por dia, 15 minutos.',
+    descricao: 'Rotina da casa, missão de 15 minutos e compras.',
     icone: House,
     status: 'disponivel',
     rota: '/casa',
     previa: {
-      resumo: 'A casa dividida em micro-zonas com mapa de cores, missão de 15 minutos por dia, rotina recorrente e lista de compras.',
-      itens: ['Missão de 15 minutos na zona da vez', 'Mapa da casa: caótica a organizada', 'Rotina diária, semanal e mensal', 'Lista de compras'],
+      resumo: 'Rotina da casa que vira missão: o timer de 15 minutos mostra a próxima tarefa e te acompanha enquanto você rola a lista. Tem rotina diária, semanal e mensal editável e lista de compras.',
+      itens: ['Missão de 15 minutos na próxima tarefa', 'Timer flutuante enquanto você rola a lista', 'Rotina diária, semanal e mensal, editável', 'Lista de compras'],
     },
   },
   {

@@ -679,3 +679,77 @@
   width: 16px;
   height: 16px;
 }
+
+/* casa: timer que acompanha na lateral da tela */
+.ca-flutuante {
+  position: fixed;
+  right: 12px;
+  bottom: calc(var(--nav-altura) + var(--seguro-baixo) + 14px);
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 8px 8px 8px 14px;
+  border-radius: 20px;
+  background: var(--vidro);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--verde-borda);
+  box-shadow: var(--sombra-flutuante);
+  animation: flut-entra 260ms var(--curva);
+}
+.ca-flut-textos {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.ca-flut-textos small {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--verde);
+}
+.ca-flut-textos b {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+.ca-flut-tempo {
+  font-size: 20px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.ca-flutuante:not([data-rodando]) .ca-flut-tempo {
+  opacity: 0.65;
+}
+.ca-flut-play,
+.ca-flut-ok {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+.ca-flut-play {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--texto);
+}
+.ca-flut-ok {
+  background: var(--verde);
+  color: #06351f;
+}
+.ca-flut-play svg,
+.ca-flut-ok svg {
+  width: 20px;
+  height: 20px;
+}
+@media (min-width: 760px) {
+  .ca-flutuante {
+    right: 24px;
+    bottom: 24px;
+  }
+}

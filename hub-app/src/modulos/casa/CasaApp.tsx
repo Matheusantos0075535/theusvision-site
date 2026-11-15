@@ -1,5 +1,5 @@
-import { Check, House, Pencil, LayoutGrid, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
-import { createContext, useContext, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react'
+import { Check, House, Pencil, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import { Confete } from '../../components/compartilhado/Confete'
 import { Secao, ShellModulo } from '../../components/compartilhado/ShellModulo'
@@ -11,32 +11,17 @@ import { uid, usePersistido } from '../prototipo/estado'
 import '../prototipo/prototipo.css'
 import { tocar } from '../../lib/som'
 
-type Zona = { id: string; nome: string; comodo: string; estado: 0 | 1 | 2 | 3; ultima?: string; regra?: string }
 type Freq = 'diaria' | 'semanal' | 'mensal'
 type Tarefa = { id: string; nome: string; freq: Freq; dia?: number; feitas: string[] }
 type Item = { id: string; nome: string; comprado: boolean }
-type Dados = { zonas: Zona[]; tarefas: Tarefa[]; compras: Item[]; missoes: string[]; timer: { fim: number; pausado?: number } | null }
+type Dados = { tarefas: Tarefa[]; compras: Item[]; missoes: string[]; timer: { fim: number; pausado?: number } | null }
 
-const ESTADOS = ['Caótica', 'Bagunçada', 'Quase lá', 'Organizada']
-const CORES = ['#ff6b5b', '#ffb547', '#7fb0f5', '#3ddc97']
 const SEMANA = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado']
 const MISSAO = 15 * 60_000
 
 function exemplo(): Dados {
-  const z = (nome: string, comodo: string, estado: Zona['estado']): Zona => ({ id: uid(), nome, comodo, estado })
   const t = (nome: string, freq: Freq, dia?: number): Tarefa => ({ id: uid(), nome, freq, dia, feitas: [] })
   return {
-    zonas: [
-      z('Mesa de trabalho', 'Escritório', 1),
-      z('Gavetas da mesa', 'Escritório', 0),
-      z('Pia e bancada', 'Cozinha', 2),
-      z('Armário de mantimentos', 'Cozinha', 1),
-      z('Guarda-roupa', 'Quarto', 1),
-      z('Criado-mudo', 'Quarto', 2),
-      z('Sala de estar', 'Sala', 2),
-      z('Banheiro', 'Banheiro', 2),
-      z('Área de serviço', 'Lavanderia', 0),
-    ],
     tarefas: [
       t('Arrumar a cama', 'diaria'),
       t('Louça do dia', 'diaria'),
@@ -91,13 +76,18 @@ function Hoje() {
     return () => window.clearInterval(t)
   }, [])
 
-  // Zona da vez: a pior, e entre as piores a que está há mais tempo sem atenção.
-  const zona = useMemo(
-    () => [...d.zonas].sort((a, b) => a.estado - b.estado || (a.ultima ?? '').localeCompare(b.ultima ?? ''))[0],
-    [d.zonas],
-  )
-  const [escolhida, setEscolhida] = useState<string | null>(null)
-  const alvo = d.zonas.find((z) => z.id === escolhida) ?? zona
+  const tarefas = d.tarefas.filter((t) => devidaHoje(t, hoje))
+  // O título do timer é sempre a próxima tarefa da rotina de hoje que ainda não foi marcada.
+  const alvo = tarefas.find((t) => !t.feitas.includes(hoje))
+  const heroRef = useRef<HTMLDivElement>(null)
+  const [heroVisivel, setHeroVisivel] = useState(true)
+  useEffect(() => {
+    const el = heroRef.current
+    if (!el || typeof IntersectionObserver === 'undefined') return
+    const o = new IntersectionObserver(([x]) => setHeroVisivel(x.isIntersecting), { threshold: 0 })
+    o.observe(el)
+    return () => o.disconnect()
+  }, [])
 
   const resta = d.timer ? Math.max(0, (d.timer.pausado ?? d.timer.fim - agora)) : MISSAO
   const rodando = !!d.timer && !d.timer.pausado && resta > 0
@@ -113,12 +103,12 @@ function Hoje() {
     }
   }, [resta, d.timer, terminou])
 
-  const concluir = (estado: Zona['estado']) => {
+  const concluir = (feita: boolean) => {
     set((x) => ({
       ...x,
       timer: null,
       missoes: x.missoes.includes(hoje) ? x.missoes : [...x.missoes, hoje],
-      zonas: x.zonas.map((z) => (z.id === alvo?.id ? { ...z, estado, ultima: hoje } : z)),
+      tarefas: feita && alvo ? x.tarefas.map((y) => (y.id === alvo.id && !y.feitas.includes(hoje) ? { ...y, feitas: [...y.feitas, hoje] } : y)) : x.tarefas,
     }))
     setTerminou(false)
     tocar('sucesso')
@@ -128,14 +118,13 @@ function Hoje() {
     }
   }
 
-  const tarefas = d.tarefas.filter((t) => devidaHoje(t, hoje))
   const alternar = (t: Tarefa) =>
     set((x) => ({
       ...x,
       tarefas: x.tarefas.map((y) => (y.id !== t.id ? y : { ...y, feitas: y.feitas.includes(hoje) ? y.feitas.filter((f) => f !== hoje) : [...y.feitas, hoje] })),
     }))
   const seq = sequencia(d.missoes, hoje)
-  const organizadas = d.zonas.filter((z) => z.estado === 3).length
+  const feitasHoje = tarefas.filter((t) => t.feitas.includes(hoje)).length
   const mm = Math.floor(resta / 60000)
   const ss = Math.floor((resta % 60000) / 1000)
 
@@ -143,12 +132,12 @@ function Hoje() {
     <div className="pt-tela">
       <section className="dia-hero pt-hero">
         <span className="dia-hero-tipo">Missão de 15 minutos</span>
-        <p className="dia-hero-saudacao">Zona da vez</p>
+        <p className="dia-hero-saudacao">{alvo ? 'Agora' : 'Rotina de hoje'}</p>
         <h2 className="dia-hero-data">
-          <span>{alvo?.nome ?? 'Cadastre uma zona'}</span>
-          {alvo && `${alvo.comodo} · ${ESTADOS[alvo.estado].toLowerCase()}`}
+          <span>{alvo?.nome ?? (tarefas.length ? 'Tudo feito hoje 🎉' : 'Sem tarefas hoje')}</span>
+          {alvo ? rotuloFreq(alvo) : tarefas.length ? 'Descanse ou adiante algo de amanhã.' : 'Cadastre tarefas na aba Rotina.'}
         </h2>
-        <div className="pt-anel" style={{ ['--p' as string]: ((MISSAO - resta) / MISSAO) * 100 }}>
+        <div ref={heroRef} className="pt-anel" style={{ ['--p' as string]: ((MISSAO - resta) / MISSAO) * 100 }}>
           <div>
             <span className="pt-relogio">
               {mm}:{String(ss).padStart(2, '0')}
@@ -187,23 +176,17 @@ function Hoje() {
         </div>
         {d.timer && resta === 0 && (
           <div className="pt-card" style={{ marginTop: 12 }}>
-            <b>Como ficou {alvo?.nome.toLowerCase()}?</b>
-            <div className="pt-estados">
-              {ESTADOS.map((e, i) => (
-                <button key={e} className="pt-estado" data-n={i} aria-pressed={false} onClick={() => concluir(i as Zona['estado'])}>
-                  {e}
+            <b>{alvo ? `Deu para terminar "${alvo.nome}"?` : 'Missão cumprida!'}</b>
+            <div className="dia-prio-botoes" style={{ justifyContent: 'flex-start' }}>
+              {alvo && (
+                <button className="btn btn-verde" onClick={() => concluir(true)}>
+                  <Check aria-hidden /> Sim, marcar como feita
                 </button>
-              ))}
-            </div>
-          </div>
-        )}
-        {!d.timer && (
-          <div className="tr-chips" style={{ marginTop: 12 }}>
-            {d.zonas.slice(0, 6).map((z) => (
-              <button key={z.id} className="dia-chip" aria-pressed={alvo?.id === z.id} onClick={() => setEscolhida(z.id)}>
-                {z.nome}
+              )}
+              <button className="btn btn-secundario" onClick={() => concluir(false)}>
+                {alvo ? 'Ainda não' : 'Fechar'}
               </button>
-            ))}
+            </div>
           </div>
         )}
         <div className="pt-hero-mini">
@@ -214,9 +197,9 @@ function Hoje() {
             </b>
           </div>
           <div>
-            <small>Zonas em ordem</small>
+            <small>Rotina de hoje</small>
             <b>
-              {organizadas}/{d.zonas.length}
+              {feitasHoje}/{tarefas.length}
             </b>
           </div>
           <div>
@@ -255,98 +238,32 @@ function Hoje() {
           </ul>
         </div>
       </Secao>
-      {festa && <Confete />}
-    </div>
-  )
-}
-
-function Zonas() {
-  const { d, set } = useC()
-  const [aberta, setAberta] = useState<string | null>(null)
-  const [nova, setNova] = useState({ nome: '', comodo: '' })
-  const comodos = [...new Set(d.zonas.map((z) => z.comodo))]
-  const z = d.zonas.find((x) => x.id === aberta)
-  const mudar = (id: string, c: Partial<Zona>) => set((x) => ({ ...x, zonas: x.zonas.map((y) => (y.id === id ? { ...y, ...c } : y)) }))
-  return (
-    <div className="pt-tela">
-      <p className="dia-apoio">
-        Divida a casa em micro-zonas (uma gaveta, a mesa, a pia). Uma por dia, 15 minutos. Zona organizada ganha uma regra de 2 minutos para não voltar a bagunçar.
-      </p>
-      {comodos.map((c) => (
-        <Secao key={c} titulo={c}>
-          <ul className="pt-mapa">
-            {d.zonas
-              .filter((x) => x.comodo === c)
-              .map((x) => (
-                <li key={x.id}>
-                  <button className="pt-zona" style={{ ['--cor' as string]: CORES[x.estado] }} onClick={() => setAberta(x.id)}>
-                    <b>{x.nome}</b>
-                    <span className="pt-tag" data-cor={x.estado === 3 ? 'verde' : x.estado === 0 ? 'vermelho' : x.estado === 1 ? 'laranja' : undefined}>
-                      {ESTADOS[x.estado]}
-                    </span>
-                    <small>{x.ultima ? `Cuidada em ${formatarDataCurta(x.ultima)}` : 'Ainda sem missão'}</small>
-                  </button>
-                </li>
-              ))}
-          </ul>
-        </Secao>
-      ))}
-      <div className="pt-card">
-        <b>Nova zona</b>
-        <div className="pt-form">
-          <input className="entrada" value={nova.nome} onChange={(e) => setNova({ ...nova, nome: e.target.value })} placeholder="Ex.: Gaveta de cabos" aria-label="Nome da zona" />
-          <input className="entrada" list="comodos" value={nova.comodo} onChange={(e) => setNova({ ...nova, comodo: e.target.value })} placeholder="Cômodo" aria-label="Cômodo" />
-          <datalist id="comodos">
-            {comodos.map((c) => (
-              <option key={c} value={c} />
-            ))}
-          </datalist>
-          <button
-            className="btn btn-primario"
-            disabled={!nova.nome.trim() || !nova.comodo.trim()}
-            onClick={() => {
-              set((x) => ({ ...x, zonas: [...x.zonas, { id: uid(), nome: nova.nome.trim(), comodo: nova.comodo.trim(), estado: 1 }] }))
-              setNova({ nome: '', comodo: '' })
-            }}
-          >
-            <Plus aria-hidden /> Criar
-          </button>
-        </div>
-      </div>
-      {z && (
-        <div className="folha-fundo" onClick={() => setAberta(null)}>
-          <div className="folha pt-folha-clara" role="dialog" aria-modal="true" aria-label={z.nome} onClick={(e) => e.stopPropagation()}>
-            <div className="folha-alca" aria-hidden />
-            <div className="tr-folha-topo">
-              <h2>{z.nome}</h2>
-              <button className="btn-icone" onClick={() => setAberta(null)} aria-label="Fechar">
-                <X aria-hidden />
-              </button>
-            </div>
-            <span className="pt-mini-texto">Como está agora?</span>
-            <div className="pt-estados">
-              {ESTADOS.map((e, i) => (
-                <button key={e} className="pt-estado" data-n={i} aria-pressed={z.estado === i} onClick={() => mudar(z.id, { estado: i as Zona['estado'] })}>
-                  {e}
-                </button>
-              ))}
-            </div>
-            <label className="campo">
-              <span>Regra de 2 minutos para manter</span>
-              <input className="entrada" value={z.regra ?? ''} onChange={(e) => mudar(z.id, { regra: e.target.value })} placeholder="Ex.: mesa limpa no fim do expediente" />
-            </label>
-            <button
-              className="btn btn-fantasma"
-              onClick={() => {
-                set((x) => ({ ...x, zonas: x.zonas.filter((y) => y.id !== z.id) }))
-                setAberta(null)
-              }}
-            >
-              <Trash2 aria-hidden /> Apagar zona
-            </button>
+      {d.timer && !heroVisivel && (
+        <div className="ca-flutuante" data-rodando={rodando || undefined} role="region" aria-label="Missão em andamento">
+          <div className="ca-flut-textos">
+            <small>{alvo ? 'Agora' : 'Missão'}</small>
+            <b>{alvo?.nome ?? 'Tudo feito'}</b>
           </div>
+          <span className="ca-flut-tempo">
+            {mm}:{String(ss).padStart(2, '0')}
+          </span>
+          {resta > 0 && (
+            <button
+              className="ca-flut-play"
+              aria-label={d.timer.pausado ? 'Continuar' : 'Pausar'}
+              onClick={() => set((x) => ({ ...x, timer: x.timer!.pausado ? { fim: Date.now() + x.timer!.pausado } : { ...x.timer!, pausado: x.timer!.fim - Date.now() } }))}
+            >
+              {d.timer.pausado ? <Play aria-hidden /> : <Pause aria-hidden />}
+            </button>
+          )}
+          {alvo && (
+            <button className="ca-flut-ok" aria-label={`Marcar ${alvo.nome} como feita`} onClick={() => alternar(alvo)}>
+              <Check aria-hidden />
+            </button>
+          )}
         </div>
       )}
+      {festa && <Confete />}
     </div>
   )
 }
@@ -526,7 +443,6 @@ function Compras() {
 
 const ABAS = [
   { para: '/casa', rotulo: 'Hoje', icone: Timer, fim: true },
-  { para: '/casa/zonas', rotulo: 'Zonas', icone: LayoutGrid },
   { para: '/casa/rotina', rotulo: 'Rotina', icone: House },
   { para: '/casa/compras', rotulo: 'Compras', icone: ShoppingCart },
 ]
@@ -541,7 +457,6 @@ export default function CasaApp() {
         <div style={{ height: 12 }} />
         <Routes>
           <Route index element={<Hoje />} />
-          <Route path="zonas" element={<Zonas />} />
           <Route path="rotina" element={<Rotina />} />
           <Route path="compras" element={<Compras />} />
           <Route path="*" element={<Hoje />} />
