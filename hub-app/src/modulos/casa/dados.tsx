@@ -5,7 +5,8 @@ import { supabase } from '../../lib/supabase'
 import { hojeBrasiliaIso } from '../../lib/tempo'
 
 export type Freq = 'diaria' | 'semanal' | 'mensal'
-export type Tarefa = { id: string; nome: string; freq: Freq; dia?: number; feitas: string[] }
+/** `dias`: dias da semana (0 = domingo) em que a tarefa semanal aparece. Vazio nas diárias e mensais. */
+export type Tarefa = { id: string; nome: string; freq: Freq; dias: number[]; feitas: string[] }
 export type Item = { id: string; nome: string; comprado: boolean }
 export type Dados = { tarefas: Tarefa[]; compras: Item[]; missoes: string[]; timer: { fim: number; pausado?: number } | null }
 
@@ -24,6 +25,11 @@ function lerTimer(): Dados['timer'] {
   }
 }
 
+const diasDe = (t: { dia?: number | null; dias?: number[] | null }) => {
+  const l = (t.dias?.length ? t.dias : t.dia != null ? [t.dia] : [0]).map(Number).filter((n) => n >= 0 && n <= 6)
+  return [...new Set(l)].sort((a, b) => a - b)
+}
+
 /** Dados do protótipo antigo (só no aparelho), se existirem. */
 function lerAntigo(): Omit<Dados, 'timer'> | null {
   try {
@@ -34,7 +40,7 @@ function lerAntigo(): Omit<Dados, 'timer'> | null {
     return {
       tarefas: bruto.tarefas
         .filter((t: Tarefa) => t && typeof t.nome === 'string' && t.nome.trim() && ['diaria', 'semanal', 'mensal'].includes(t.freq))
-        .map((t: Tarefa) => ({ id: novoId(), nome: t.nome.trim().slice(0, 80), freq: t.freq, dia: t.freq === 'semanal' ? Math.min(6, Math.max(0, Number(t.dia ?? 0))) : undefined, feitas: [...new Set((t.feitas ?? []).filter(ok))].sort() })),
+        .map((t: Tarefa) => ({ id: novoId(), nome: t.nome.trim().slice(0, 80), freq: t.freq, dias: t.freq === 'semanal' ? diasDe(t as unknown as { dia?: number | null; dias?: number[] | null }) : [], feitas: [...new Set((t.feitas ?? []).filter(ok))].sort() })),
       compras: (bruto.compras ?? []).filter((c: Item) => c && typeof c.nome === 'string' && c.nome.trim()).map((c: Item) => ({ id: novoId(), nome: c.nome.trim().slice(0, 120), comprado: !!c.comprado })),
       missoes: [...new Set(((bruto.missoes ?? []) as unknown[]).filter(ok))].sort(),
     }
@@ -59,7 +65,7 @@ export function useCasaDados() {
 
   const carregar = useCallback(async () => {
     const [ta, fe, co, mi] = await Promise.all([
-      supabase.from('casa_tarefas').select('id, nome, freq, dia, ordem, criado_em').order('ordem').order('criado_em'),
+      supabase.from('casa_tarefas').select('id, nome, freq, dia, dias, ordem, criado_em').order('ordem').order('criado_em'),
       supabase.from('casa_feitas').select('tarefa_id, dia').order('dia'),
       supabase.from('casa_compras').select('id, nome, comprado, criado_em').order('criado_em', { ascending: false }),
       supabase.from('casa_missoes').select('dia').order('dia'),
@@ -69,7 +75,7 @@ export function useCasaDados() {
     const feitas = new Map<string, string[]>()
     for (const f of fe.data as { tarefa_id: string; dia: string }[]) feitas.set(f.tarefa_id, [...(feitas.get(f.tarefa_id) ?? []), f.dia])
     return {
-      tarefas: (ta.data as { id: string; nome: string; freq: Freq; dia: number | null }[]).map((t) => ({ id: t.id, nome: t.nome, freq: t.freq, dia: t.dia ?? undefined, feitas: feitas.get(t.id) ?? [] })),
+      tarefas: (ta.data as { id: string; nome: string; freq: Freq; dia: number | null; dias: number[] | null }[]).map((t) => ({ id: t.id, nome: t.nome, freq: t.freq, dias: t.freq === 'semanal' ? diasDe(t) : [], feitas: feitas.get(t.id) ?? [] })),
       compras: (co.data as Item[]).map((c) => ({ id: c.id, nome: c.nome, comprado: c.comprado })),
       missoes: (mi.data as { dia: string }[]).map((m) => m.dia),
     }
@@ -84,7 +90,7 @@ export function useCasaDados() {
       if ((r.data as { novo: boolean }).novo && antigo) {
         // Primeira vez com dados do aparelho: leva a rotina que você organizou para o banco.
         const erros = [
-          antigo.tarefas.length && (await supabase.from('casa_tarefas').insert(antigo.tarefas.map((t, i) => ({ id: t.id, nome: t.nome, freq: t.freq, dia: t.dia ?? null, ordem: i + 1 })))).error,
+          antigo.tarefas.length && (await supabase.from('casa_tarefas').insert(antigo.tarefas.map((t, i) => ({ id: t.id, nome: t.nome, freq: t.freq, dia: t.dias[0] ?? null, dias: t.dias.length ? t.dias : null, ordem: i + 1 })))).error,
           antigo.compras.length && (await supabase.from('casa_compras').insert(antigo.compras.map((c) => ({ id: c.id, nome: c.nome, comprado: c.comprado })))).error,
           antigo.missoes.length && (await supabase.from('casa_missoes').insert(antigo.missoes.map((dia) => ({ dia })))).error,
         ].filter(Boolean)
@@ -122,8 +128,8 @@ export function useCasaDados() {
       const depois = new Map(b.tarefas.map((t) => [t.id, t]))
       b.tarefas.forEach((t, i) => {
         const o = antes.get(t.id)
-        if (!o) ops.push(supabase.from('casa_tarefas').insert({ id: t.id, nome: t.nome, freq: t.freq, dia: t.dia ?? null, ordem: i + 1 }))
-        else if (o.nome !== t.nome || o.freq !== t.freq || o.dia !== t.dia) ops.push(supabase.from('casa_tarefas').update({ nome: t.nome, freq: t.freq, dia: t.dia ?? null }).eq('id', t.id))
+        if (!o) ops.push(supabase.from('casa_tarefas').insert({ id: t.id, nome: t.nome, freq: t.freq, dia: t.dias[0] ?? null, dias: t.dias.length ? t.dias : null, ordem: i + 1 }))
+        else if (o.nome !== t.nome || o.freq !== t.freq || o.dias.join() !== t.dias.join()) ops.push(supabase.from('casa_tarefas').update({ nome: t.nome, freq: t.freq, dia: t.dias[0] ?? null, dias: t.dias.length ? t.dias : null }).eq('id', t.id))
       })
       for (const o of a.tarefas) if (!depois.has(o.id)) ops.push(supabase.from('casa_tarefas').delete().eq('id', o.id))
       // Feitas só depois de a tarefa existir (a fila é sequencial, então basta a ordem).
