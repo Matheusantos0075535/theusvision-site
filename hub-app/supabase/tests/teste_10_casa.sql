@@ -39,3 +39,17 @@ begin
   exception when insufficient_privilege or not_null_violation or foreign_key_violation then null; end;
 end $$;
 rollback;
+
+begin;
+select public.teste_logar('11111111-1111-1111-1111-111111111111');
+do $$
+begin
+  perform public.casa_iniciar(true);
+  insert into public.casa_tarefas (nome, freq, dia, dias) values ('Lixo', 'semanal', 2, array[2, 4, 6]);
+  assert (select dias from public.casa_tarefas where nome = 'Lixo') = array[2, 4, 6]::smallint[], 'FALHA: não guardou vários dias';
+  begin
+    insert into public.casa_tarefas (nome, freq, dias) values ('Ruim', 'semanal', array[9]);
+    raise exception 'FALHA: aceitou dia 9';
+  exception when check_violation then null; end;
+end $$;
+rollback;

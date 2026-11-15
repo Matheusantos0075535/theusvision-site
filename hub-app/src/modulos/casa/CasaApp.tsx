@@ -17,11 +17,11 @@ type Ctx = { d: Dados; set: Dispatch<SetStateAction<Dados>> }
 const C = createContext<Ctx | null>(null)
 const useC = () => useContext(C)!
 
-/** Tarefa vale para hoje? Diária sempre; semanal só no dia da semana marcado; mensal até ser feita no mês (ou 30 dias depois da última vez). */
+/** Tarefa vale para hoje? Diária sempre; semanal só nos dias da semana marcados; mensal até ser feita no mês (ou 30 dias depois da última vez). */
 function devidaHoje(t: Tarefa, hoje: string) {
   const ultima = t.feitas[t.feitas.length - 1]
   if (t.freq === 'diaria') return true
-  if (t.freq === 'semanal') return t.dia === diaDaSemana(hoje)
+  if (t.freq === 'semanal') return t.dias.includes(diaDaSemana(hoje))
   return !ultima || diferencaDias(hoje, ultima) >= 30 || t.feitas.includes(hoje)
 }
 
@@ -240,10 +240,17 @@ function Hoje() {
   )
 }
 
-const rotuloFreq = (t: { freq: Freq; dia?: number }) =>
-  t.freq === 'diaria' ? 'Todo dia' : t.freq === 'semanal' ? `${[0, 6].includes(t.dia ?? 0) ? 'Todo' : 'Toda'} ${SEMANA[t.dia ?? 0]}` : 'Uma vez por mês'
+const rotuloFreq = (t: { freq: Freq; dias: number[] }) => {
+  if (t.freq === 'diaria') return 'Todo dia'
+  if (t.freq === 'mensal') return 'Uma vez por mês'
+  const nomes = t.dias.map((d) => SEMANA[d])
+  if (nomes.length === 0) return 'Toda semana'
+  if (nomes.length === 7) return 'Todo dia'
+  const lista = nomes.length === 1 ? nomes[0] : `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}`
+  return `${t.dias.every((d) => [0, 6].includes(d)) ? 'Todo' : 'Toda'} ${lista}`
+}
 
-type Rascunho = { nome: string; freq: Freq; dia: number }
+type Rascunho = { nome: string; freq: Freq; dias: number[] }
 const GRUPOS_FREQ: [Freq, string][] = [
   ['diaria', 'Todo dia'],
   ['semanal', 'Toda semana'],
@@ -258,7 +265,7 @@ function FormTarefa({ inicial, rotulo, aoSalvar, aoCancelar }: { inicial: Rascun
       className="ca-form"
       onSubmit={(e) => {
         e.preventDefault()
-        if (r.nome.trim()) aoSalvar({ ...r, nome: r.nome.trim() })
+        if (r.nome.trim() && (r.freq !== 'semanal' || r.dias.length)) aoSalvar({ ...r, nome: r.nome.trim(), dias: r.freq === 'semanal' ? r.dias : [] })
       }}
     >
       <input className="entrada" autoFocus={!!aoCancelar} maxLength={80} value={r.nome} onChange={(e) => setR({ ...r, nome: e.target.value })} placeholder="Ex.: regar as plantas" aria-label="Nome da tarefa" />
@@ -270,13 +277,22 @@ function FormTarefa({ inicial, rotulo, aoSalvar, aoCancelar }: { inicial: Rascun
         ))}
       </div>
       {r.freq === 'semanal' && (
-        <div className="tr-chips" role="group" aria-label="Dia da semana">
-          {SEMANA.map((s, i) => (
-            <button key={s} type="button" className="dia-chip" aria-pressed={r.dia === i} onClick={() => setR({ ...r, dia: i })}>
-              {s.slice(0, 3)}
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="tr-chips" role="group" aria-label="Dias da semana (pode marcar mais de um)">
+            {SEMANA.map((s, i) => (
+              <button
+                key={s}
+                type="button"
+                className="dia-chip"
+                aria-pressed={r.dias.includes(i)}
+                onClick={() => setR({ ...r, dias: r.dias.includes(i) ? r.dias.filter((x) => x !== i) : [...r.dias, i].sort((a, b) => a - b) })}
+              >
+                {s.slice(0, 3)}
+              </button>
+            ))}
+          </div>
+          <small className="ca-dica">Marque todos os dias em que a tarefa se repete.</small>
+        </>
       )}
       <div className="dia-prio-botoes">
         {aoCancelar && (
@@ -284,7 +300,7 @@ function FormTarefa({ inicial, rotulo, aoSalvar, aoCancelar }: { inicial: Rascun
             Cancelar
           </button>
         )}
-        <button className="btn btn-primario" disabled={!r.nome.trim()}>
+        <button className="btn btn-primario" disabled={!r.nome.trim() || (r.freq === 'semanal' && r.dias.length === 0)}>
           {rotulo}
         </button>
       </div>
@@ -297,12 +313,12 @@ function Rotina() {
   const [editando, setEditando] = useState<string | null>(null)
   const [chave, setChave] = useState(0)
   const salvar = (id: string, r: Rascunho) =>
-    set((x) => ({ ...x, tarefas: x.tarefas.map((y) => (y.id === id ? { ...y, nome: r.nome, freq: r.freq, dia: r.freq === 'semanal' ? r.dia : undefined } : y)) }))
+    set((x) => ({ ...x, tarefas: x.tarefas.map((y) => (y.id === id ? { ...y, nome: r.nome, freq: r.freq, dias: r.dias } : y)) }))
   return (
     <div className="pt-tela">
       <p className="dia-apoio">Toque no lápis para mudar o nome, a frequência ou o dia de uma tarefa.</p>
       {GRUPOS_FREQ.map(([f, rot]) => {
-        const lista = d.tarefas.filter((t) => t.freq === f).sort((a, b) => (a.dia ?? 0) - (b.dia ?? 0))
+        const lista = d.tarefas.filter((t) => t.freq === f).sort((a, b) => (a.dias[0] ?? 0) - (b.dias[0] ?? 0))
         return (
           <Secao key={f} titulo={rot}>
             <div className="pt-card">
@@ -312,7 +328,7 @@ function Rotina() {
                   editando === t.id ? (
                     <li key={t.id} className="ca-editando">
                       <FormTarefa
-                        inicial={{ nome: t.nome, freq: t.freq, dia: t.dia ?? 6 }}
+                        inicial={{ nome: t.nome, freq: t.freq, dias: t.dias.length ? t.dias : [6] }}
                         rotulo="Salvar"
                         aoCancelar={() => setEditando(null)}
                         aoSalvar={(r) => {
@@ -351,10 +367,10 @@ function Rotina() {
         <b>Nova tarefa da casa</b>
         <FormTarefa
           key={chave}
-          inicial={{ nome: '', freq: 'semanal', dia: 6 }}
+          inicial={{ nome: '', freq: 'semanal', dias: [6] }}
           rotulo="Adicionar"
           aoSalvar={(r) => {
-            set((x) => ({ ...x, tarefas: [...x.tarefas, { id: uid(), nome: r.nome, freq: r.freq, dia: r.freq === 'semanal' ? r.dia : undefined, feitas: [] }] }))
+            set((x) => ({ ...x, tarefas: [...x.tarefas, { id: uid(), nome: r.nome, freq: r.freq, dias: r.dias, feitas: [] }] }))
             setChave((k) => k + 1)
           }}
         />
