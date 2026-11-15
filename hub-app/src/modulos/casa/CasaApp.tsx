@@ -1,4 +1,4 @@
-import { Check, ChevronDown, House, Pencil, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, Check, ChevronDown, House, Pencil, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
 import { createContext, useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
 import { Confete } from '../../components/compartilhado/Confete'
@@ -16,6 +16,32 @@ const MISSAO = 15 * 60_000
 type Ctx = { d: Dados; set: Dispatch<SetStateAction<Dados>> }
 const C = createContext<Ctx | null>(null)
 const useC = () => useContext(C)!
+
+/** Troca de lugar a tarefa `id` com a vizinha da lista visível `ordem` (sobe ou desce), mexendo só nessas duas na lista toda. */
+function mover(x: Dados, visiveis: Tarefa[], id: string, dir: -1 | 1): Dados {
+  const i = visiveis.findIndex((t) => t.id === id)
+  const vizinha = visiveis[i + dir]
+  if (i < 0 || !vizinha) return x
+  const a = x.tarefas.findIndex((t) => t.id === id)
+  const b = x.tarefas.findIndex((t) => t.id === vizinha.id)
+  const lista = [...x.tarefas]
+  ;[lista[a], lista[b]] = [lista[b], lista[a]]
+  return { ...x, tarefas: lista }
+}
+
+/** Setas de subir/descer, mostradas no modo de reordenar. */
+function Setas({ aoMover, podeSubir, podeDescer, nome }: { aoMover: (d: -1 | 1) => void; podeSubir: boolean; podeDescer: boolean; nome: string }) {
+  return (
+    <span className="ca-setas">
+      <button className="btn-icone" disabled={!podeSubir} aria-label={`Subir ${nome}`} onClick={() => aoMover(-1)}>
+        <ArrowUp aria-hidden />
+      </button>
+      <button className="btn-icone" disabled={!podeDescer} aria-label={`Descer ${nome}`} onClick={() => aoMover(1)}>
+        <ArrowDown aria-hidden />
+      </button>
+    </span>
+  )
+}
 
 /** Tarefa vale para hoje? Diária sempre; semanal só nos dias da semana marcados; mensal até ser feita no mês (ou 30 dias depois da última vez). */
 function devidaHoje(t: Tarefa, hoje: string) {
@@ -53,6 +79,7 @@ function Hoje() {
   const tarefas = doDia.filter((t) => t.freq !== 'mensal')
   const mensais = doDia.filter((t) => t.freq === 'mensal')
   const [mensaisAbertas, setMensaisAbertas] = useState(false)
+  const [reordenando, setReordenando] = useState(false)
   const mensaisFeitas = mensais.filter((t) => t.feitas.includes(hoje)).length
   // O título do timer é sempre a próxima tarefa da rotina de hoje que ainda não foi marcada.
   const alvo = tarefas.find((t) => !t.feitas.includes(hoje))
@@ -100,7 +127,7 @@ function Hoje() {
       ...x,
       tarefas: x.tarefas.map((y) => (y.id !== t.id ? y : { ...y, feitas: y.feitas.includes(hoje) ? y.feitas.filter((f) => f !== hoje) : [...y.feitas, hoje] })),
     }))
-  const linha = (t: Tarefa) => {
+  const linha = (t: Tarefa, i: number, lista: Tarefa[]) => {
     const feita = t.feitas.includes(hoje)
     return (
       <li key={t.id} className="pt-linha" data-feita={feita || undefined}>
@@ -113,6 +140,7 @@ function Hoje() {
           <b>{t.nome}</b>
           <small>{rotuloFreq(t)}</small>
         </span>
+        {reordenando && <Setas nome={t.nome} podeSubir={i > 0} podeDescer={i < lista.length - 1} aoMover={(dir) => set((x) => mover(x, lista, t.id, dir))} />}
       </li>
     )
   }
@@ -205,14 +233,21 @@ function Hoje() {
       <Secao
         titulo={`Rotina de hoje · ${SEMANA[diaDaSemana(hoje)]}`}
         acao={
-          <Link to="/casa/rotina" className="btn btn-fantasma ca-editar">
-            <Pencil aria-hidden /> Editar
-          </Link>
+          <span className="ca-acoes">
+            {tarefas.length > 1 && (
+              <button className="btn btn-fantasma ca-editar" aria-pressed={reordenando} onClick={() => setReordenando((r) => !r)}>
+                <ArrowUpDown aria-hidden /> {reordenando ? 'Pronto' : 'Ordem'}
+              </button>
+            )}
+            <Link to="/casa/rotina" className="btn btn-fantasma ca-editar">
+              <Pencil aria-hidden /> Editar
+            </Link>
+          </span>
         }
       >
         <div className="pt-card">
           <ul className="pt-linhas">
-            {tarefas.map(linha)}
+            {tarefas.map((t, i) => linha(t, i, tarefas))}
           </ul>
           {tarefas.length === 0 && <small>Nenhuma tarefa para hoje.</small>}
         </div>
@@ -226,7 +261,7 @@ function Hoje() {
             </span>
             <ChevronDown aria-hidden />
           </summary>
-          <ul className="pt-linhas">{mensais.map(linha)}</ul>
+          <ul className="pt-linhas">{mensais.map((t, i) => linha(t, i, mensais))}</ul>
         </details>
       )}
       {d.timer && !heroVisivel && (
@@ -331,19 +366,25 @@ function Rotina() {
   const { d, set } = useC()
   const [editando, setEditando] = useState<string | null>(null)
   const [chave, setChave] = useState(0)
+  const [reordenando, setReordenando] = useState(false)
   const salvar = (id: string, r: Rascunho) =>
     set((x) => ({ ...x, tarefas: x.tarefas.map((y) => (y.id === id ? { ...y, nome: r.nome, freq: r.freq, dias: r.dias } : y)) }))
   return (
     <div className="pt-tela">
-      <p className="dia-apoio">Toque no lápis para mudar o nome, a frequência ou o dia de uma tarefa.</p>
+      <div className="ca-topo-rotina">
+        <p className="dia-apoio">Toque no lápis para mudar o nome, a frequência ou o dia de uma tarefa.</p>
+        <button className="btn btn-secundario ca-editar" aria-pressed={reordenando} onClick={() => setReordenando((r) => !r)}>
+          <ArrowUpDown aria-hidden /> {reordenando ? 'Pronto' : 'Mudar ordem'}
+        </button>
+      </div>
       {GRUPOS_FREQ.map(([f, rot]) => {
-        const lista = d.tarefas.filter((t) => t.freq === f).sort((a, b) => (a.dias[0] ?? 0) - (b.dias[0] ?? 0))
+        const lista = d.tarefas.filter((t) => t.freq === f)
         return (
           <Secao key={f} titulo={rot}>
             <div className="pt-card">
               {lista.length === 0 && <small>Nenhuma tarefa aqui.</small>}
               <ul className="pt-linhas">
-                {lista.map((t) =>
+                {lista.map((t, i) =>
                   editando === t.id ? (
                     <li key={t.id} className="ca-editando">
                       <FormTarefa
@@ -364,6 +405,7 @@ function Rotina() {
                           {rotuloFreq(t)} · {t.feitas.length ? `última vez ${formatarDataCurta(t.feitas[t.feitas.length - 1])}` : 'ainda não feita'}
                         </small>
                       </span>
+                      {reordenando && <Setas nome={t.nome} podeSubir={i > 0} podeDescer={i < lista.length - 1} aoMover={(dir) => set((x) => mover(x, lista, t.id, dir))} />}
                       <button className="btn-icone" aria-label={`Editar ${t.nome}`} onClick={() => setEditando(t.id)}>
                         <Pencil aria-hidden />
                       </button>

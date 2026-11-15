@@ -132,6 +132,10 @@ export function useCasaDados() {
         else if (o.nome !== t.nome || o.freq !== t.freq || o.dias.join() !== t.dias.join()) ops.push(supabase.from('casa_tarefas').update({ nome: t.nome, freq: t.freq, dia: t.dias[0] ?? null, dias: t.dias.length ? t.dias : null }).eq('id', t.id))
       })
       for (const o of a.tarefas) if (!depois.has(o.id)) ops.push(supabase.from('casa_tarefas').delete().eq('id', o.id))
+      // Mudou a ordem entre as que continuam? Regrava a ordem de todas (poucas linhas).
+      const comuns = b.tarefas.filter((t) => antes.has(t.id)).map((t) => t.id)
+      const ordemAntes = a.tarefas.filter((t) => depois.has(t.id)).map((t) => t.id)
+      if (comuns.join() !== ordemAntes.join()) b.tarefas.forEach((t, i) => antes.has(t.id) && ops.push(supabase.from('casa_tarefas').update({ ordem: i + 1 }).eq('id', t.id)))
       // Feitas só depois de a tarefa existir (a fila é sequencial, então basta a ordem).
       const aposTarefas = async () => {
         for (const t of b.tarefas) {
