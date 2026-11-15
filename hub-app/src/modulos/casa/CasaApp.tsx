@@ -1,6 +1,6 @@
-import { Check, House, LayoutGrid, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
+import { Check, House, Pencil, LayoutGrid, Pause, Play, Plus, RotateCcw, ShoppingCart, Timer, Trash2, X } from 'lucide-react'
 import { createContext, useContext, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
 import { Confete } from '../../components/compartilhado/Confete'
 import { Secao, ShellModulo } from '../../components/compartilhado/ShellModulo'
 import { diaDaSemana, diferencaDias, formatarDataCurta, hojeBrasiliaIso, somarDias } from '../../lib/tempo'
@@ -226,7 +226,14 @@ function Hoje() {
         </div>
       </section>
 
-      <Secao titulo={`Rotina de hoje · ${SEMANA[diaDaSemana(hoje)]}`}>
+      <Secao
+        titulo={`Rotina de hoje · ${SEMANA[diaDaSemana(hoje)]}`}
+        acao={
+          <Link to="/casa/rotina" className="btn btn-fantasma ca-editar">
+            <Pencil aria-hidden /> Editar
+          </Link>
+        }
+      >
         <div className="pt-card">
           <ul className="pt-linhas">
             {tarefas.map((t) => {
@@ -240,7 +247,7 @@ function Hoje() {
                   </button>
                   <span>
                     <b>{t.nome}</b>
-                    <small>{t.freq === 'diaria' ? 'Todo dia' : t.freq === 'semanal' ? `${[0, 6].includes(t.dia ?? 0) ? 'Todo' : 'Toda'} ${SEMANA[t.dia ?? 0]}` : 'Uma vez por mês'}</small>
+                    <small>{rotuloFreq(t)}</small>
                   </span>
                 </li>
               )
@@ -344,69 +351,124 @@ function Zonas() {
   )
 }
 
-function Rotina() {
-  const { d, set } = useC()
-  const [nova, setNova] = useState<{ nome: string; freq: Freq; dia: number }>({ nome: '', freq: 'semanal', dia: 6 })
-  const grupos: [Freq, string][] = [
-    ['diaria', 'Todo dia'],
-    ['semanal', 'Toda semana'],
-    ['mensal', 'Todo mês'],
-  ]
+const rotuloFreq = (t: { freq: Freq; dia?: number }) =>
+  t.freq === 'diaria' ? 'Todo dia' : t.freq === 'semanal' ? `${[0, 6].includes(t.dia ?? 0) ? 'Todo' : 'Toda'} ${SEMANA[t.dia ?? 0]}` : 'Uma vez por mês'
+
+type Rascunho = { nome: string; freq: Freq; dia: number }
+const GRUPOS_FREQ: [Freq, string][] = [
+  ['diaria', 'Todo dia'],
+  ['semanal', 'Toda semana'],
+  ['mensal', 'Todo mês'],
+]
+
+/** Formulário de tarefa da casa: o mesmo para criar e para editar. */
+function FormTarefa({ inicial, rotulo, aoSalvar, aoCancelar }: { inicial: Rascunho; rotulo: string; aoSalvar: (r: Rascunho) => void; aoCancelar?: () => void }) {
+  const [r, setR] = useState(inicial)
   return (
-    <div className="pt-tela">
-      {grupos.map(([f, rot]) => (
-        <Secao key={f} titulo={rot}>
-          <div className="pt-card">
-            <ul className="pt-linhas">
-              {d.tarefas
-                .filter((t) => t.freq === f)
-                .map((t) => (
-                  <li key={t.id} className="pt-linha">
-                    <span>
-                      <b>{t.nome}</b>
-                      <small>
-                        {f === 'semanal' && `${SEMANA[t.dia ?? 0]} · `}
-                        {t.feitas.length ? `última vez ${formatarDataCurta(t.feitas[t.feitas.length - 1])}` : 'ainda não feita'}
-                      </small>
-                    </span>
-                    <button className="btn-icone" aria-label={`Apagar ${t.nome}`} onClick={() => set((x) => ({ ...x, tarefas: x.tarefas.filter((y) => y.id !== t.id) }))}>
-                      <X aria-hidden />
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        </Secao>
-      ))}
-      <div className="pt-card">
-        <b>Nova tarefa da casa</b>
-        <input className="entrada" value={nova.nome} onChange={(e) => setNova({ ...nova, nome: e.target.value })} placeholder="Ex.: regar as plantas" aria-label="Nome da tarefa" />
-        <div className="tr-chips">
-          {grupos.map(([f, rot]) => (
-            <button key={f} className="dia-chip" aria-pressed={nova.freq === f} onClick={() => setNova({ ...nova, freq: f })}>
-              {rot}
+    <form
+      className="ca-form"
+      onSubmit={(e) => {
+        e.preventDefault()
+        if (r.nome.trim()) aoSalvar({ ...r, nome: r.nome.trim() })
+      }}
+    >
+      <input className="entrada" autoFocus={!!aoCancelar} maxLength={80} value={r.nome} onChange={(e) => setR({ ...r, nome: e.target.value })} placeholder="Ex.: regar as plantas" aria-label="Nome da tarefa" />
+      <div className="tr-chips">
+        {GRUPOS_FREQ.map(([f, rot]) => (
+          <button key={f} type="button" className="dia-chip" aria-pressed={r.freq === f} onClick={() => setR({ ...r, freq: f })}>
+            {rot}
+          </button>
+        ))}
+      </div>
+      {r.freq === 'semanal' && (
+        <div className="tr-chips" role="group" aria-label="Dia da semana">
+          {SEMANA.map((s, i) => (
+            <button key={s} type="button" className="dia-chip" aria-pressed={r.dia === i} onClick={() => setR({ ...r, dia: i })}>
+              {s.slice(0, 3)}
             </button>
           ))}
         </div>
-        {nova.freq === 'semanal' && (
-          <select className="entrada" value={nova.dia} onChange={(e) => setNova({ ...nova, dia: Number(e.target.value) })} aria-label="Dia da semana">
-            {SEMANA.map((s, i) => (
-              <option key={s} value={i}>
-                {s}
-              </option>
-            ))}
-          </select>
+      )}
+      <div className="dia-prio-botoes">
+        {aoCancelar && (
+          <button type="button" className="btn btn-fantasma" onClick={aoCancelar}>
+            Cancelar
+          </button>
         )}
-        <button
-          className="btn btn-primario"
-          disabled={!nova.nome.trim()}
-          onClick={() => {
-            set((x) => ({ ...x, tarefas: [...x.tarefas, { id: uid(), nome: nova.nome.trim(), freq: nova.freq, dia: nova.freq === 'semanal' ? nova.dia : undefined, feitas: [] }] }))
-            setNova({ ...nova, nome: '' })
-          }}
-        >
-          <Plus aria-hidden /> Adicionar
+        <button className="btn btn-primario" disabled={!r.nome.trim()}>
+          {rotulo}
         </button>
+      </div>
+    </form>
+  )
+}
+
+function Rotina() {
+  const { d, set } = useC()
+  const [editando, setEditando] = useState<string | null>(null)
+  const [chave, setChave] = useState(0)
+  const salvar = (id: string, r: Rascunho) =>
+    set((x) => ({ ...x, tarefas: x.tarefas.map((y) => (y.id === id ? { ...y, nome: r.nome, freq: r.freq, dia: r.freq === 'semanal' ? r.dia : undefined } : y)) }))
+  return (
+    <div className="pt-tela">
+      <p className="dia-apoio">Toque no lápis para mudar o nome, a frequência ou o dia de uma tarefa.</p>
+      {GRUPOS_FREQ.map(([f, rot]) => {
+        const lista = d.tarefas.filter((t) => t.freq === f).sort((a, b) => (a.dia ?? 0) - (b.dia ?? 0))
+        return (
+          <Secao key={f} titulo={rot}>
+            <div className="pt-card">
+              {lista.length === 0 && <small>Nenhuma tarefa aqui.</small>}
+              <ul className="pt-linhas">
+                {lista.map((t) =>
+                  editando === t.id ? (
+                    <li key={t.id} className="ca-editando">
+                      <FormTarefa
+                        inicial={{ nome: t.nome, freq: t.freq, dia: t.dia ?? 6 }}
+                        rotulo="Salvar"
+                        aoCancelar={() => setEditando(null)}
+                        aoSalvar={(r) => {
+                          salvar(t.id, r)
+                          setEditando(null)
+                        }}
+                      />
+                    </li>
+                  ) : (
+                    <li key={t.id} className="pt-linha">
+                      <span>
+                        <b>{t.nome}</b>
+                        <small>
+                          {rotuloFreq(t)} · {t.feitas.length ? `última vez ${formatarDataCurta(t.feitas[t.feitas.length - 1])}` : 'ainda não feita'}
+                        </small>
+                      </span>
+                      <button className="btn-icone" aria-label={`Editar ${t.nome}`} onClick={() => setEditando(t.id)}>
+                        <Pencil aria-hidden />
+                      </button>
+                      <button
+                        className="btn-icone"
+                        aria-label={`Apagar ${t.nome}`}
+                        onClick={() => window.confirm(`Apagar "${t.nome}" da rotina?`) && set((x) => ({ ...x, tarefas: x.tarefas.filter((y) => y.id !== t.id) }))}
+                      >
+                        <X aria-hidden />
+                      </button>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </div>
+          </Secao>
+        )
+      })}
+      <div className="pt-card">
+        <b>Nova tarefa da casa</b>
+        <FormTarefa
+          key={chave}
+          inicial={{ nome: '', freq: 'semanal', dia: 6 }}
+          rotulo="Adicionar"
+          aoSalvar={(r) => {
+            set((x) => ({ ...x, tarefas: [...x.tarefas, { id: uid(), nome: r.nome, freq: r.freq, dia: r.freq === 'semanal' ? r.dia : undefined, feitas: [] }] }))
+            setChave((k) => k + 1)
+          }}
+        />
       </div>
     </div>
   )
