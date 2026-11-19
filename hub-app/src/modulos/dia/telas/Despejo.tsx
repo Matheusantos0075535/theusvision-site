@@ -1,5 +1,6 @@
 import { ArrowRightToLine, Check, ChevronDown, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Secao } from '../../../components/compartilhado/ShellModulo'
 import { useToast } from '../../../components/ui/Toast'
 import { mensagemDeErroBanco } from '../../../lib/erros'
@@ -130,6 +131,9 @@ export function Despejo() {
     <div className="dia-despejo">
       <Secao titulo="Despejo mental">
         <p className="dia-apoio">{TEXTOS.despejoApoio}</p>
+        <p className="dia-apoio">
+          Precisa escrever mais, com calma? <Link to="/diario/escrever">Abra o Diário</Link>.
+        </p>
         <form
           className="dep-novo"
           onSubmit={(e) => {

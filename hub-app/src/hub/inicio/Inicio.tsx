@@ -10,6 +10,7 @@ import { Marca } from '../LayoutAcesso'
 import { useModo } from '../modo'
 import { GRUPOS, MODULOS, ROTULO_MODO, type Modo } from '../modulos'
 import type { DestaqueCard } from './CardModulo'
+import { DiarioChamada } from './DiarioChamada'
 import { UsoSemanal } from './UsoSemanal'
 import { GradeModulos } from './GradeModulos'
 import './inicio.css'
@@ -128,6 +129,7 @@ export function Inicio() {
         </section>
         <UsoSemanal />
         </div>
+        <DiarioChamada />
         <section aria-labelledby="titulo-modulos">
           <div className="secao-cabeca">
             <h2 id="titulo-modulos">Módulos</h2>
