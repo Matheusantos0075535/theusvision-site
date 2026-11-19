@@ -1206,3 +1206,108 @@
     height: 56px;
   }
 }
+
+/* chamada na tela inicial */
+.di-chamada {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 26px;
+  padding: 16px;
+  border-radius: var(--raio-xg);
+  border: 1px solid var(--borda-forte);
+  background:
+    radial-gradient(70% 140% at 0% 0%, rgba(255, 159, 17, 0.26), transparent 60%),
+    radial-gradient(60% 140% at 100% 100%, rgba(122, 95, 176, 0.4), transparent 70%), var(--superf);
+  animation: aparecer var(--t-longo) var(--curva);
+}
+.di-chamada-topo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.di-chamada-icone {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--laranja-suave);
+  color: var(--laranja);
+}
+.di-chamada-icone svg {
+  width: 22px;
+  height: 22px;
+}
+.di-chamada-titulo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.di-chamada-titulo b {
+  font-size: 17px;
+}
+.di-chamada-titulo small {
+  font-size: 13px;
+  color: var(--texto-2);
+}
+.di-chamada-chama {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  font-weight: 800;
+  font-size: 14px;
+}
+.di-chamada-chama svg {
+  width: 16px;
+  height: 16px;
+  color: var(--laranja);
+}
+.di-chamada-form {
+  display: flex;
+  gap: 8px;
+}
+.di-chamada-form .entrada {
+  flex: 1;
+  min-width: 0;
+}
+.di-chamada-form .btn {
+  flex: none;
+  min-height: 52px;
+}
+.di-chamada-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+.di-chamada-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--laranja);
+  text-decoration: none;
+}
+@media (min-width: 900px) {
+  .di-chamada {
+    flex-direction: row;
+    align-items: center;
+    gap: 18px;
+  }
+  .di-chamada-topo {
+    flex: 0 0 340px;
+  }
+  .di-chamada-form {
+    flex: 1;
+  }
+  .di-chamada-links {
+    flex: none;
+  }
+}

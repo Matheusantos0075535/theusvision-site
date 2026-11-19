@@ -13,6 +13,7 @@ const VisaoApp = lazy(() => import('./work/VisaoApp'))
 const DnsmkApp = lazy(() => import('./dnsmk/DnsmkApp'))
 const LeituraApp = lazy(() => import('./leitura/LeituraApp'))
 const StudioApp = lazy(() => import('./studio/StudioApp'))
+const DiarioApp = lazy(() => import('../diario/DiarioApp'))
 
 function Lento({ children }: { children: ReactNode }) {
   return (
@@ -42,4 +43,6 @@ export const ROTAS_MODULOS: { caminho: string; elemento: ReactNode }[] = [
   { caminho: '/dnsmk/*', elemento: <Lento><DnsmkApp /></Lento> },
   { caminho: '/leitura/*', elemento: <Lento><LeituraApp /></Lento> },
   { caminho: '/studio/*', elemento: <Lento><StudioApp /></Lento> },
+  // O diário não é um módulo (não aparece na grade): é uma função do Hub.
+  { caminho: '/diario/*', elemento: <Lento><DiarioApp /></Lento> },
 ]
